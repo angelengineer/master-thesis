@@ -1,6 +1,6 @@
 {
 	"openmp": "",
-	"qpoases": "",
+	"qpoases": "-lqpOASES_e",
 	"daqp": "",
 	"qpdunes": "",
 	"osqp": "",
