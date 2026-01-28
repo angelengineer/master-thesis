@@ -1,0 +1,28 @@
+\section{Research Motivation}
+
+The deployment of mobile robotic platforms in human-centric environments is a central objective in modern robotics, with applications in logistics, healthcare, and collaborative manufacturing. Within this domain, self-balancing wheeled platforms offer advantages in maneuverability, energy efficiency, and compact design. However, their inherent instability and underactuated dynamics introduce fundamental control challenges, which become particularly pronounced during physical human--robot interaction.
+
+Although existing control strategies achieve reliable performance under nominal conditions, their effectiveness degrades when exposed to the dynamic uncertainties typical of real-world operation. In particular, payload manipulation tasks frequently involve objects with unknown or time-varying mass and inertial properties. Vertically actuated payload mechanisms induce continuous shifts in the system center of gravity and inertia, significantly altering the platform dynamics. Most existing approaches assume fixed parameters or discrete payload changes, limiting their applicability during continuous manipulation.
+
+In addition, self-balancing platforms operating in shared environments are subject to modeling inaccuracies, surface irregularities, actuator nonlinearities, and external disturbances. Conventional robust control strategies often rely on conservative designs or high-gain feedback, which may compromise performance or introduce oscillatory behavior. This motivates control architectures capable of actively estimating and compensating disturbances while maintaining stability and responsiveness.
+
+A further critical challenge arises from the need to safely handle unexpected human interactions such as collisions or unintended contact. For self-balancing systems, continuous balancing-induced forces must be distinguished from genuine external interactions, a task complicated by payload-dependent changes in system response. Existing collision detection methods developed for fully actuated systems are not directly applicable to underactuated balancing platforms with active payload manipulation.
+
+These challenges are strongly interrelated. Payload variations influence disturbance rejection and collision detection, while safety responses must remain effective across different loading conditions. Addressing stabilization, payload adaptation, and interaction safety within a unified control framework therefore constitutes the primary motivation of this research.
+
+\section{Research Objectives}
+
+The objective of this thesis is to develop, implement, and validate a control framework for underactuated self-balancing wheeled platforms that enables robust stabilization, adaptability to variable payloads, and safe operation during close human interaction.
+
+To this end, the research focuses first on the development of a parametric dynamic model of the Two-Wheeled Forklift Robot that captures the coupled dynamics of longitudinal motion, pitch behavior, and vertical fork actuation under varying payload conditions. The model balances physical fidelity with computational tractability in order to support real-time predictive control.
+
+Building upon this model, a nonlinear Model Predictive Control strategy is designed to stabilize the platform around its unstable upright equilibrium while tracking operator-defined longitudinal velocity references. The controller explicitly accounts for system constraints and nonlinear dynamics, and operates robustly in the presence of modeling uncertainties and external disturbances at control rates suitable for fast mechanical dynamics.
+
+To enhance robustness and adaptability, disturbance observer techniques are integrated to estimate external disturbances and payload-induced effects without relying on additional physical sensors. These observer outputs are exploited to improve the internal predictive model online, enabling adaptive behavior during continuous payload manipulation.
+
+In parallel, mechanisms for detecting unexpected external interactions are developed, with particular emphasis on distinguishing genuine collisions from normal balancing dynamics under varying payload conditions. A supervisory safety logic is incorporated to manage appropriate response strategies, prioritizing stabilization and human safety upon detection of anomalous behavior.
+
+The proposed framework is validated through extensive simulation studies covering nominal operation, variable payload scenarios, external disturbances, and collision events. In addition, the computational requirements of the overall control architecture are analyzed to ensure feasibility for real-time implementation on embedded hardware platforms.
+
+\section{Scope and Limitations}
+

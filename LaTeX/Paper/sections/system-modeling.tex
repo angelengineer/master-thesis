@@ -1,0 +1,51 @@
+
+\subsection{Robot Description}
+
+The Two-Wheeled Forklift Robot (TWFR) consists of a differential-drive mobile base with a vertically actuated fork mechanism (\figref{fig:twfr-full}). The platform transports loads using a prismatic actuator that extends and retracts a fork-like end effector connected via a revolute joint. Sensing is limited to wheel encoders, linear actuator position, fork joint angle, and IMU pitch measurement.
+
+
+
+\begin{figure}[t]
+    \centering
+    \includegraphics[width=0.5\columnwidth]{TWFR_full.png}
+    \caption{Two-Wheeled Forklift Robot (TWFR) CAD model.}
+    \label{fig:twfr-full}
+\end{figure}
+
+\begin{figure}[t]
+    \centering
+    \includegraphics[width=0.85\columnwidth]{robot-simplification.png}
+    \caption{Simplified planar rigid body model of the TWFR showing equivalent parameters: total mass $M$, center of gravity position $(x_G, z_G)$, and equivalent inertia $I_{\mathrm{eq}}$.}
+    \label{fig:robot-simplification}
+\end{figure}
+
+\subsection{Simplified Dynamic Model}
+
+To enable real-time optimal control, the multibody structure is reduced to an equivalent planar rigid body characterized by total mass $M$, global center of gravity $(x_G, z_G)$, and equivalent rotational inertia $I_{\mathrm{eq}}$. These parameters vary as functions of payload mass, position, and lift displacement.
+
+The equivalent mass and center of gravity for $N=4$ rigid components are:
+\begin{equation}
+M = \sum_{i=1}^{4} m_i, \quad
+x_G = \frac{1}{M} \sum_{i=1}^{4} m_i x_i, \quad
+z_G = \frac{1}{M} \sum_{i=1}^{4} m_i z_i
+\end{equation}
+
+The equivalent rotational inertia using the parallel-axis theorem is:
+\begin{equation}
+I_{\mathrm{eq}} =
+\sum_{i=1}^{4}
+\left(
+I_{y,i} + m_i \left( (x_i - x_G)^2 + (z_i - z_G)^2 \right)
+\right)
+\end{equation}
+
+The simplified dynamics are described using generalized coordinates $q_s = [q_x \; \theta_p]^T$, where $q_x$ is the horizontal wheel position and $\theta_p$ is the pitch angle. Applying Euler-Lagrange equations yields:
+\begin{equation}
+M_s(q_s)\ddot{q}_s + h_s(q_s,\dot{q}_s) = \boldsymbol{\tau}_s
+\end{equation}
+where $M_s(q_s) \in \mathbb{R}^{2\times2}$ is the configuration-dependent inertia matrix, $h_s$ contains Coriolis, centrifugal, and gravitational terms, and $\boldsymbol{\tau}_s$ represents generalized forces from wheel torques.
+
+The state-space representation used for control is:
+\begin{equation}
+x_s = [q_x \; \theta_p \; \dot{q}_x \; \dot{\theta}_p]^T
+\end{equation}

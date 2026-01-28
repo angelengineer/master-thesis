@@ -1,0 +1,54 @@
+\subsection{Simulation Scenario}
+
+The control architecture is validated in a challenging scenario combining sudden payload application, commanded motion, and external collision. At $t \approx 2$~s, a 10~kg payload is applied while the operator commands longitudinal motion. An impulsive collision disturbance is introduced at $t \approx 4$~s.
+
+\subsection{Performance Results}
+
+\figref{fig:velocity-profile} shows the longitudinal velocity profile. Despite abrupt dynamic changes and collision, the NMPC maintains bounded velocity and smoothly rejects disturbances, demonstrating robust stabilization.
+
+\begin{figure}[t]
+    \centering
+    \includegraphics[width=0.85\columnwidth]{velocity.png}
+    \caption{Longitudinal velocity during disturbance event showing stable tracking and disturbance rejection.}
+    \label{fig:velocity-profile}
+\end{figure}
+
+\figref{fig:mass-estimation} illustrates mass estimation. Following payload application, the estimator rapidly converges to the true value with well-damped transient response, confirming effectiveness under quasi-static conditions.
+
+\begin{figure}[t]
+    \centering
+    \includegraphics[width=0.85\columnwidth]{mass.png}
+    \caption{Payload mass estimation showing rapid convergence after load application.}
+    \label{fig:mass-estimation}
+\end{figure}
+
+\figref{fig:distance-estimation} shows the estimated horizontal distance of the payload center of mass. The estimate adapts consistently with the applied load, validating the reaction-based geometric estimation.
+
+\begin{figure}[t]
+    \centering
+    \includegraphics[width=0.85\columnwidth]{dist.png}
+    \caption{Distance estimation of payload center of mass from fork joint axis.}
+    \label{fig:distance-estimation}
+\end{figure}
+
+\figref{fig:derivative-estimation} reports the prediction error derivative. Peaks correspond to payload application and collision instants, providing clear signals for interaction detection despite varying system dynamics.
+
+\begin{figure}[t]
+    \centering
+    \includegraphics[width=0.85\columnwidth]{derivative.png}
+    \caption{Absolute value of prediction error derivative highlighting disturbance events.}
+    \label{fig:derivative-estimation}
+\end{figure}
+
+\figref{fig:cpu-time} demonstrates computational feasibility. CPU time remains bounded throughout the simulation, confirming real-time compatibility of the NMPC configuration with RTI scheme and solver settings.
+
+\begin{figure}[t]
+    \centering
+    \includegraphics[width=0.85\columnwidth]{CPU-time.png}
+    \caption{CPU time per control iteration showing real-time feasibility.}
+    \label{fig:cpu-time}
+\end{figure}
+
+\subsection{Discussion}
+
+The results demonstrate that integrating disturbance observers with NMPC enables seamless adaptation to variable payloads. The observers provide accurate real-time parameter estimates without dedicated sensors, while the NMPC maintains stability and tracking performance. The prediction error-based collision detection successfully identifies external interactions despite payload-induced dynamic changes. The system remains computationally efficient, supporting embedded implementation.

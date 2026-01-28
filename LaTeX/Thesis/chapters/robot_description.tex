@@ -1,0 +1,14 @@
+\section{Problem Description}
+
+The robotic platform considered in this research is a two-wheeled differential-drive robot whose main body chassis is located at the wheel axis. Attached to the chassis is a linear actuator capable of extending and retracting, terminating in a fork-like end effector. This fork is connected via a revolute joint, allowing its orientation to be adjusted as required. The robot is designed to use this tool to transport loads of varying weights from one location to another.
+
+The sensing capabilities of the system are limited and include wheel encoders, a position sensor for the linear actuator, and an angular sensor measuring the orientation of the fork joint. Despite this seemingly simple setup, the task is inherently challenging due to the underactuated nature of the system and the presence of dynamically varying, structured conditions induced by different payloads and configurations.
+
+Furthermore, the robot is intended to operate in environments where human interaction may occur at any time. As a result, the control system must be capable of adapting to sudden changes in the system’s dynamic behavior, such as those caused by collisions or unexpected interactions, while maintaining stability and safe operation.
+
+\begin{figure}[t]
+    \centering
+    \includegraphics[width=0.4\linewidth]{TWFR_full}
+    \caption{CAD model of the two-wheeled fork robot (TWFR).}
+    \label{fig:robot-cad-model}
+\end{figure}

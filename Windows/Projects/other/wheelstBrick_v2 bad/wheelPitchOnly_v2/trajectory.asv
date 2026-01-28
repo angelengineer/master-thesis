@@ -1,0 +1,9 @@
+%% References
+x = [0;0;0;0];
+u = [0;0];
+
+ref_0 = [x;u];
+ref = repmat(x, N-1, 1);
+ref_e = x;
+
+$

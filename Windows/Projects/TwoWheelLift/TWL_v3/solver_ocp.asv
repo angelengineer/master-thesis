@@ -1,0 +1,157 @@
+
+import casadi.*
+
+%% ============================================
+%% 1. CARGAR MODELO DINÁMICO
+%% ============================================
+model = get_wheeled_robot_model();
+nx = size(model.x, 1);    % 8 estados
+nu = size(model.u, 1);    % 4 controles
+
+
+%% ============================================
+%% 2. PARÁMETROS DEL MPC
+%% ============================================
+Ts = 0.1;                 % Tiempo de muestreo [s]
+N = 20;                   % Horizonte de predicción (2 segundos)
+Tf = Ts * N;              % Tiempo total de predicción
+
+x0 = zeros(nx,1);
+%% ============================================
+%% 3. MATRICES DE PESO (AJUSTAR SEGÚN NECESIDAD)
+%% ============================================
+% Pesos para POSICIONES (q) - Altos para estabilidad
+Q_pos = diag([10,    
+  200,   
+  50,    
+  30]); 
+
+% Pesos para VELOCIDADES (dq) - ¡ES CLAVE PARA CONTROLAR DINÁMICA!
+Q_vel = diag([5,     
+  500,   
+  20,    
+  15]);  
+
+% Matriz Q completa (estados)
+Q = blkdiag(Q_pos, Q_vel);
+
+% Pesos para CONTROLES (suavidad y esfuerzo)
+R = diag([0.1,    
+0.5,    
+0.3,    
+0.2]);  
+
+% Matriz terminal (estabiliza el final del horizonte)
+Qn = 10 * Q;  % Más estricto al final
+
+%% ============================================
+%% 4. RESTRICCIONES FÍSICAS (SEGURIDAD CRÍTICA)
+%% ============================================
+% Límites de POSICIÓN (seguridad física)
+x_min = [-inf;      % x: sin límite inferior
+-0.35;     % theta_p: -20 grados (¡NO VOLCAR!)
+0.0;       % d_m: altura mínima del lift
+-pi/3];    % theta_a: ángulo fork mínimo
+
+x_max = [inf;       % x: sin límite superior
+0.35;      % theta_p: +20 grados (¡NO VOLCAR!)
+1.2;       % d_m: altura máxima del lift
+pi/3];     % theta_a: ángulo fork máximo
+
+% Límites de VELOCIDAD (¡ES LO MÁS IMPORTANTE PARA SEGURIDAD!)
+dx_min = [-1.5;     % dx: velocidad horizontal máxima (segura)
+-0.8;     % dtheta_p: velocidad pitch máxima
+-0.3;     % dd_m: velocidad lift máxima
+-0.5];    % dtheta_a: velocidad fork máxima
+
+dx_max = [1.5;      % dx: -1.5 m/s
+0.8;      % dtheta_p: ±0.8 rad/s (45 deg/s)
+0.3;      % dd_m: ±0.3 m/s
+0.5];     % dtheta_a: ±0.5 rad/s (28 deg/s)
+
+% Combinar en límites de estado completo
+lbx = [x_min; dx_min];
+ubx = [x_max; dx_max];
+
+% Límites de CONTROLES (capacidades físicas de actuadores)
+lbu = [-50;   % tau_x: torque ruedas mínimo (frenado)
+-30;   % tau_p: torque pitch mínimo
+-100;  % tau_m: fuerza lift mínima (bajar)
+-20];  % tau_a: torque fork mínimo
+
+ubu = [50;    % tau_x: torque ruedas máximo (acelerar)
+30;    % tau_p: torque pitch máximo
+100;   % tau_m: fuerza lift máxima (subir)
+20];   % tau_a: torque fork máximo
+
+%% ============================================
+%% 5. CONFIGURACIÓN DEL SOLVER ACADOS
+%% ============================================
+ocp = AcadosOcp();
+ocp.model = model;
+
+% Costo cuadrático
+ocp.cost.cost_type_0 = 'NONLINEAR_LS';
+ocp.cost.cost_type = 'NONLINEAR_LS';
+ocp.cost.cost_type_e = 'NONLINEAR_LS';  % Costo terminal
+
+% Matrices de peso
+ocp.cost.W_0 = blkdiag(Q, R);    % Matriz para todos los nodos
+ocp.cost.W = blkdiag(Q, R);    % Matriz para todos los nodos
+ocp.cost.W_e = Qn;             % Matriz terminal
+
+% Referencias (se actualizarán en tiempo real)
+ocp.cost.yref_0 = zeros(nx + nu, 1);
+ocp.cost.yref = zeros(nx + nu, 1);    % [x_ref; u_ref]
+ocp.cost.yref_e = zeros(nx, 1);       % [x_ref terminal]
+
+ocp.model.cost_y_expr_0 = vertcat(model.x, model.u);
+ocp.model.cost_y_expr = vertcat(model.x, model.u);
+ocp.model.cost_y_expr_e = model.x;
+
+
+% Restricciones de caja (bounds)
+% Usar restricciones de caja
+ocp.constraints.constr_type = 'BGH';
+
+
+ocp.constraints.lbx = lbx;    % Límites inferiores estados
+ocp.constraints.ubx = ubx;    % Límites superiores estados
+ocp.constraints.idxbx = 1:nx; % Índices de estados con límites
+
+ocp.constraints.idxbu = 0:nu-1;  % [0, 1] para 2 controle
+ocp.constraints.lbu = lbu;    % Límites inferiores controles
+ocp.constraints.ubu = ubu;    % Límites superiores controles
+ocp.constraints.idxbu = 1:nu; % Índices de controles
+
+
+% Para etapa inicial (0) - fijar el estado inicial
+ocp.constraints.idxbx_0 = 0:nx-1;
+ocp.constraints.lbx_0 = x0;
+ocp.constraints.ubx_0 = x0;
+
+%% ============================================
+%% 6. OPCIONES DE SOLVER (TIEMPO REAL)
+%% ============================================
+ocp.solver_options.qp_solver = 'FULL_CONDENSING_HPIPM'; % Rápido para problemas pequeños
+ocp.solver_options.hessian_approx = 'GAUSS_NEWTON';    % Eficiente para MPC
+ocp.solver_options.integrator_type = 'ERK';            % Runge-Kutta explícito
+ocp.solver_options.nlp_solver_type = 'SQP';            % Sequential Quadratic Programming
+ocp.solver_options.tf = Tf;                             % Tiempo total de horizonte
+ocp.solver_options.N_horizon = N;
+
+
+% Tolerancias para tiempo real
+ocp.solver_options.nlp_solver_max_iter = 20;  % Máximo 20 iteraciones SQP
+ocp.solver_options.qp_solver_iter_max = 50;   % Máximo 50 iteraciones QP
+
+ocp.simulink_opts = simulink_opts;
+
+%% create solver
+try
+    ocp_solver = AcadosOcpSolver(ocp);
+    fprintf('Solver creado exitosamente\n');
+catch ME
+    fprintf('Error creando solver: %s\n', ME.message);
+    rethrow(ME);
+end

@@ -1,0 +1,89 @@
+\section{Finite State Machine}
+
+Distinguishing between disturbances caused by charging or discharging operations and those arising from physical contact is non-trivial, as both scenarios produce similar sensor signatures. To address this challenge, a Finite State Machine (FSM) is proposed to robustly discriminate between these situations and to enforce appropriate system behavior.
+
+\subsection{FSM Inputs}
+
+The FSM operates based on the following boolean input signals:
+\begin{itemize}
+    \item \textbf{Start}: Enables the FSM operation.
+    \item \textbf{Move}: Commands the robot to move according to the provided reference.
+    \item \textbf{Load}: Indicates that a loading or unloading operation is in progress.
+    \item \textbf{Collision}: Signals the detection of an external disturbance or collision.
+\end{itemize}
+
+\subsection{FSM States}
+
+\begin{figure}[t]
+    \centering
+    \includegraphics[width=0.5\linewidth]{FSM.png}
+    \caption{Block diagram of the finite state machine (FSM) implementation.}
+    \label{fig:FSM}
+\end{figure}
+
+The FSM is composed of four discrete states, each associated with a specific robot behavior:
+\begin{itemize}
+    \item \textbf{$S_0$ -- Idle:} The robot remains stationary with no active motion or task execution.
+    \item \textbf{$S_1$ -- Moving:} The robot moves while tracking the given motion references.
+    \item \textbf{$S_2$ -- Loading:} The robot remains stationary and deliberately ignores disturbance signals to allow safe loading or unloading.
+    \item \textbf{$S_3$ -- Collision:} Upon detecting a collision, the robot performs a short backward motion and subsequently stops.
+\end{itemize}
+
+\subsection{State Transitions}
+
+The state transitions are governed by the following transition functions:
+\begin{itemize}
+    \item \textbf{$f_{0,1}^{\sigma}$:} $\mathrm{cmd}(\text{Move}) = 1$
+    \item \textbf{$f_{0,2}^{\sigma}$:} $\mathrm{cmd}(\text{Load}) = 1$
+    \item \textbf{$f_{1,2}^{\sigma}$:} $\mathrm{cmd}(\text{Load}) = 1$
+    \item \textbf{$f_{1,3}^{\sigma}$:} $\mathrm{cmd}(\text{Collision}) = 1$
+    \item \textbf{$f_{2,1}^{\sigma}$:} $\mathrm{cmd}(\text{Move}) = 1$
+    \item \textbf{$f_{3,0}^{\sigma}$:} $\mathrm{cmd}(\text{Start}) = 1$
+\end{itemize}
+
+The resulting FSM diagram is illustrated in Figure.
+% TABLE 1: FSM STATES (Professional B&W)
+\begin{table}[h]
+\centering
+\small
+\begin{tabular}{@{}llp{4.2cm}@{}}
+\toprule
+\textbf{State} & \textbf{Behavior} & \textbf{Key Feature} \\
+\midrule
+$S_0$ -- Idle & 
+Stationary, no motion execution & 
+System entry/exit point \\
+$S_1$ -- Moving & 
+Tracks motion references while monitoring disturbances & 
+Active navigation mode \\
+$S_2$ -- Loading & 
+Stationary with \textbf{disturbance signals ignored} & 
+Safe human-robot interaction during load/unload \\
+$S_3$ -- Collision & 
+Short backward motion $\rightarrow$ full stop & 
+Automatic safety recovery \\
+\bottomrule
+\end{tabular}
+\caption{FSM operational states}
+\label{tab:fsm_states}
+\end{table}
+
+% TABLE 2: TRANSITION FUNCTIONS (Professional B&W - CORRECTED)
+\begin{table}[h]
+\centering
+\small
+\begin{tabular}{@{}>{$}l<{$}>{$}l<{$}p{4.5cm}@{}}
+\toprule
+\textbf{Transition} & \textbf{Condition} & \textbf{Description} \\
+\midrule
+f_{0,1}^{\sigma} & \mathrm{cmd}(\text{Move}) & Start navigation from idle \\
+f_{0,2}^{\sigma} & \mathrm{cmd}(\text{Load}) & Initiate loading procedure \\
+f_{1,2}^{\sigma} & \mathrm{cmd}(\text{Load})  & Pause motion for loading \\
+f_{1,3}^{\sigma} & \mathrm{cmd}(\text{Collision}) & Emergency response during motion \\
+f_{2,1}^{\sigma} & \mathrm{cmd}(\text{Move}) & Resume navigation after loading \\
+f_{3,0}^{\sigma} & \mathrm{cmd}(\text{Start})  & System reset after collision \\
+\bottomrule
+\end{tabular}
+\caption{FSM state transition logic}
+\label{tab:fsm_transitions}
+\end{table}

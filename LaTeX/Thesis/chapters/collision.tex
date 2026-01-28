@@ -1,0 +1,48 @@
+\section{Collision Detection Mechanism}
+
+This section describes the collision detection mechanism implemented within the proposed control architecture. Unlike force-based approaches relying directly on external sensors or disturbance estimates, the adopted method exploits the prediction capabilities of NMPC to identify abnormal system behavior caused by external contacts.
+
+
+\section{Collision }
+
+\begin{figure}[t]
+    \centering
+    \includegraphics[width=1\linewidth]{control-Collision.png}
+    \caption{Control architecture with collision handling}
+    \label{fig:control-collision}
+\end{figure}
+
+
+Figure~\ref{fig:control-collision} illustrates the signal flow used for collision detection and handling.
+
+\subsection{Prediction Error-Based Collision Detection}
+
+At each control cycle, the NMPC provides a one-step-ahead prediction of the system state based on the previously applied control input and the internal model. Let $x_k$ denote the measured state at the current sampling instant, and $\hat{x}_{k|k-1}$ the state predicted at the previous iteration for the same time instant.
+
+The prediction error is computed as
+\begin{equation}
+e_k = x_k - \hat{x}_{k|k-1}.
+\end{equation}
+
+To emphasize sudden deviations caused by impulsive external interactions, the absolute value of the prediction error is considered and numerically differentiated:
+\begin{equation}
+\dot{e}_k = \frac{\mathrm{d}}{\mathrm{d}t} \left( | e_k | \right).
+\end{equation}
+
+This operation highlights rapid changes in the system response that cannot be explained by the nominal model dynamics or by smooth load variations.
+
+\subsection{State Selection and Thresholding}
+
+Among the available state components, the derivative of the pitch-rate prediction error, $\dot{e}_{\dot{\beta},k}$, is selected as the collision indicator. This choice is motivated by the strong sensitivity of the pitch dynamics to external contacts in self-balancing systems.
+
+A collision is detected when the following condition is satisfied:
+\begin{equation}
+|\dot{e}_{\dot{\beta},k}| > \gamma_{\mathrm{coll}},
+\end{equation}
+where $\gamma_{\mathrm{coll}}$ is a predefined threshold determined empirically. This threshold allows reliable discrimination between nominal disturbances and abrupt collision events.
+
+\subsection{Integration with the Control Architecture}
+
+Once the collision condition is met, a collision flag is raised and forwarded to the supervisory finite state machine (FSM). The FSM then triggers the appropriate control reconfiguration, as shown in Figure~\ref{fig:control-collision}, enabling a safe reaction while maintaining continuity of operation.
+
+Since the robot is not autonomous, this mechanism does not aim to cancel user commands but rather to detect unsafe interactions and adapt the control behavior accordingly. By leveraging NMPC predictions, the proposed approach achieves fast and reliable collision detection without requiring additional physical sensors.

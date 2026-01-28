@@ -1,0 +1,14 @@
+Self-balancing wheeled robots offer significant advantages in maneuverability, energy efficiency, and compactness compared to statically stable platforms. However, their inherently unstable dynamics and underactuated nature present fundamental control challenges, particularly during payload manipulation tasks in human-shared environments. When transporting objects with unknown or time-varying mass and inertial properties, continuous shifts in the system center of gravity significantly alter platform dynamics, requiring adaptive control strategies.
+
+Model Predictive Control has emerged as an effective framework for stabilizing wheeled inverted pendulum systems due to its ability to handle constraints and predict future behavior \cite{millsNonlinearModelPredictive2009, mishraControlTwoWheelSelfBalancing2024}. However, most implementations assume fixed parameters or discrete payload changes \cite{onkolAdaptiveModelPredictive2018}, limiting applicability during continuous manipulation. Disturbance observers have proven effective for parameter estimation and external force compensation \cite{yajimaPostureStabilizationControl2023, kanazawa2023}, yet their integration with NMPC for real-time model adaptation remains underexplored.
+
+This paper addresses these limitations by proposing an integrated control architecture that combines NMPC with multiple disturbance observers for seamless adaptation to variable payloads. The main contributions are:
+
+\begin{itemize}
+\item Integration of DOB and RDOB techniques with NMPC to enable continuous adaptation to payload variations without dedicated sensors
+\item Real-time estimation of payload mass and center-of-gravity using reaction force measurements
+\item Prediction error-based collision detection compatible with varying payload conditions
+\item Validation demonstrating stable operation under simultaneous payload changes, motion commands, and external disturbances
+\end{itemize}
+
+The remainder of this paper is organized as follows. Section II describes the system modeling approach. Section III presents the control architecture including NMPC formulation, disturbance observers, and supervisory logic. Section IV reports simulation results, and Section V concludes the paper.

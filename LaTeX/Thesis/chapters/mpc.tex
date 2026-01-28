@@ -1,0 +1,95 @@
+\section{Model Predictive Control}
+\label{sec:mpc}
+
+Model Predictive Control (MPC) is an optimization-based control strategy in which a finite-horizon optimal control problem is solved at each sampling instant. Only the first control action of the optimal sequence is applied to the system, and the procedure is repeated at the next time step following a receding-horizon principle \cite{rawlings2017model}. This framework enables the explicit handling of state and input constraints while optimizing system performance over a prediction horizon
+\[
+\mathcal{H} = \{k, k+1, \dots, k+N\},
+\]
+where $N \in \mathbb{N}$ denotes the horizon length.
+
+Consider the discrete-time nonlinear system
+\begin{align}
+\mathbf{x}_{k+1} &= f(\mathbf{x}_k, \mathbf{u}_k), 
+\quad \mathbf{x}_0 = \hat{\mathbf{x}}_k,
+\label{eq:system_dynamics} \\
+\mathbf{y}_k &= h(\mathbf{x}_k, \mathbf{u}_k),
+\label{eq:system_output}
+\end{align}
+where $\mathbf{x} \in \mathbb{R}^{n_x}$ is the state vector, $\mathbf{u} \in \mathbb{R}^{n_u}$ the control input, and $\mathbf{y} \in \mathbb{R}^{n_y}$ the system output.
+
+At each time step, MPC solves the following finite-horizon optimization problem:
+\begin{subequations}
+\begin{align}
+\min_{\mathbf{X}, \mathbf{U}} \quad 
+& \sum_{i=0}^{N-1} \ell(\mathbf{x}_i, \mathbf{u}_i) + m(\mathbf{x}_N)
+\label{eq:mpc_cost} \\
+\text{s.t.} \quad 
+& \mathbf{x}_{i+1} = f(\mathbf{x}_i, \mathbf{u}_i), \quad i = 0, \dots, N-1, \\
+& \mathbf{x}_0 = \hat{\mathbf{x}}_k, \\
+& \mathbf{u}_i \in \mathcal{U} \subseteq \mathbb{R}^{n_u}, \quad i = 0, \dots, N-1, \\
+& \mathbf{x}_i \in \mathcal{X} \subseteq \mathbb{R}^{n_x}, \quad i = 1, \dots, N, \\
+& \mathbf{x}_N \in \mathcal{X}_f \subseteq \mathcal{X},
+\end{align}
+\label{eq:mpc_problem}
+\end{subequations}
+where $\ell(\cdot)$ denotes the stage cost, $m(\cdot)$ the terminal cost, $\mathcal{U}$ and $\mathcal{X}$ the admissible input and state sets, and $\mathcal{X}_f$ a terminal constraint set introduced to ensure recursive feasibility \cite{Mayne2000}. The solution yields an optimal control sequence
+\[
+\mathbf{U}^* =
+\begin{bmatrix}
+\mathbf{u}_0^{*\top} & \dots & \mathbf{u}_{N-1}^{*\top}
+\end{bmatrix}^\top,
+\]
+of which only $\mathbf{u}_0^*$ is applied to the system.
+
+\subsection{Recursive Feasibility}
+Recursive feasibility refers to the property that, if the MPC optimization problem is feasible at the initial time step, feasibility is preserved at all subsequent time steps under closed-loop operation. This property is typically guaranteed through the appropriate choice of terminal cost and terminal constraint set $\mathcal{X}_f$.
+
+\subsection{Acados Framework}
+\label{subsec:acados}
+
+Acados (Advanced Control Software) is an open-source software framework for embedded optimization and nonlinear MPC, specifically designed for real-time applications \cite{verschueren2021acados}. Its implementation emphasizes computational efficiency through structure-exploiting numerical algorithms and code generation capabilities.
+
+Key characteristics of Acados include:
+\begin{itemize}
+    \item Modular separation between problem formulation and numerical solvers
+    \item Support for real-time iteration (RTI) schemes based on sensitivity updates \cite{diehl2002real}
+    \item Automatic generation of optimized C code for embedded platforms
+    \item Multiple explicit and implicit integration methods for nonlinear dynamics
+\end{itemize}
+
+For the nonlinear MPC problem in \eqref{eq:mpc_problem}, Acados employs a Sequential Quadratic Programming (SQP) strategy. At each iteration, the nonlinear dynamics and cost are linearized around the current trajectory, resulting in a quadratic program of the form:
+\begin{subequations}
+\begin{align}
+\min_{\Delta \mathbf{X}, \Delta \mathbf{U}} \quad 
+& \frac{1}{2}
+\begin{bmatrix}
+\Delta \mathbf{x} \\
+\Delta \mathbf{u}
+\end{bmatrix}^\top
+\mathbf{H}_i
+\begin{bmatrix}
+\Delta \mathbf{x} \\
+\Delta \mathbf{u}
+\end{bmatrix}
++ \mathbf{g}_i^\top
+\begin{bmatrix}
+\Delta \mathbf{x} \\
+\Delta \mathbf{u}
+\end{bmatrix} \\
+\text{s.t.} \quad 
+& \Delta \mathbf{x}_{i+1} =
+\mathbf{A}_i \Delta \mathbf{x}_i +
+\mathbf{B}_i \Delta \mathbf{u}_i +
+\mathbf{c}_i, \\
+& \mathbf{D}_i
+\begin{bmatrix}
+\Delta \mathbf{x}_i \\
+\Delta \mathbf{u}_i
+\end{bmatrix}
+\leq \mathbf{e}_i,
+\end{align}
+\label{eq:acados_qp}
+\end{subequations}
+where the matrices $\mathbf{H}_i$, $\mathbf{A}_i$, $\mathbf{B}_i$, and vectors $\mathbf{g}_i$, $\mathbf{c}_i$, $\mathbf{e}_i$ are obtained from first-order Taylor approximations of the nonlinear problem.
+
+These quadratic programs are solved using tailored solvers such as HPIPM \cite{frison2020hpipm} or OSQP \cite{stellato2020osqp}, which exploit the problem structure to achieve linear computational complexity with respect to the prediction horizon.

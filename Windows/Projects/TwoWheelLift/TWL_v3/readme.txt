@@ -1,0 +1,1 @@
+probando modleo simple (solo body physics) en el robot compelto

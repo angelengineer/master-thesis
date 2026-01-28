@@ -1,0 +1,109 @@
+% ----------------------------
+% XeLaTeX essentials
+% ----------------------------
+\usepackage{newtxtext}
+\usepackage{newtxmath}
+\usepackage{comment}  
+
+\usepackage{graphicx}
+\usepackage{float}      % for [H] placement if needed
+\usepackage{subcaption} % only if you want subfigures
+\graphicspath{{images/}}
+
+\usepackage{geometry}
+\geometry{
+  a4paper,
+  left=30mm,
+  right=25mm,
+  top=30mm,
+  bottom=25mm
+}
+
+\usepackage{setspace}
+\onehalfspacing
+
+\usepackage{titlesec}
+\titleformat{\chapter}[hang]
+  {\normalfont\bfseries\Large}
+  {Chapter \thechapter}
+  {1em}{}
+
+\titleformat{\section}
+  {\normalfont\bfseries\large}
+  {\thesection}{1em}{}
+
+\titleformat{\subsection}
+  {\normalfont\bfseries\normalsize}
+  {\thesubsection}{1em}{}
+
+% ----------------------------
+% Figures & tables
+% ----------------------------
+\usepackage{graphicx}
+\usepackage{caption}
+\usepackage{subcaption}
+\usepackage{tikz}
+\usetikzlibrary{arrows.meta, positioning, calc, shapes.geometric}
+\usepackage[table]{xcolor} % For row coloring
+\usepackage{booktabs}      % For professional rules
+\usepackage{array}         % For column formatting
+\usepackage{booktabs}    % Professional table rules
+\usepackage{array}       % Advanced column formatting
+\usepackage{caption}     % Compact caption styling
+\captionsetup[table]{skip=5pt, font=small} % Slide-friendly captions
+
+\captionsetup{
+  font=small,
+  labelfont=bf
+}
+
+% ----------------------------
+% Math & symbols
+% ----------------------------
+\usepackage{amsmath}
+
+% ----------------------------
+% References
+% ----------------------------
+\usepackage[
+  backend=biber,
+  style=numeric,
+  sorting=none
+]{biblatex}
+
+\addbibresource{references.bib}
+
+% ----------------------------
+% Hyperlinks (debe ir casi al final)
+% ----------------------------
+\usepackage{hyperref}
+\hypersetup{
+    colorlinks=false,        % false: boxed links; true: colored links
+    linkcolor=blue,         % color of internal links (chapters, sections, etc.)
+    citecolor=blue,         % color of citations
+    filecolor=magenta,      % color of file links
+    urlcolor=cyan,          % color of external URLs
+    bookmarksdepth=3,       % depth of bookmarks in PDF
+    pdfborder={0 0 0},      % remove border around links
+}
+
+% ----------------------------
+% Headers / footers
+% ----------------------------
+\usepackage{fancyhdr}
+\pagestyle{fancy}
+\fancyhf{}
+\fancyfoot[C]{\thepage}
+\renewcommand{\headrulewidth}{0pt}
+
+% ----------------------------
+% Paragraph formatting
+% ----------------------------
+\setlength{\parindent}{15pt}
+\setlength{\parskip}{0pt}
+
+% ----------------------------
+% Prevent widows/orphans
+% ----------------------------
+\clubpenalty=10000
+\widowpenalty=10000

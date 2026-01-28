@@ -1,0 +1,56 @@
+% !TeX program = pdflatex
+
+\documentclass[conference]{IEEEtran}
+%\IEEEoverridecommandlockouts
+\input{preamble}
+
+\begin{document}
+
+\title{Control of an Underactuated Self-Balancing
+Robotic Platform with Variable Payloads and
+Dynamic Uncertainties for Human–Robot
+Interaction}
+
+\author{
+\IEEEauthorblockN{Ángel Muñoz Rocha}
+\IEEEauthorblockA{
+\textit{Graduate School of Integrated Design Engineering}\\
+\textit{Keio University}\\
+Yokohama, Japan\\
+angelmr@keio.jp}
+\and
+\IEEEauthorblockN{Toshiyuki Murakami}
+\IEEEauthorblockA{
+\textit{Department of System Design Engineering}\\
+\textit{Keio University}\\
+Yokohama, Japan\\
+mura@sd.keio.ac.jp}
+}
+
+\maketitle
+
+\input{sections/abstract.tex}
+
+\begin{IEEEkeywords}
+Self-balancing robot, nonlinear model predictive control, disturbance observer, variable payload, human-robot interaction, collision detection
+\end{IEEEkeywords}
+
+\section{Introduction}
+\input{sections/introduction.tex}
+
+\section{System Modeling}
+\input{sections/system-modeling.tex}
+
+\section{Control Architecture}
+\input{sections/control.tex}
+
+\section{Simulation Results}
+\input{sections/simulation.tex}
+
+
+\section{Conclusion}
+\input{sections/conclusion.tex}
+
+\bibliography{references}
+
+\end{document}

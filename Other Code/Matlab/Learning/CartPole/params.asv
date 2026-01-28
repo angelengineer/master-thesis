@@ -1,0 +1,4 @@
+L =1; Kd = 0.5; theta0 = 0;
+mPend = 4 ;
+mCart = 10;
+g = 

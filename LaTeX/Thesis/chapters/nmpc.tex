@@ -1,0 +1,171 @@
+\section{Introduction to Nonlinear Model Predictive Control}
+
+Nonlinear Model Predictive Control (NMPC) is an advanced control strategy that has attracted considerable interest in embedded optimization and robotic applications. Unlike linear MPC, NMPC explicitly accounts for nonlinear system dynamics, constraints, and objective functions, making it particularly well suited for mechanically complex and underactuated systems. This capability is essential for self-balancing robotic platforms, where strong nonlinearities, coupling effects, and state-dependent constraints fundamentally influence the system behavior.
+
+\subsection{NMPC Problem Formulation}
+
+The continuous-time nonlinear optimal control problem underlying NMPC can be formulated as
+\begin{equation}
+\begin{aligned}
+\min_{x(\cdot), z(\cdot), u(\cdot)} \quad
+& \int_0^T \ell(x(t), z(t), u(t)) \, \mathrm{d}t + M(x(T)) \\
+\text{subject to} \quad
+& x(0) = \bar{x}_0, \\
+& 0 = f(\dot{x}(t), x(t), z(t), u(t)), \quad t \in [0, T], \\
+& 0 \geq g(x(t), z(t), u(t)), \quad t \in [0, T],
+\end{aligned}
+\end{equation}
+where $x : \mathbb{R} \rightarrow \mathbb{R}^{n_x}$ denotes the differential state vector, $z : \mathbb{R} \rightarrow \mathbb{R}^{n_z}$ represents the algebraic variables, and $u : \mathbb{R} \rightarrow \mathbb{R}^{n_u}$ is the control input. The function $\ell(\cdot)$ defines the running cost, while $M(\cdot)$ denotes the terminal cost. The implicit differential-algebraic equations (DAEs) describing the system dynamics are captured by $f(\cdot)$, and $g(\cdot)$ represents nonlinear path constraints.
+
+\subsection{Multiple Shooting Discretization}
+
+To enable the numerical solution of the continuous-time optimal control problem, a multiple shooting discretization is employed. The prediction horizon $[0, T]$ is divided into $N$ intervals defined by the grid points $t_0, t_1, \ldots, t_N$. This yields the following discrete-time formulation:
+\begin{equation}
+\begin{aligned}
+\min_{x_0,\ldots,x_N, z_0,\ldots,z_{N-1}, u_0,\ldots,u_{N-1}} \quad
+& \sum_{k=0}^{N-1} (t_{k+1} - t_k)\,\ell(x_k, z_k, u_k) + M(x_N) \\
+\text{subject to} \quad
+& x_0 = \bar{x}_0, \\
+&
+\begin{bmatrix}
+x_{k+1} \\
+z_k
+\end{bmatrix}
+= \varphi_k(x_k, u_k), \quad k = 0, \ldots, N-1, \\
+& 0 \geq g_k(x_k, z_k, u_k), \quad k = 0, \ldots, N-1,
+\end{aligned}
+\end{equation}
+where $\varphi_k(\cdot)$ denotes the numerical integration operator that propagates the system dynamics over each discretization interval.
+
+\section{The \textit{acados} Software Framework}
+
+\subsection{Overview of \textit{acados}}
+
+\textit{acados} is a modular open-source framework for fast embedded optimal control, designed to achieve high computational performance while maintaining modeling flexibility. It provides efficient numerical solvers tailored to real-time NMPC applications and supports seamless integration with symbolic modeling tools. Key features of \textit{acados} include efficient C-based implementations of optimal control algorithms, high-performance linear algebra routines based on the BLASFEO library, interfaces to MATLAB and Python, compatibility with the CasADi modeling framework, and deployability on embedded hardware platforms.
+
+\subsection{Sequential Quadratic Programming in \textit{acados}}
+
+Nonlinear optimal control problems in \textit{acados} are solved using Sequential Quadratic Programming (SQP). At each SQP iteration, the original nonlinear problem is locally approximated by a quadratic programming (QP) subproblem obtained through first-order linearization of the system dynamics and constraints, together with a second-order approximation of the cost function.
+
+\subsubsection{Standard QP Subproblem}
+
+At SQP iteration $k$, the resulting QP is formulated in terms of state and input increments
+$\Delta x_k = x_k - \bar{x}_k$ and $\Delta u_k = u_k - \bar{u}_k$, and reads
+\begin{equation}
+\begin{aligned}
+\min_{\Delta x_k, \Delta u_k} \quad
+& \frac{1}{2}
+\begin{bmatrix}
+\Delta x_k \\
+\Delta u_k
+\end{bmatrix}^T
+H_k
+\begin{bmatrix}
+\Delta x_k \\
+\Delta u_k
+\end{bmatrix}
++
+g_k^T
+\begin{bmatrix}
+\Delta x_k \\
+\Delta u_k
+\end{bmatrix} \\
+\text{subject to} \quad
+& \Delta x_{k+1}
+=
+A_k \Delta x_k + B_k \Delta u_k + d_k, \\
+& \underline{c}_k
+\le
+C_k
+\begin{bmatrix}
+\Delta x_k \\
+\Delta u_k
+\end{bmatrix}
+\le
+\bar{c}_k ,
+\end{aligned}
+\end{equation}
+where the optimization variables represent corrections to the current trajectory estimate rather than absolute state and input values.
+
+\subsubsection{Interpretation of the SQP Decision Variables and QP Components}
+
+At each SQP iteration, the quadratic program is solved in terms of incremental decision variables $\Delta x_k$ and $\Delta u_k$, which represent correction steps with respect to the current trajectory estimate. The updated solution is obtained as
+\begin{equation}
+x_k^{\text{new}} = x_k^{\text{current}} + \Delta x_k, \qquad
+u_k^{\text{new}} = u_k^{\text{current}} + \Delta u_k .
+\end{equation}
+This incremental formulation allows the solver to iteratively refine the solution by computing how the current estimate should be adjusted to reduce the cost while satisfying the constraints.
+
+\paragraph{Cost Function Approximation}
+The matrix $H_k$ denotes the Hessian approximation of the Lagrangian and captures the local curvature of the cost function around the current iterate. In \textit{acados}, a Gauss--Newton approximation is commonly employed,
+\begin{equation}
+H_k \approx J_k^T W J_k,
+\end{equation}
+where $J_k$ is the Jacobian of the least-squares residual and $W$ is a user-defined weighting matrix. This approximation avoids the computation of second-order derivatives, significantly reducing computational complexity while maintaining favorable numerical properties for tracking and regulation problems.
+
+The vector $g_k$ represents the gradient of the cost function evaluated at the current trajectory estimate and indicates the direction of steepest descent in the local quadratic model.
+
+\paragraph{Linearized Dynamics and Constraints}
+The matrices $A_k$ and $B_k$ result from first-order linearization of the nonlinear system dynamics
+\begin{equation}
+\dot{x} = f(x,u),
+\end{equation}
+and are defined as
+\begin{equation}
+A_k = \frac{\partial f}{\partial x}, \qquad
+B_k = \frac{\partial f}{\partial u}.
+\end{equation}
+They describe the sensitivity of the future system evolution with respect to variations in the current state and control input, respectively. Through this linearization, the nonlinear dynamics are locally approximated by an affine model suitable for efficient QP-based optimization.
+
+The term $d_k$ denotes the dynamic residual introduced by linearization and represents the mismatch between the nonlinear dynamics evaluated at the current iterate and their linear approximation. The QP solution seeks to reduce this residual, thereby enforcing consistency with the underlying physical model across successive SQP iterations.
+
+\subsubsection{Multi-Stage SQP Formulation}
+
+In the multi-stage setting adopted by \textit{acados}, the QP over the prediction horizon is written as
+\begin{equation}
+\begin{aligned}
+\min_{\substack{\Delta x_0,\ldots,\Delta x_N \\ \Delta u_0,\ldots,\Delta u_{N-1} \\ s_0,\ldots,s_N}} \quad
+& \sum_{k=0}^{N-1}
+\Bigg(
+\frac{1}{2}
+\begin{bmatrix}
+\Delta x_k \\
+\Delta u_k
+\end{bmatrix}^T
+H_k
+\begin{bmatrix}
+\Delta x_k \\
+\Delta u_k
+\end{bmatrix}
++
+\begin{bmatrix}
+q_k \\
+r_k
+\end{bmatrix}^T
+\begin{bmatrix}
+\Delta x_k \\
+\Delta u_k
+\end{bmatrix}
+\Bigg) \\
+& + \frac{1}{2}\Delta x_N^T Q_N \Delta x_N
++ q_N^T \Delta x_N
++ \sum_{k=0}^{N} \left( s_k^T P_k s_k + p_k^T s_k \right) \\
+\text{subject to} \quad
+& \Delta x_{k+1}
+=
+A_k \Delta x_k
++
+B_k \Delta u_k
++
+d_k, \\
+& G_k^x \Delta x_k + G_k^u \Delta u_k - J_{s,k}s_k
+\le
+\bar{g}_k, \\
+& s_k \ge 0,
+\end{aligned}
+\end{equation}
+where slack variables $s_k$ are introduced to soften constraints and improve numerical robustness.
+
+\subsection{Real-Time Iteration Scheme}
+
+For real-time control applications, \textit{acados} employs the Real-Time Iteration (RTI) scheme. Instead of iterating the SQP algorithm until convergence at each sampling instant, RTI performs a single SQP iteration per control cycle. This iteration is divided into a preparation phase, which computes the linearization of the dynamics and constraints, and a feedback phase, which solves the resulting QP using the updated initial state. This strategy enables a favorable trade-off between computational efficiency and control performance, making it suitable for embedded implementations with strict real-time constraints.

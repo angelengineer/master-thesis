@@ -1,0 +1,19 @@
+syms sp Lb d2 cp rw La
+T03 = desp([sp*(Lb+d2),-cp*(Lb+d2),0]);
+T03 = vpa(T03,2)
+TWO = desp([0 0 rw])*rotx(-pi/2);
+TWO = vpa(TWO,2)
+T3TCP = rotx(pi/2)*desp([La 0 0]);
+T3TCP = vpa(T3TCP,2)
+T_total =TWO * T03 * T3TCP;
+T_total = vpa(T_total,2)
+
+
+X = cos(theta_a)*cos(theta_p)*l_ag + ...
+    cos(theta_a)*sin(theta_p)*(d_m+l_b)+...
+    -sin(theta_a)*sin(theta_p)*l_ag+...
+    sin(theta_a)*cos(theta_p)*(d_m+l_b)+...
+    sin(theta_a)*dm + sin(theta_a)*l_b
+Z = -sin(theta_a)*cos(theta_p)*l_ag+...
+    -sin(theta_a)*sin(theta_p)*(d_m+l_b)+...
+    -cos(theta_a)*

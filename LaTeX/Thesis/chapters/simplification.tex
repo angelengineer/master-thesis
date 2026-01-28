@@ -1,0 +1,156 @@
+\section{System Simplification}
+
+To enable real-time optimal control, the full multibody structure of the robot is reduced to an equivalent planar rigid body. All rigid components of the platform, including the lift mechanism and the carried payload, are lumped into a single body characterized by an equivalent mass, a global center of gravity (CoG), and an equivalent rotational inertia. This reduction preserves the dominant inertial effects relevant to balance and longitudinal motion while significantly reducing model complexity.
+
+\begin{figure}[t]
+    \centering
+    \includegraphics[width=0.8\linewidth]{robot-simplification.png}
+    \caption{Simplified model of the two-wheeled fork robot (TWFR).}
+    \label{fig:robot-simplification}
+\end{figure}
+
+
+\subsection{Equivalent Mass and Center of Gravity}
+
+Let the system consist of $N=4$ rigid components with masses $m_i$ and centers of gravity located at $(x_i, z_i)$ in the body-fixed frame. The payload is treated as a parameterized component with mass $\hat m$ and horizontal offset $\hat d$, while vertical positions depend on the lift displacement $p_{\mathrm{lift}}$.
+
+The total equivalent mass is defined as
+\begin{equation}
+M = \sum_{i=1}^{4} m_i .
+\end{equation}
+
+The coordinates of the equivalent center of gravity $(x_G, z_G)$ are computed as
+\begin{equation}
+x_G = \frac{1}{M} \sum_{i=1}^{4} m_i x_i,
+\qquad
+z_G = \frac{1}{M} \sum_{i=1}^{4} m_i z_i .
+\end{equation}
+
+\subsection{Equivalent Rotational Inertia}
+
+The equivalent rotational inertia about the out-of-plane $y$ axis and the global CoG is obtained using the parallel-axis theorem. Defining
+\begin{equation}
+\Delta x_i = x_i - x_G,
+\qquad
+\Delta z_i = z_i - z_G ,
+\end{equation}
+the equivalent inertia is given by
+\begin{equation}
+I_{\mathrm{eq}} =
+\sum_{i=1}^{4}
+\left(
+I_{y,i} + m_i \left( \Delta x_i^2 + \Delta z_i^2 \right)
+\right) .
+\end{equation}
+
+The parameters $(M, x_G, z_G, I_{\mathrm{eq}})$ vary continuously as functions of payload mass, payload position, and lift displacement, enabling online adaptation within the control framework.
+
+\subsection{Simplified Dynamic Model}
+
+Using the equivalent parameters defined above, the robot is modeled as a planar rigid body mounted on two identical wheels. The dynamics are described using the generalized coordinate vector
+\begin{equation}
+q_s =
+\begin{bmatrix}
+q_x & \theta_p
+\end{bmatrix}^T ,
+\end{equation}
+where $q_x$ denotes the horizontal position of the wheel axis and $\theta_p$ is the pitch angle of the equivalent body.
+
+\subsubsection{Kinematics}
+
+Let $(l_{bx}, l_{bz})$ denote the position of the equivalent CoG relative to the wheel axis in the body-fixed frame. The CoG position in the inertial frame is
+\begin{align}
+x_b &= q_x + l_{bx}\cos\theta_p + l_{bz}\sin\theta_p , \\
+z_b &= r_w - l_{bx}\sin\theta_p + l_{bz}\cos\theta_p .
+\end{align}
+
+The corresponding velocities are
+\begin{align}
+\dot{x}_b &= \dot{q}_x
+- l_{bx}\dot{\theta}_p\sin\theta_p
++ l_{bz}\dot{\theta}_p\cos\theta_p , \\
+\dot{z}_b &=
+- l_{bx}\dot{\theta}_p\cos\theta_p
+- l_{bz}\dot{\theta}_p\sin\theta_p .
+\end{align}
+
+\subsubsection{Energy Expressions}
+
+Assuming pure rolling without slip, the kinetic energy of one wheel is
+\begin{equation}
+T_w = \frac{1}{2} m_w \dot{q}_x^2
+      + \frac{1}{2} I_w \left( \frac{\dot{q}_x}{r_w} \right)^2 ,
+\end{equation}
+with zero potential energy.
+
+The kinetic energy of the equivalent body is
+\begin{equation}
+T_b =
+\frac{1}{2} M \left( \dot{x}_b^2 + \dot{z}_b^2 \right)
++ \frac{1}{2} I_{\mathrm{eq}} \dot{\theta}_p^2 ,
+\end{equation}
+and the gravitational potential energy is
+\begin{equation}
+U_b = M g \left( -l_{bx}\sin\theta_p + l_{bz}\cos\theta_p \right) .
+\end{equation}
+
+The total energies are therefore
+\begin{equation}
+T = 2T_w + T_b,
+\qquad
+U = U_b .
+\end{equation}
+
+\subsubsection{Equations of Motion}
+
+The Lagrangian is defined as
+\begin{equation}
+L = T - U .
+\end{equation}
+
+Applying the Euler--Lagrange equations yields
+\begin{equation}
+M_s(q_s)\ddot{q}_s + h_s(q_s,\dot{q}_s) = \boldsymbol{\tau}_s ,
+\end{equation}
+where $M_s(q_s) \in \mathbb{R}^{2\times2}$ is the inertia matrix and
+$h_s(q_s,\dot{q}_s)$ collects Coriolis, centrifugal, and gravitational terms.
+
+\subsubsection{Generalized Forces}
+
+The system is actuated through torques applied at the wheels. Let $\tau_L$ and $\tau_R$ denote the left and right wheel torques. The resulting generalized force vector is
+\begin{equation}
+\boldsymbol{\tau}_s =
+\begin{bmatrix}
+(\tau_L + \tau_R)/r_w \\
+0
+\end{bmatrix} .
+\end{equation}
+
+\subsubsection{State-Space Representation}
+
+For control design, the dynamics are expressed in first-order form using the state vector
+\begin{equation}
+x_s =
+\begin{bmatrix}
+q_s^T & \dot{q}_s^T
+\end{bmatrix}^T
+=
+\begin{bmatrix}
+q_x & \theta_p & \dot{q}_x & \dot{\theta}_p
+\end{bmatrix}^T .
+\end{equation}
+
+The continuous-time state equations are
+\begin{equation}
+\dot{x}_s =
+\begin{bmatrix}
+\dot{q}_s \\
+\ddot{q}_s
+\end{bmatrix},
+\qquad
+\ddot{q}_s = M_s(q_s)^{-1}
+\left(
+\boldsymbol{\tau}_s - h_s(q_s,\dot{q}_s)
+\right) ,
+\end{equation}
+which corresponds to the model implemented symbolically and used within the NMPC framework.

@@ -1,0 +1,54 @@
+\section{Simulation Results}
+
+This section presents simulation results for a representative and challenging scenario involving a sudden payload variation, commanded motion, and an external collision. The objective of this simulation is to evaluate the closed-loop behavior of the proposed control and estimation architecture under combined disturbances, while assessing stability, estimation performance, and computational feasibility.
+
+The simulation begins with the robot operating under nominal conditions. At a given time instant, a payload is suddenly applied to the system, inducing a change in the overall mass and center-of-mass location. Simultaneously, longitudinal motion is commanded by the operator, and an external collision is introduced as an impulsive disturbance. This scenario is designed to stress both the prediction-based controller and the disturbance-aware estimation layers.
+
+Figure~\ref{fig:velocity-profile} shows the longitudinal velocity profile during the disturbance event. Despite the abrupt changes in system dynamics and the external interaction, the NMPC maintains bounded velocity behavior and smoothly rejects the disturbance. This demonstrates the controller’s ability to preserve dynamic stability while tracking operator-driven motion commands.
+
+The estimated payload mass is shown in Figure~\ref{fig:mass-estimation}. Following the sudden load application, the estimator rapidly converges to the new payload mass value. The transient response remains well damped, indicating that the reaction-based estimation strategy is effective under quasi-static conditions even in the presence of motion and disturbances.
+
+Figure~\ref{fig:distance-estimation} illustrates the estimated horizontal distance of the payload center of mass from the arm joint axis. The estimate adapts consistently with the applied load, converging toward a stable value after the disturbance. This result confirms that the proposed estimation logic can reliably infer geometric payload properties using reaction torque information.
+
+The absolute value of the derivative of the prediction error is reported in Figure~\ref{fig:derivative-estimation}. Peaks correspond to the instants of payload application and collision, reflecting abrupt deviations between predicted and measured behavior. These events are correctly detected by the observer framework, providing a meaningful signal for interaction awareness and safety supervision through the FSM.
+
+Finally, Figure~\ref{fig:cpu-time} shows the computational time per control iteration. The CPU time remains within bounded limits throughout the simulation, including during disturbance events. This confirms that the NMPC configuration and solver settings are compatible with real-time execution requirements.
+
+Overall, the simulation results demonstrate that the proposed control architecture successfully combines nonlinear predictive control, disturbance-aware estimation, and supervisory logic. The system remains stable, responsive, and computationally efficient under simultaneous payload changes, motion commands, and external collisions, supporting its suitability for safe human-operated scenarios.
+
+
+\begin{figure}[t]
+    \centering
+    \includegraphics[width=0.8\linewidth]{velocity.png}
+    \caption{Simulation results showing the velocity profile during a disturbance event}
+    \label{fig:velocity-profile}
+\end{figure}
+
+
+\begin{figure}[t]
+    \centering
+    \includegraphics[width=0.8\linewidth]{mass.png}
+    \caption{Simulation results showing mass estimation}
+    \label{fig:mass-estimation}
+\end{figure}
+
+\begin{figure}[t]
+    \centering
+    \includegraphics[width=0.8\linewidth]{dist.png}
+    \caption{Simulation results showing distance of load from arm axis estimation}
+    \label{fig:distance-estimation}
+\end{figure}
+
+\begin{figure}[t]
+    \centering
+    \includegraphics[width=0.8\linewidth]{derivative.png}
+    \caption{Simulation results showing the absolute value of the derivative of the prediction error}
+    \label{fig:derivative-estimation}
+\end{figure}
+
+\begin{figure}[t]
+    \centering
+    \includegraphics[width=0.8\linewidth]{CPU-time.png}
+    \caption{Simulation results showing CPU time}
+    \label{fig:cpu-time}
+\end{figure}

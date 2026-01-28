@@ -1,0 +1,53 @@
+This chapter presents the overall methodology adopted for the development of the control framework for the Two-Wheeled Forklift Robot operating under variable payload conditions and dynamic uncertainties. The approach systematically progresses from system modeling to control design, safety management, implementation, and validation, ensuring consistency with the research objectives and the practical constraints of underactuated self-balancing platforms.
+
+\section{Overall Research Approach}
+
+The methodology is structured into five interrelated phases: system analysis and modeling, control architecture design, safety and interaction management, implementation and computational framework, and validation and performance assessment. Each phase builds upon the outcomes of the preceding stages to ensure coherent development and traceability between theoretical design and validation results.
+
+\subsection{System Analysis and Modeling}
+
+The control framework is founded on an accurate representation of the platform dynamics. The complete multi-body dynamics of the system are derived using Lagrangian mechanics, capturing the coupled behavior of the wheeled base, main chassis, vertically actuated fork mechanism, and payload. The formulation explicitly accounts for non-slip wheel constraints, prismatic fork actuation, and time-varying parameters arising from payload manipulation and geometric reconfiguration.
+
+To enable real-time predictive control, a reduced-order model is derived by approximating the system as an equivalent rigid body characterized by total mass, global center of gravity, and equivalent rotational inertia. This simplification is justified by the observation that the dominant dynamics relevant to balance and longitudinal motion occur at frequencies below those associated with the fork mechanism. The reduced model preserves the essential coupling between actuation and platform motion while maintaining computational tractability.
+
+System parameters are identified through a combination of direct measurement, CAD-based extraction, and system identification procedures. Model validity is assessed by comparing predicted and simulated responses under representative operating conditions, with particular emphasis on pitch dynamics and the influence of fork position.
+
+\subsection{Control Architecture Design}
+
+The control architecture adopts a hierarchical structure centered on a nonlinear Model Predictive Controller responsible for simultaneous pitch stabilization and longitudinal velocity regulation. Operator-defined velocity references are tracked while maintaining the platform near the unstable upright equilibrium and respecting physical and safety-related constraints.
+
+The optimal control problem is formulated in continuous time and discretized for numerical solution. Design choices include the selection of prediction horizon length, nonlinear least-squares cost formulation emphasizing pitch-related states, and explicit state and input constraints reflecting actuator limits and safe operating regions. Stabilization objectives are prioritized to ensure balance maintenance when conflicts arise between tracking performance and stability.
+
+Real-time feasibility is achieved through the Real-Time Iteration (RTI) scheme, which performs a single Sequential Quadratic Programming iteration per control cycle. The nonlinear problem is approximated locally by a quadratic program, enabling efficient solution while retaining sensitivity to nonlinear dynamics.
+
+Robustness is enhanced through the integration of two disturbance observers. A Disturbance Observer estimates external forces and modeling errors acting on the main platform dynamics, while a Reaction Disturbance Observer applied to the fork actuation estimates payload-induced torques and reaction forces. These observers reconstruct unmeasured disturbances using inverse dynamics and available sensor measurements, with filtering applied to balance noise rejection and disturbance tracking bandwidth.
+
+Payload mass and center-of-gravity position are inferred from observer estimates using force and moment balance relationships. When the fork is in motion, vertical reaction forces enable mass estimation; when stationary, reaction torques provide center-of-gravity information. A switching logic selects the appropriate estimation mode based on fork motion. The estimated parameters are used to update the internal predictive model, enabling adaptation to varying payloads without dedicated payload sensors.
+
+\subsection{Safety and Interaction Management}
+
+Safe operation during close human interaction requires reliable detection of unexpected external contacts. Collision detection is achieved by exploiting the predictive nature of the NMPC framework. Deviations between predicted and measured states are monitored, and the rate of change of prediction errors is evaluated to emphasize abrupt disturbances characteristic of collisions.
+
+This approach inherently accounts for expected system behavior, including payload-dependent dynamics, and is less sensitive to slow-varying modeling errors. The method does not require additional sensing infrastructure and remains compatible with the underactuated nature of the platform.
+
+A supervisory Finite State Machine coordinates operational modes, including nominal tracking, payload manipulation, collision response, and fault handling. Mode transitions are triggered by events such as collision detection or task completion. The FSM modifies reference signals, cost function weights, and constraint sets to enforce appropriate behavior in each mode, prioritizing stabilization and safety during abnormal conditions.
+
+\subsection{Implementation and Computational Framework}
+
+The control framework is implemented using a combination of MATLAB and Simulink for development and simulation, with CasADi employed for symbolic formulation of the optimal control problem and automatic differentiation. The acados framework serves as the core solver, providing efficient real-time solution of the structured nonlinear optimal control problem using the RTI scheme.
+
+The NMPC implementation employs Sequential Quadratic Programming with Gauss--Newton Hessian approximation, partial condensing, and interior-point methods for quadratic subproblems. System dynamics are discretized using an integration scheme suitable for stiff nonlinear systems. These design choices reflect a balance between numerical robustness, computational efficiency, and control performance.
+
+A modular software architecture separates the NMPC, disturbance observers, collision detection, and supervisory logic into well-defined functional blocks, facilitating independent testing and future extensibility.
+
+\subsection{Validation and Performance Assessment}
+
+The proposed framework is validated through extensive simulation studies using a high-fidelity environment that incorporates the full multi-body dynamics as the plant, actuator saturation and friction effects, sensor noise, and sampling constraints representative of physical hardware. The reduced-order model used by the NMPC is intentionally mismatched to the simulated plant to assess robustness to modeling uncertainty.
+
+Test scenarios include nominal operation with varying payloads, reference tracking with diverse velocity profiles, external disturbances such as impulse forces and sustained pushes, collision events under different loading conditions, and combined scenarios involving simultaneous payload manipulation and disturbances.
+
+Performance is evaluated using quantitative metrics addressing stability, tracking accuracy, control effort, parameter estimation accuracy, collision detection reliability, and computational execution time. Comparative studies against baseline control strategies provide contextual assessment of the proposed approach.
+
+\section{Methodological Considerations}
+
+Several methodological considerations merit discussion. The use of a simplified predictive model while validating against a high-fidelity plant intentionally introduces model mismatch, reflecting practical deployment conditions. Although validation is performed primarily in simulation, the inclusion of realistic actuator and sensor effects provides a stringent test of robustness. Emphasis on computational efficiency ensures feasibility for embedded implementation. Finally, the integration of safety supervision and collision detection reflects a safety-oriented design philosophy consistent with operation in human-centric environments.

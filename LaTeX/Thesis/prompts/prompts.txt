@@ -1,0 +1,33 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% Prompt literature review
+
+You are an expert researcher in mobile robotics and control systems.
+
+I am writing the literature review for a thesis entitled:
+“Control of an Underactuated Self-Balancing Robotic Platform with Variable Payloads and Dynamic Uncertainties for Human–Robot Interaction.”
+
+I will provide the full PDF of a research paper. Your task is to read and analyze the paper and then write one coherent paragraph (or at most two short paragraphs) suitable for inclusion in a technical literature review.
+
+Focus specifically on the following aspects:
+
+The robotic platform and mechanical structure, highlighting any non-standard design choices, underactuation, modeling assumptions, payload representation, actuation layout, and sensing setup.
+
+The control strategy adopted (e.g., linear vs. nonlinear, robust, adaptive, optimal, learning-based), including its core formulation, stability guarantees (if any), and underlying assumptions.
+
+Elements that are particularly relevant, complementary, or contrasting with self-balancing wheeled inverted pendulum robots operating under variable payloads, dynamic uncertainties, and human–robot interaction constraints.
+
+Avoid generic summaries of the paper. Emphasize technical particularities, explicit assumptions, and design trade-offs that matter from a control-theoretic and system-level perspective.
+
+Writing constraints:
+
+Academic tone appropriate for a master’s thesis in robotics and control.
+
+Concise, technically dense, and precise.
+
+Neutral and critical when appropriate.
+
+Output LaTeX-ready text only (no preamble, no bullet points, no section headers).
+
+Do not restate my thesis; position the paper within the broader literature instead.
+
+Input:
+The complete PDF of the research paper.

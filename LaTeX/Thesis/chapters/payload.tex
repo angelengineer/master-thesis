@@ -1,0 +1,74 @@
+\section{Payload Mass and Center-of-Mass Estimation}
+
+This section presents a quasi-static estimation method for the payload mass and its horizontal distance from the arm joint axis. The payload is modeled as a point mass, and the estimation relies on reaction force and torque measurements obtained from the lift linear actuator and the arm motor.
+
+\subsection{Assumptions}
+
+The following assumptions are made:
+\begin{itemize}
+    \item The payload is rigidly attached to the fork and can be approximated as a point mass.
+    \item The system operates under quasi-static conditions.
+    \item Reaction estimates are available from the lift actuator and the arm motor.
+\end{itemize}
+
+\subsection{Available Measurements}
+
+The estimator uses the following measured or estimated quantities:
+\begin{itemize}
+    \item $\hat{f}_{m}^{\mathrm{reac}}$: estimated reaction force at the lift actuator
+    \item $\hat{\tau}_{a}^{\mathrm{reac}}$: estimated reaction torque at the arm motor
+    \item $\theta_p^{\mathrm{res}}$: measured pitch angle
+    \item $d_m^{\mathrm{res}}$: measured lift position
+    \item $\theta_a^{\mathrm{res}}$: measured arm motor angle
+\end{itemize}
+
+The parameters to be estimated are:
+\begin{itemize}
+    \item $\hat{m}$: payload mass
+    \item $\hat{d}$: horizontal distance of the payload center of mass from the arm joint axis
+\end{itemize}
+
+\subsection{Estimation Equations}
+
+When the lift mechanism is active, the payload mass can be directly estimated from the lift reaction force as
+\begin{equation}
+\hat{m}_{\mathrm{lift}} =
+\frac{\hat{f}_{m}^{\mathrm{reac}}}
+{g \cos\!\left(\theta_p^{\mathrm{res}}\right)},
+\end{equation}
+where $g$ denotes the gravitational acceleration.
+
+The payload mass can alternatively be estimated from the arm reaction torque according to
+\begin{equation}
+\hat{m}_{\mathrm{arm}} =
+\frac{\hat{\tau}_{a}^{\mathrm{reac}}}
+{g \cos\!\left(\theta_a^{\mathrm{res}} + \theta_p^{\mathrm{res}}\right)\, \hat{d}}.
+\end{equation}
+
+The distance of the payload center of mass from the arm joint axis is estimated as
+\begin{equation}
+\hat{d} =
+\begin{cases}
+\dfrac{\hat{\tau}_{a}^{\mathrm{reac}}}
+{g \cos\!\left(\theta_a^{\mathrm{res}} + \theta_p^{\mathrm{res}}\right)\, \hat{m}},
+& \text{if } d_m^{\mathrm{res}} > 0, \\[10pt]
+d_{\mathrm{fork}}^{\mathrm{nom}},
+& \text{otherwise},
+\end{cases}
+\end{equation}
+where $d_{\mathrm{fork}}^{\mathrm{nom}}$ denotes the nominal center-of-mass distance of the empty fork.
+
+\subsection{Estimation Logic}
+
+The final payload mass estimate is selected based on the lift position:
+\begin{equation}
+\hat{m} =
+\begin{cases}
+\hat{m}_{\mathrm{lift}}, & \text{if } d_m^{\mathrm{res}} > 0, \\
+\hat{m}_{\mathrm{arm}},  & \text{otherwise}.
+\end{cases}
+\end{equation}
+
+\subsection{Implementation Remark}
+
+The estimation logic is implemented using Simulink blocks and logical switching. By combining force-based and torque-based measurements, the estimator remains operational even when one of the reaction signals is unavailable, ensuring robustness across different operating conditions.

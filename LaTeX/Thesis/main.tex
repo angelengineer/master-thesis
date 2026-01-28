@@ -1,0 +1,76 @@
+\documentclass[12pt,oneside]{report}
+
+\input{chapters/preamble.tex}
+
+\begin{document}
+
+% ----------------------------
+% Front matter
+% ----------------------------
+\pagenumbering{roman}
+
+\input{chapters/front-page.tex}
+% ----------------------------
+
+\input{chapters/abstract}
+
+\tableofcontents
+\listoffigures
+\listoftables
+
+\cleardoublepage
+\pagenumbering{arabic}
+
+% ----------------------------
+% Main chapters
+% ----------------------------
+\chapter{Introduction}
+\input{chapters/introduction}
+
+\chapter{Literature Review}
+%\input{chapters/previous-work.tex}
+\input{chapters/lit-review.tex}
+
+\chapter{Objectives}
+\input{chapters/objectives.tex}
+
+\chapter{Approach and methodology}
+\input{chapters/methodology.tex}
+%\input{chapters/control-framework.tex}
+
+\chapter{Sytem Modeling}
+\input{chapters/robot_description.tex}
+\input{chapters/dynamics.tex}
+\input{chapters/simplification.tex}
+\input{chapters/payload.tex}
+
+\chapter{Control}
+\input{chapters/control-intro.tex}
+\input{chapters/nmpc.tex}
+\input{chapters/DO.tex}
+\input{chapters/collision.tex}
+\input{chapters/fsm.tex}
+\input{chapters/control-global.tex}
+
+
+\chapter{Simulation and Results}
+\input{chapters/solver-config.tex}
+\input{chapters/simulation.tex}
+
+\chapter{Discussion}
+
+\chapter{Conclusions}
+
+\chapter{Equations}
+\input{chapters/equations.tex}
+%\chapter{Sucio}
+%\input{chapters/lagrange.tex}
+%\input{chapters/acados-ez.tex}
+%\input{chapters/probando.tex}
+% ----------------------------
+% Bibliography
+% ----------------------------
+\cleardoublepage
+\printbibliography[heading=bibintoc, title={References}]
+
+\end{document}

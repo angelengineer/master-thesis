@@ -1,0 +1,835 @@
+% $ biblatex auxiliary file $
+% $ biblatex bbl format version 3.3 $
+% Do not modify the above lines!
+%
+% This is an auxiliary file used by the 'biblatex' package.
+% This file may safely be deleted. It will be recreated by
+% biber as required.
+%
+\begingroup
+\makeatletter
+\@ifundefined{ver@biblatex.sty}
+  {\@latex@error
+     {Missing 'biblatex' package}
+     {The bibliography requires the 'biblatex' package.}
+      \aftergroup\endinput}
+  {}
+\endgroup
+
+
+\refsection{0}
+  \datalist[entry]{none/global//global/global/global}
+    \entry{millsNonlinearModelPredictive2009}{inproceedings}{}{}
+      \name{author}{3}{}{%
+        {{hash=c1521c94eee5b63801ad97b18546e8f2}{%
+           family={Mills},
+           familyi={M\bibinitperiod},
+           given={Adam},
+           giveni={A\bibinitperiod}}}%
+        {{hash=fab21355ad1dec2960931935e8dfb3dd}{%
+           family={Wills},
+           familyi={W\bibinitperiod},
+           given={Adrian},
+           giveni={A\bibinitperiod}}}%
+        {{hash=0de7130037a289c38b412fcef676289a}{%
+           family={Ninness},
+           familyi={N\bibinitperiod},
+           given={Brett},
+           giveni={B\bibinitperiod}}}%
+      }
+      \list{location}{1}{%
+        {St. Louis, MO, USA}%
+      }
+      \list{publisher}{1}{%
+        {IEEE}%
+      }
+      \strng{namehash}{e0d88cbe972f3c3792601a6931703b8a}
+      \strng{fullhash}{e0d88cbe972f3c3792601a6931703b8a}
+      \strng{fullhashraw}{e0d88cbe972f3c3792601a6931703b8a}
+      \strng{bibnamehash}{e0d88cbe972f3c3792601a6931703b8a}
+      \strng{authorbibnamehash}{e0d88cbe972f3c3792601a6931703b8a}
+      \strng{authornamehash}{e0d88cbe972f3c3792601a6931703b8a}
+      \strng{authorfullhash}{e0d88cbe972f3c3792601a6931703b8a}
+      \strng{authorfullhashraw}{e0d88cbe972f3c3792601a6931703b8a}
+      \field{sortinit}{1}
+      \field{sortinithash}{4f6aaa89bab872aa0999fec09ff8e98a}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{booktitle}{2009 {{American Control Conference}}}
+      \field{eventtitle}{2009 {{American Control Conference}}}
+      \field{title}{Nonlinear Model Predictive Control of an Inverted Pendulum}
+      \field{year}{2009}
+      \field{dateera}{ce}
+      \field{pages}{2335\bibrangedash 2340}
+      \range{pages}{6}
+      \verb{doi}
+      \verb 10.1109/ACC.2009.5160391
+      \endverb
+    \endentry
+    \entry{mishraControlTwoWheelSelfBalancing2024}{inproceedings}{}{}
+      \name{author}{2}{}{%
+        {{hash=62facb0421a0b7ecd6ee150c6c5f7f04}{%
+           family={Mishra},
+           familyi={M\bibinitperiod},
+           given={Ashutosh},
+           giveni={A\bibinitperiod}}}%
+        {{hash=0156ac5bdfce760786dc65217f0ec98c}{%
+           family={Bansal},
+           familyi={B\bibinitperiod},
+           given={Kritika},
+           giveni={K\bibinitperiod}}}%
+      }
+      \list{location}{1}{%
+        {Bhopal, India}%
+      }
+      \list{publisher}{1}{%
+        {IEEE}%
+      }
+      \strng{namehash}{45f78e8b1921024875466dc9170e7900}
+      \strng{fullhash}{45f78e8b1921024875466dc9170e7900}
+      \strng{fullhashraw}{45f78e8b1921024875466dc9170e7900}
+      \strng{bibnamehash}{45f78e8b1921024875466dc9170e7900}
+      \strng{authorbibnamehash}{45f78e8b1921024875466dc9170e7900}
+      \strng{authornamehash}{45f78e8b1921024875466dc9170e7900}
+      \strng{authorfullhash}{45f78e8b1921024875466dc9170e7900}
+      \strng{authorfullhashraw}{45f78e8b1921024875466dc9170e7900}
+      \field{sortinit}{2}
+      \field{sortinithash}{8b555b3791beccb63322c22f3320aa9a}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{shorttitle}
+      \field{booktitle}{2024 {{IEEE International Students}}' {{Conference}} on {{Electrical}}, {{Electronics}} and {{Computer Science}} ({{SCEECS}})}
+      \field{day}{24}
+      \field{eventtitle}{2024 {{IEEE International Students}}' {{Conference}} on {{Electrical}}, {{Electronics}} and {{Computer Science}} ({{SCEECS}})}
+      \field{isbn}{979-8-3503-4846-0}
+      \field{month}{2}
+      \field{shorttitle}{Control of {{Two-Wheel Self-Balancing Robot}}}
+      \field{title}{Control of {{Two-Wheel Self-Balancing Robot}}: {{LQR}} and {{MPC Performance Analysis}}}
+      \field{year}{2024}
+      \field{dateera}{ce}
+      \field{pages}{1\bibrangedash 6}
+      \range{pages}{6}
+      \verb{doi}
+      \verb 10.1109/SCEECS61402.2024.10481856
+      \endverb
+    \endentry
+    \entry{zadOptimalControllerDesign2016}{inproceedings}{}{}
+      \name{author}{4}{}{%
+        {{hash=4fadb429bb92b8de0d4f889a34789bb9}{%
+           family={Zad},
+           familyi={Z\bibinitperiod},
+           given={Haris\bibnamedelima Sheh},
+           giveni={H\bibinitperiod\bibinitdelim S\bibinitperiod}}}%
+        {{hash=28395159c02bbe65778cb2d6fafc2c94}{%
+           family={Ulasyar},
+           familyi={U\bibinitperiod},
+           given={Abasin},
+           giveni={A\bibinitperiod}}}%
+        {{hash=72574cebb01f4262990c50e98f11d5bd}{%
+           family={Zohaib},
+           familyi={Z\bibinitperiod},
+           given={Adil},
+           giveni={A\bibinitperiod}}}%
+        {{hash=4f0e710bc84dcf0126f9ea7b07cd5f89}{%
+           family={Hussain},
+           familyi={H\bibinitperiod},
+           given={Syed\bibnamedelima Shahzad},
+           giveni={S\bibinitperiod\bibinitdelim S\bibinitperiod}}}%
+      }
+      \list{location}{1}{%
+        {Islamabad, Pakistan}%
+      }
+      \list{publisher}{1}{%
+        {IEEE}%
+      }
+      \strng{namehash}{7ed18b93727bdc2184860e1857294247}
+      \strng{fullhash}{49ee5bc717d4fe24f46b3c01de64e805}
+      \strng{fullhashraw}{49ee5bc717d4fe24f46b3c01de64e805}
+      \strng{bibnamehash}{7ed18b93727bdc2184860e1857294247}
+      \strng{authorbibnamehash}{7ed18b93727bdc2184860e1857294247}
+      \strng{authornamehash}{7ed18b93727bdc2184860e1857294247}
+      \strng{authorfullhash}{49ee5bc717d4fe24f46b3c01de64e805}
+      \strng{authorfullhashraw}{49ee5bc717d4fe24f46b3c01de64e805}
+      \field{sortinit}{3}
+      \field{sortinithash}{ad6fe7482ffbd7b9f99c9e8b5dccd3d7}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{booktitle}{2016 {{International Conference}} on {{Frontiers}} of {{Information Technology}} ({{FIT}})}
+      \field{eventtitle}{2016 {{International Conference}} on {{Frontiers}} of {{Information Technology}} ({{FIT}})}
+      \field{month}{12}
+      \field{title}{Optimal {{Controller Design}} for {{Self-Balancing Two-Wheeled Robot System}}}
+      \field{year}{2016}
+      \field{dateera}{ce}
+      \field{pages}{11\bibrangedash 16}
+      \range{pages}{6}
+      \verb{doi}
+      \verb 10.1109/FIT.2016.011
+      \endverb
+    \endentry
+    \entry{kim2025}{article}{}{}
+      \name{author}{2}{}{%
+        {{hash=4bbde8a08938e282b6bd70ea30ba2b09}{%
+           family={Kim},
+           familyi={K\bibinitperiod},
+           given={David},
+           giveni={D\bibinitperiod}}}%
+        {{hash=fe6ce367b5ea862af203e9911ec83c20}{%
+           family={Choi},
+           familyi={C\bibinitperiod},
+           given={Dongil},
+           giveni={D\bibinitperiod}}}%
+      }
+      \strng{namehash}{0e73ed33757562fb56d15cc6037f0a06}
+      \strng{fullhash}{0e73ed33757562fb56d15cc6037f0a06}
+      \strng{fullhashraw}{0e73ed33757562fb56d15cc6037f0a06}
+      \strng{bibnamehash}{0e73ed33757562fb56d15cc6037f0a06}
+      \strng{authorbibnamehash}{0e73ed33757562fb56d15cc6037f0a06}
+      \strng{authornamehash}{0e73ed33757562fb56d15cc6037f0a06}
+      \strng{authorfullhash}{0e73ed33757562fb56d15cc6037f0a06}
+      \strng{authorfullhashraw}{0e73ed33757562fb56d15cc6037f0a06}
+      \field{sortinit}{4}
+      \field{sortinithash}{9381316451d1b9788675a07e972a12a7}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{day}{11}
+      \field{journaltitle}{Journal of Computational Design and Engineering}
+      \field{month}{10}
+      \field{number}{10}
+      \field{title}{Control of a Longitudinally Extended Two-Wheeled Inverted Pendulum Robot with a Sliding Mechanism}
+      \field{volume}{12}
+      \field{year}{2025}
+      \field{dateera}{ce}
+      \field{pages}{118\bibrangedash 132}
+      \range{pages}{15}
+      \verb{doi}
+      \verb 10.1093/jcde/qwaf098
+      \endverb
+    \endentry
+    \entry{onkolAdaptiveModelPredictive2018}{article}{}{}
+      \name{author}{2}{}{%
+        {{hash=5e1757b5783441eece7b8851841f2554}{%
+           family={Önkol},
+           familyi={Ö\bibinitperiod},
+           given={Mert},
+           giveni={M\bibinitperiod}}}%
+        {{hash=c8b630d195cb4881006de10cee7eacf7}{%
+           family={Kasnakoğlu},
+           familyi={K\bibinitperiod},
+           given={Coşku},
+           giveni={C\bibinitperiod}}}%
+      }
+      \strng{namehash}{7ea36e71b1873e0503c5d2d7a6a15c27}
+      \strng{fullhash}{7ea36e71b1873e0503c5d2d7a6a15c27}
+      \strng{fullhashraw}{7ea36e71b1873e0503c5d2d7a6a15c27}
+      \strng{bibnamehash}{7ea36e71b1873e0503c5d2d7a6a15c27}
+      \strng{authorbibnamehash}{7ea36e71b1873e0503c5d2d7a6a15c27}
+      \strng{authornamehash}{7ea36e71b1873e0503c5d2d7a6a15c27}
+      \strng{authorfullhash}{7ea36e71b1873e0503c5d2d7a6a15c27}
+      \strng{authorfullhashraw}{7ea36e71b1873e0503c5d2d7a6a15c27}
+      \field{sortinit}{5}
+      \field{sortinithash}{20e9b4b0b173788c5dace24730f47d8c}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{journaltitle}{Measurement and Control}
+      \field{month}{3}
+      \field{number}{1--2}
+      \field{title}{Adaptive {{Model Predictive Control}} of a {{Two-wheeled Robot Manipulator}} with {{Varying Mass}}}
+      \field{volume}{51}
+      \field{year}{2018}
+      \field{dateera}{ce}
+      \field{pages}{38\bibrangedash 56}
+      \range{pages}{19}
+      \verb{doi}
+      \verb 10.1177/0020294018758527
+      \endverb
+    \endentry
+    \entry{itoUnderactuatedControlTwoWheeled2023}{inproceedings}{}{}
+      \name{author}{2}{}{%
+        {{hash=73d58c729ae4a8d76a593af1738ea473}{%
+           family={Ito},
+           familyi={I\bibinitperiod},
+           given={Jin},
+           giveni={J\bibinitperiod}}}%
+        {{hash=fbe8c1bd36db57552f4391c664bab0ad}{%
+           family={Murakami},
+           familyi={M\bibinitperiod},
+           given={Toshiyuki},
+           giveni={T\bibinitperiod}}}%
+      }
+      \list{location}{1}{%
+        {Helsinki, Finland}%
+      }
+      \list{publisher}{1}{%
+        {IEEE}%
+      }
+      \strng{namehash}{448530748b3dc535e0db1b8be0053ef8}
+      \strng{fullhash}{448530748b3dc535e0db1b8be0053ef8}
+      \strng{fullhashraw}{448530748b3dc535e0db1b8be0053ef8}
+      \strng{bibnamehash}{448530748b3dc535e0db1b8be0053ef8}
+      \strng{authorbibnamehash}{448530748b3dc535e0db1b8be0053ef8}
+      \strng{authornamehash}{448530748b3dc535e0db1b8be0053ef8}
+      \strng{authorfullhash}{448530748b3dc535e0db1b8be0053ef8}
+      \strng{authorfullhashraw}{448530748b3dc535e0db1b8be0053ef8}
+      \field{sortinit}{6}
+      \field{sortinithash}{b33bc299efb3c36abec520a4c896a66d}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{booktitle}{2023 {{IEEE}} 32nd {{International Symposium}} on {{Industrial Electronics}} ({{ISIE}})}
+      \field{day}{19}
+      \field{eventtitle}{2023 {{IEEE}} 32nd {{International Symposium}} on {{Industrial Electronics}} ({{ISIE}})}
+      \field{isbn}{979-8-3503-9971-4}
+      \field{month}{6}
+      \field{title}{Underactuated {{Control}} for {{Two-Wheeled Mobile Robot}} with an {{Arm Using Torque Constraint Conditions}} and {{Disturbance Observer}}}
+      \field{year}{2023}
+      \field{dateera}{ce}
+      \field{pages}{1\bibrangedash 6}
+      \range{pages}{6}
+      \verb{doi}
+      \verb 10.1109/ISIE51358.2023.10228153
+      \endverb
+    \endentry
+    \entry{yajimaPostureStabilizationControl2023}{inproceedings}{}{}
+      \name{author}{6}{}{%
+        {{hash=fcb75ccf22c7e1b756b4acdf82953c26}{%
+           family={Yajima},
+           familyi={Y\bibinitperiod},
+           given={Hikaru},
+           giveni={H\bibinitperiod}}}%
+        {{hash=465467b30cf1c5b8e706adbd6a2e16b3}{%
+           family={Ishizaki},
+           familyi={I\bibinitperiod},
+           given={Kosuke},
+           giveni={K\bibinitperiod}}}%
+        {{hash=9949cd439f9d77ca46a265f14e9eaf5e}{%
+           family={Miyata},
+           familyi={M\bibinitperiod},
+           given={Yasuhiro},
+           giveni={Y\bibinitperiod}}}%
+        {{hash=e976c9148eb3a32d0ad7876500a9ad97}{%
+           family={Nawa},
+           familyi={N\bibinitperiod},
+           given={Masamichi},
+           giveni={M\bibinitperiod}}}%
+        {{hash=1cb6f6e9717e09e23e58783b3546431d}{%
+           family={Kato},
+           familyi={K\bibinitperiod},
+           given={Norihiko},
+           giveni={N\bibinitperiod}}}%
+        {{hash=fbe8c1bd36db57552f4391c664bab0ad}{%
+           family={Murakami},
+           familyi={M\bibinitperiod},
+           given={Toshiyuki},
+           giveni={T\bibinitperiod}}}%
+      }
+      \list{location}{1}{%
+        {Loughborough, United Kingdom}%
+      }
+      \list{publisher}{1}{%
+        {IEEE}%
+      }
+      \strng{namehash}{72115647badc212023f1dbf311873664}
+      \strng{fullhash}{525af69193f116bab0e772161b1313ec}
+      \strng{fullhashraw}{525af69193f116bab0e772161b1313ec}
+      \strng{bibnamehash}{72115647badc212023f1dbf311873664}
+      \strng{authorbibnamehash}{72115647badc212023f1dbf311873664}
+      \strng{authornamehash}{72115647badc212023f1dbf311873664}
+      \strng{authorfullhash}{525af69193f116bab0e772161b1313ec}
+      \strng{authorfullhashraw}{525af69193f116bab0e772161b1313ec}
+      \field{sortinit}{7}
+      \field{sortinithash}{108d0be1b1bee9773a1173443802c0a3}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{booktitle}{2023 {{IEEE International Conference}} on {{Mechatronics}} ({{ICM}})}
+      \field{day}{15}
+      \field{eventtitle}{2023 {{IEEE International Conference}} on {{Mechatronics}} ({{ICM}})}
+      \field{isbn}{978-1-6654-6661-5}
+      \field{month}{3}
+      \field{title}{Posture {{Stabilization Control Compensating Variation}} of {{Body Center}} of {{Gravity}} in {{Underactuated System}}}
+      \field{year}{2023}
+      \field{dateera}{ce}
+      \field{pages}{1\bibrangedash 6}
+      \range{pages}{6}
+      \verb{doi}
+      \verb 10.1109/ICM54990.2023.10101996
+      \endverb
+    \endentry
+    \entry{kanazawa2023}{inproceedings}{}{}
+      \name{author}{6}{}{%
+        {{hash=c7e2a8c3934b0664d25220034de04d72}{%
+           family={Kanazawa},
+           familyi={K\bibinitperiod},
+           given={Hirotaka},
+           giveni={H\bibinitperiod}}}%
+        {{hash=465467b30cf1c5b8e706adbd6a2e16b3}{%
+           family={Ishizaki},
+           familyi={I\bibinitperiod},
+           given={Kosuke},
+           giveni={K\bibinitperiod}}}%
+        {{hash=9949cd439f9d77ca46a265f14e9eaf5e}{%
+           family={Miyata},
+           familyi={M\bibinitperiod},
+           given={Yasuhiro},
+           giveni={Y\bibinitperiod}}}%
+        {{hash=e976c9148eb3a32d0ad7876500a9ad97}{%
+           family={Nawa},
+           familyi={N\bibinitperiod},
+           given={Masamichi},
+           giveni={M\bibinitperiod}}}%
+        {{hash=1cb6f6e9717e09e23e58783b3546431d}{%
+           family={Kato},
+           familyi={K\bibinitperiod},
+           given={Norihiko},
+           giveni={N\bibinitperiod}}}%
+        {{hash=fbe8c1bd36db57552f4391c664bab0ad}{%
+           family={Murakami},
+           familyi={M\bibinitperiod},
+           given={Toshiyuki},
+           giveni={T\bibinitperiod}}}%
+      }
+      \list{location}{1}{%
+        {Helsinki, Finland}%
+      }
+      \list{publisher}{1}{%
+        {IEEE}%
+      }
+      \strng{namehash}{7f1c1353c6920147f724709643c8d0e5}
+      \strng{fullhash}{e26c2b94ed19ade14d699d6bfcaf88c9}
+      \strng{fullhashraw}{e26c2b94ed19ade14d699d6bfcaf88c9}
+      \strng{bibnamehash}{7f1c1353c6920147f724709643c8d0e5}
+      \strng{authorbibnamehash}{7f1c1353c6920147f724709643c8d0e5}
+      \strng{authornamehash}{7f1c1353c6920147f724709643c8d0e5}
+      \strng{authorfullhash}{e26c2b94ed19ade14d699d6bfcaf88c9}
+      \strng{authorfullhashraw}{e26c2b94ed19ade14d699d6bfcaf88c9}
+      \field{sortinit}{8}
+      \field{sortinithash}{a231b008ebf0ecbe0b4d96dcc159445f}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{booktitle}{2023 {{IEEE}} 32nd {{International Symposium}} on {{Industrial Electronics}} ({{ISIE}})}
+      \field{day}{19}
+      \field{eventtitle}{2023 {{IEEE}} 32nd {{International Symposium}} on {{Industrial Electronics}} ({{ISIE}})}
+      \field{isbn}{979-8-3503-9971-4}
+      \field{month}{6}
+      \field{title}{Model-{{Based Pitch Angle Compensation}} for {{Center}} of {{Gravity Variation}} in {{Underactuated System}} with an {{Arm}}}
+      \field{year}{2023}
+      \field{dateera}{ce}
+      \field{pages}{1\bibrangedash 6}
+      \range{pages}{6}
+      \verb{doi}
+      \verb 10.1109/ISIE51358.2023.10228009
+      \endverb
+    \endentry
+    \entry{nguyenAdaptiveNonlinearPD2024}{article}{}{}
+      \name{author}{6}{}{%
+        {{hash=bfa8aa65575065e269ad8a93d4226331}{%
+           family={Nguyen},
+           familyi={N\bibinitperiod},
+           given={Van-Truong},
+           giveni={V\bibinithyphendelim T\bibinitperiod}}}%
+        {{hash=fdd34bc637aaf7cbebf88969cc56a22b}{%
+           family={Duong},
+           familyi={D\bibinitperiod},
+           given={Dai-Nhan},
+           giveni={D\bibinithyphendelim N\bibinitperiod}}}%
+        {{hash=79781c9c13c967cee515d4d0a95245bb}{%
+           family={Phan},
+           familyi={P\bibinitperiod},
+           given={Dinh-Hieu},
+           giveni={D\bibinithyphendelim H\bibinitperiod}}}%
+        {{hash=d17fcc5ab389d1a28ed1a8db8e084355}{%
+           family={Bui},
+           familyi={B\bibinitperiod},
+           given={Thanh-Lam},
+           giveni={T\bibinithyphendelim L\bibinitperiod}}}%
+        {{hash=0985a7c681598b1127a9594b1d8b8ead}{%
+           family={HoangVan},
+           familyi={H\bibinitperiod},
+           given={Xiem},
+           giveni={X\bibinitperiod}}}%
+        {{hash=73f637c470b79873f972f30a99d643f9}{%
+           family={Tan},
+           familyi={T\bibinitperiod},
+           given={Phan\bibnamedelima Xuan},
+           giveni={P\bibinitperiod\bibinitdelim X\bibinitperiod}}}%
+      }
+      \strng{namehash}{1a343ef50977ee65183fb784821979ef}
+      \strng{fullhash}{4a8ff7f900f94162304d698129f1bfa4}
+      \strng{fullhashraw}{4a8ff7f900f94162304d698129f1bfa4}
+      \strng{bibnamehash}{1a343ef50977ee65183fb784821979ef}
+      \strng{authorbibnamehash}{1a343ef50977ee65183fb784821979ef}
+      \strng{authornamehash}{1a343ef50977ee65183fb784821979ef}
+      \strng{authorfullhash}{4a8ff7f900f94162304d698129f1bfa4}
+      \strng{authorfullhashraw}{4a8ff7f900f94162304d698129f1bfa4}
+      \field{sortinit}{1}
+      \field{sortinithash}{4f6aaa89bab872aa0999fec09ff8e98a}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{journaltitle}{Computers, Materials \& Continua}
+      \field{number}{2}
+      \field{title}{Adaptive {{Nonlinear PD Controller}} of {{Two-Wheeled Self-Balancing Robot}} with {{External Force}}}
+      \field{volume}{81}
+      \field{year}{2024}
+      \field{dateera}{ce}
+      \field{pages}{2337\bibrangedash 2356}
+      \range{pages}{20}
+      \verb{doi}
+      \verb 10.32604/cmc.2024.055412
+      \endverb
+    \endentry
+    \entry{nghiaAdaptiveNeuralSliding2022}{article}{}{}
+      \name{author}{4}{}{%
+        {{hash=88ed73b567d6fbfd019eec57e6a62105}{%
+           family={Nghia},
+           familyi={N\bibinitperiod},
+           given={Vo\bibnamedelima Ba\bibnamedelima Viet},
+           giveni={V\bibinitperiod\bibinitdelim B\bibinitperiod\bibinitdelim V\bibinitperiod}}}%
+        {{hash=822c1ee37108058611b6b999a8e8c267}{%
+           family={Van\bibnamedelima Thien},
+           familyi={V\bibinitperiod\bibinitdelim T\bibinitperiod},
+           given={Tran},
+           giveni={T\bibinitperiod}}}%
+        {{hash=4367a8ae5dff57ec558645ca61cf28f0}{%
+           family={Son},
+           familyi={S\bibinitperiod},
+           given={Nguyen\bibnamedelima Ngoc},
+           giveni={N\bibinitperiod\bibinitdelim N\bibinitperiod}}}%
+        {{hash=a07d49f426fde12e6fbee7b8d3e3fc52}{%
+           family={Long},
+           familyi={L\bibinitperiod},
+           given={Mai\bibnamedelima Thang},
+           giveni={M\bibinitperiod\bibinitdelim T\bibinitperiod}}}%
+      }
+      \strng{namehash}{dafba0f302e3b2c9b563e10d17e09661}
+      \strng{fullhash}{d99edfe0b8cea3c8105f93c2c2746387}
+      \strng{fullhashraw}{d99edfe0b8cea3c8105f93c2c2746387}
+      \strng{bibnamehash}{dafba0f302e3b2c9b563e10d17e09661}
+      \strng{authorbibnamehash}{dafba0f302e3b2c9b563e10d17e09661}
+      \strng{authornamehash}{dafba0f302e3b2c9b563e10d17e09661}
+      \strng{authorfullhash}{d99edfe0b8cea3c8105f93c2c2746387}
+      \strng{authorfullhashraw}{d99edfe0b8cea3c8105f93c2c2746387}
+      \field{sortinit}{1}
+      \field{sortinithash}{4f6aaa89bab872aa0999fec09ff8e98a}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{journaltitle}{International Journal of Dynamics and Control}
+      \field{month}{6}
+      \field{number}{3}
+      \field{title}{Adaptive Neural Sliding Mode Control for Two Wheel Self Balancing Robot}
+      \field{volume}{10}
+      \field{year}{2022}
+      \field{dateera}{ce}
+      \field{pages}{771\bibrangedash 784}
+      \range{pages}{14}
+      \verb{doi}
+      \verb 10.1007/s40435-021-00832-1
+      \endverb
+    \endentry
+    \entry{isdaryaniDesignImplementationTwoWheeled}{article}{}{}
+      \name{author}{2}{}{%
+        {{hash=5e0c3b21e382e17b16855dc490c428c1}{%
+           family={Isdaryani},
+           familyi={I\bibinitperiod},
+           given={Feni},
+           giveni={F\bibinitperiod}}}%
+        {{hash=7cb7034b25ff2e5641bc0c5ca500cdf1}{%
+           family={Salam},
+           familyi={S\bibinitperiod},
+           given={Rudi},
+           giveni={R\bibinitperiod}}}%
+      }
+      \strng{namehash}{2614700819ca66bdb443fae1450879bb}
+      \strng{fullhash}{2614700819ca66bdb443fae1450879bb}
+      \strng{fullhashraw}{2614700819ca66bdb443fae1450879bb}
+      \strng{bibnamehash}{2614700819ca66bdb443fae1450879bb}
+      \strng{authorbibnamehash}{2614700819ca66bdb443fae1450879bb}
+      \strng{authornamehash}{2614700819ca66bdb443fae1450879bb}
+      \strng{authorfullhash}{2614700819ca66bdb443fae1450879bb}
+      \strng{authorfullhashraw}{2614700819ca66bdb443fae1450879bb}
+      \field{sortinit}{1}
+      \field{sortinithash}{4f6aaa89bab872aa0999fec09ff8e98a}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{title}{Design and {{Implementation}} of {{Two-Wheeled Robot Control Using MRAC}}}
+    \endentry
+    \entry{unluturkMachineLearningBased2022}{article}{}{}
+      \name{author}{2}{}{%
+        {{hash=0c9bd638a4dde99bec6d7b909d3d5f03}{%
+           family={Unluturk},
+           familyi={U\bibinitperiod},
+           given={Ali},
+           giveni={A\bibinitperiod}}}%
+        {{hash=89b8b8c3bc769c33bea60877c53a3918}{%
+           family={Aydogdu},
+           familyi={A\bibinitperiod},
+           given={Omer},
+           giveni={O\bibinitperiod}}}%
+      }
+      \strng{namehash}{a29238712192fe0d03f5e59fc238d535}
+      \strng{fullhash}{a29238712192fe0d03f5e59fc238d535}
+      \strng{fullhashraw}{a29238712192fe0d03f5e59fc238d535}
+      \strng{bibnamehash}{a29238712192fe0d03f5e59fc238d535}
+      \strng{authorbibnamehash}{a29238712192fe0d03f5e59fc238d535}
+      \strng{authornamehash}{a29238712192fe0d03f5e59fc238d535}
+      \strng{authorfullhash}{a29238712192fe0d03f5e59fc238d535}
+      \strng{authorfullhashraw}{a29238712192fe0d03f5e59fc238d535}
+      \field{sortinit}{1}
+      \field{sortinithash}{4f6aaa89bab872aa0999fec09ff8e98a}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{journaltitle}{IEEE Access}
+      \field{title}{Machine {{Learning Based Self-Balancing}} and {{Motion Control}} of the {{Underactuated Mobile Inverted Pendulum With Variable Load}}}
+      \field{volume}{10}
+      \field{year}{2022}
+      \field{dateera}{ce}
+      \field{pages}{104706\bibrangedash 104718}
+      \range{pages}{13}
+      \verb{doi}
+      \verb 10.1109/ACCESS.2022.3210540
+      \endverb
+    \endentry
+    \entry{ahn2014}{article}{}{}
+      \name{author}{2}{}{%
+        {{hash=f4cdabdefba369636366ae3128fd016f}{%
+           family={Ahn},
+           familyi={A\bibinitperiod},
+           given={Jae\bibnamedelima Kook},
+           giveni={J\bibinitperiod\bibinitdelim K\bibinitperiod}}}%
+        {{hash=44e569d1c7479ccf08efe74c2986ca89}{%
+           family={Jung},
+           familyi={J\bibinitperiod},
+           given={Seul},
+           giveni={S\bibinitperiod}}}%
+      }
+      \strng{namehash}{0d5e16f568f1a593864fec3743145a59}
+      \strng{fullhash}{0d5e16f568f1a593864fec3743145a59}
+      \strng{fullhashraw}{0d5e16f568f1a593864fec3743145a59}
+      \strng{bibnamehash}{0d5e16f568f1a593864fec3743145a59}
+      \strng{authorbibnamehash}{0d5e16f568f1a593864fec3743145a59}
+      \strng{authornamehash}{0d5e16f568f1a593864fec3743145a59}
+      \strng{authorfullhash}{0d5e16f568f1a593864fec3743145a59}
+      \strng{authorfullhashraw}{0d5e16f568f1a593864fec3743145a59}
+      \field{sortinit}{1}
+      \field{sortinithash}{4f6aaa89bab872aa0999fec09ff8e98a}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{shorttitle}
+      \field{journaltitle}{Robotica}
+      \field{month}{10}
+      \field{number}{7}
+      \field{shorttitle}{Development of a Two-Wheel Mobile Manipulator}
+      \field{title}{Development of a Two-Wheel Mobile Manipulator: Balancing and Interaction Control}
+      \field{volume}{32}
+      \field{year}{2014}
+      \field{dateera}{ce}
+      \field{pages}{1135\bibrangedash 1152}
+      \range{pages}{18}
+      \verb{doi}
+      \verb 10.1017/S026357471300129X
+      \endverb
+    \endentry
+    \entry{saltducajuModelBasedPredictiveImpedance2025}{article}{}{}
+      \name{author}{3}{}{%
+        {{hash=422cb1ba4a44608145a233d4f3154e75}{%
+           family={Salt\bibnamedelima Ducaju},
+           familyi={S\bibinitperiod\bibinitdelim D\bibinitperiod},
+           given={Julian\bibnamedelima M.},
+           giveni={J\bibinitperiod\bibinitdelim M\bibinitperiod}}}%
+        {{hash=4bb69a500cf1e8bf00e64f4d1104cc98}{%
+           family={Olofsson},
+           familyi={O\bibinitperiod},
+           given={Björn},
+           giveni={B\bibinitperiod}}}%
+        {{hash=148e499ff14924472208522a20805512}{%
+           family={Johansson},
+           familyi={J\bibinitperiod},
+           given={Rolf},
+           giveni={R\bibinitperiod}}}%
+      }
+      \strng{namehash}{d789d9a22bf681fcf65cdc721cdd6dd7}
+      \strng{fullhash}{d789d9a22bf681fcf65cdc721cdd6dd7}
+      \strng{fullhashraw}{d789d9a22bf681fcf65cdc721cdd6dd7}
+      \strng{bibnamehash}{d789d9a22bf681fcf65cdc721cdd6dd7}
+      \strng{authorbibnamehash}{d789d9a22bf681fcf65cdc721cdd6dd7}
+      \strng{authornamehash}{d789d9a22bf681fcf65cdc721cdd6dd7}
+      \strng{authorfullhash}{d789d9a22bf681fcf65cdc721cdd6dd7}
+      \strng{authorfullhashraw}{d789d9a22bf681fcf65cdc721cdd6dd7}
+      \field{sortinit}{1}
+      \field{sortinithash}{4f6aaa89bab872aa0999fec09ff8e98a}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{journaltitle}{IEEE Transactions on Automation Science and Engineering}
+      \field{title}{Model-{{Based Predictive Impedance Variation}} for {{Obstacle Avoidance}} in {{Safe Human}}–{{Robot Collaboration}}}
+      \field{volume}{22}
+      \field{year}{2025}
+      \field{dateera}{ce}
+      \field{pages}{9571\bibrangedash 9583}
+      \range{pages}{13}
+      \verb{doi}
+      \verb 10.1109/TASE.2024.3508718
+      \endverb
+    \endentry
+    \entry{yuImpedanceControlIndustrial2025}{inproceedings}{}{}
+      \name{author}{2}{}{%
+        {{hash=a361c91ec0489083b37f9836bd45b88c}{%
+           family={Yu},
+           familyi={Y\bibinitperiod},
+           given={Zhipeng},
+           giveni={Z\bibinitperiod}}}%
+        {{hash=1f647bb6da8304b7be380ec58eb6373a}{%
+           family={Wang},
+           familyi={W\bibinitperiod},
+           given={Lei},
+           giveni={L\bibinitperiod}}}%
+      }
+      \list{location}{1}{%
+        {Chongqing, China}%
+      }
+      \list{publisher}{1}{%
+        {IEEE}%
+      }
+      \strng{namehash}{7307d5faba82cca1fdbfc83ddb8f180c}
+      \strng{fullhash}{7307d5faba82cca1fdbfc83ddb8f180c}
+      \strng{fullhashraw}{7307d5faba82cca1fdbfc83ddb8f180c}
+      \strng{bibnamehash}{7307d5faba82cca1fdbfc83ddb8f180c}
+      \strng{authorbibnamehash}{7307d5faba82cca1fdbfc83ddb8f180c}
+      \strng{authornamehash}{7307d5faba82cca1fdbfc83ddb8f180c}
+      \strng{authorfullhash}{7307d5faba82cca1fdbfc83ddb8f180c}
+      \strng{authorfullhashraw}{7307d5faba82cca1fdbfc83ddb8f180c}
+      \field{sortinit}{1}
+      \field{sortinithash}{4f6aaa89bab872aa0999fec09ff8e98a}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{booktitle}{2025 44th {{Chinese Control Conference}} ({{CCC}})}
+      \field{day}{28}
+      \field{eventtitle}{2025 44th {{Chinese Control Conference}} ({{CCC}})}
+      \field{isbn}{978-988-75816-1-1}
+      \field{month}{7}
+      \field{title}{Impedance {{Control}} for {{Industrial Robots Based}} on {{Model Predictive Control}}}
+      \field{year}{2025}
+      \field{dateera}{ce}
+      \field{pages}{280\bibrangedash 285}
+      \range{pages}{6}
+      \verb{doi}
+      \verb 10.23919/CCC64809.2025.11179306
+      \endverb
+    \endentry
+    \entry{wangHeadStabilizationWheeled2025}{online}{}{}
+      \name{author}{9}{}{%
+        {{hash=6aa30d34d455af1d2fd335466afc296d}{%
+           family={Wang},
+           familyi={W\bibinitperiod},
+           given={Tianyu},
+           giveni={T\bibinitperiod}}}%
+        {{hash=49c4be0353f517e5ebfcf9c7dd0553ff}{%
+           family={Yan},
+           familyi={Y\bibinitperiod},
+           given={Chunxiang},
+           giveni={C\bibinitperiod}}}%
+        {{hash=cecee8eb6cf5b2d77cb9bdaedda2e5f7}{%
+           family={Liao},
+           familyi={L\bibinitperiod},
+           given={Xuanhong},
+           giveni={X\bibinitperiod}}}%
+        {{hash=228dd687961f3612985beeddec81f72a}{%
+           family={Zhang},
+           familyi={Z\bibinitperiod},
+           given={Tao},
+           giveni={T\bibinitperiod}}}%
+        {{hash=2053a78b8c7e674d28eabbe236f2f077}{%
+           family={Wang},
+           familyi={W\bibinitperiod},
+           given={Ping},
+           giveni={P\bibinitperiod}}}%
+        {{hash=a936eb8a77c28797555364620d9e310a}{%
+           family={Wen},
+           familyi={W\bibinitperiod},
+           given={Cong},
+           giveni={C\bibinitperiod}}}%
+        {{hash=6cd0ad5d82aacb78d0e4f163cbf8cf3d}{%
+           family={Liu},
+           familyi={L\bibinitperiod},
+           given={Dingchuan},
+           giveni={D\bibinitperiod}}}%
+        {{hash=f653dc90cf401460e3f2f602dd90e81e}{%
+           family={Yu},
+           familyi={Y\bibinitperiod},
+           given={Haowen},
+           giveni={H\bibinitperiod}}}%
+        {{hash=74df904e237a6e78563554f4a0ab16c7}{%
+           family={Lyu},
+           familyi={L\bibinitperiod},
+           given={Ximin},
+           giveni={X\bibinitperiod}}}%
+      }
+      \strng{namehash}{4fceecc1def2a77ab729e7c18df0ca7b}
+      \strng{fullhash}{b3362ad2de1d6f2510a4a427b1e4ee24}
+      \strng{fullhashraw}{b3362ad2de1d6f2510a4a427b1e4ee24}
+      \strng{bibnamehash}{4fceecc1def2a77ab729e7c18df0ca7b}
+      \strng{authorbibnamehash}{4fceecc1def2a77ab729e7c18df0ca7b}
+      \strng{authornamehash}{4fceecc1def2a77ab729e7c18df0ca7b}
+      \strng{authorfullhash}{b3362ad2de1d6f2510a4a427b1e4ee24}
+      \strng{authorfullhashraw}{b3362ad2de1d6f2510a4a427b1e4ee24}
+      \field{sortinit}{1}
+      \field{sortinithash}{4f6aaa89bab872aa0999fec09ff8e98a}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{day}{24}
+      \field{eprintclass}{cs}
+      \field{eprinttype}{arXiv}
+      \field{month}{11}
+      \field{pubstate}{prepublished}
+      \field{title}{Head {{Stabilization}} for {{Wheeled Bipedal Robots}} via {{Force-Estimation-Based Admittance Control}}}
+      \field{year}{2025}
+      \field{dateera}{ce}
+      \verb{doi}
+      \verb 10.48550/arXiv.2511.18712
+      \endverb
+      \verb{eprint}
+      \verb 2511.18712
+      \endverb
+    \endentry
+    \entry{shiroma1996cooperative}{inproceedings}{}{}
+      \name{author}{4}{}{%
+        {{hash=d36599a74381683ac121723f19876493}{%
+           family={Shiroma},
+           familyi={S\bibinitperiod},
+           given={Naoji},
+           giveni={N\bibinitperiod}}}%
+        {{hash=a4757201de3a0fa3a9f8645a710161b1}{%
+           family={Matsumoto},
+           familyi={M\bibinitperiod},
+           given={Osamu},
+           giveni={O\bibinitperiod}}}%
+        {{hash=26b4b6c6afae0ed0bbba0b59039c7054}{%
+           family={Kajita},
+           familyi={K\bibinitperiod},
+           given={Shuuji},
+           giveni={S\bibinitperiod}}}%
+        {{hash=84478509c16748843f94a0f76695e7aa}{%
+           family={Tani},
+           familyi={T\bibinitperiod},
+           given={Kazuo},
+           giveni={K\bibinitperiod}}}%
+      }
+      \list{publisher}{1}{%
+        {IEEE}%
+      }
+      \strng{namehash}{763612df3f2c9c9e2c7925d00f738ea9}
+      \strng{fullhash}{bbc8ace79a7f8bfebe7c8ddb8637e5bc}
+      \strng{fullhashraw}{bbc8ace79a7f8bfebe7c8ddb8637e5bc}
+      \strng{bibnamehash}{763612df3f2c9c9e2c7925d00f738ea9}
+      \strng{authorbibnamehash}{763612df3f2c9c9e2c7925d00f738ea9}
+      \strng{authornamehash}{763612df3f2c9c9e2c7925d00f738ea9}
+      \strng{authorfullhash}{bbc8ace79a7f8bfebe7c8ddb8637e5bc}
+      \strng{authorfullhashraw}{bbc8ace79a7f8bfebe7c8ddb8637e5bc}
+      \field{sortinit}{2}
+      \field{sortinithash}{8b555b3791beccb63322c22f3320aa9a}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{booktitle}{Proceedings of the 1996 IEEE/RSJ International Conference on Intelligent Robots and Systems (IROS '96)}
+      \field{title}{Cooperative Behavior of a Wheeled Inverted Pendulum for Object Transportation}
+      \field{year}{1996}
+      \field{pages}{396\bibrangedash 401}
+      \range{pages}{6}
+    \endentry
+  \enddatalist
+\endrefsection
+\endinput
+

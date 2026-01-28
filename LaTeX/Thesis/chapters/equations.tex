@@ -1,0 +1,301 @@
+\section{Visualize equations}
+
+\section{Summary of Model Equations}
+
+\begin{equation}
+\mathbf{q} =
+\begin{bmatrix}
+x & \theta_p & d_m & \theta_a
+\end{bmatrix}^T
+\end{equation}
+
+\begin{equation}
+x = r_w \theta_w, \qquad \dot{\theta}_w = \frac{\dot{x}}{r_w}
+\end{equation}
+
+\begin{equation}
+\dot{x}_w = \dot{x}, \qquad \dot{z}_w = 0
+\end{equation}
+
+\begin{equation}
+T_w = \frac{1}{2} m_w \dot{x}^2 + \frac{1}{2} I_w \left(\frac{\dot{x}}{r_w}\right)^2,
+\qquad
+U_w = 0
+\end{equation}
+
+\begin{align}
+x_b &= x + l_{bx}\cos\theta_p + l_{bz}\sin\theta_p \\
+z_b &= r_w - l_{bx}\sin\theta_p + l_{bz}\cos\theta_p
+\end{align}
+
+\begin{align}
+\dot{x}_b &= \dot{x} - l_{bx}\dot{\theta}_p\sin\theta_p + l_{bz}\dot{\theta}_p\cos\theta_p \\
+\dot{z}_b &= -l_{bx}\dot{\theta}_p\cos\theta_p - l_{bz}\dot{\theta}_p\sin\theta_p
+\end{align}
+
+\begin{equation}
+T_b = \frac{1}{2} m_b (\dot{x}_b^2 + \dot{z}_b^2)
+      + \frac{1}{2} I_b \dot{\theta}_p^2
+\end{equation}
+
+\begin{equation}
+U_b = m_b g (- l_{bx}\sin\theta_p + l_{bz}\cos\theta_p)
+\end{equation}
+
+\begin{align}
+x_m &= x + l_{mx}\cos\theta_p + l_{mz}\sin\theta_p \\
+z_m &= r_w - l_{mx}\sin\theta_p + l_{mz}\cos\theta_p
+\end{align}
+
+\begin{align}
+\dot{x}_m &= \dot{x} - l_{mx}\dot{\theta}_p\sin\theta_p + l_{mz}\dot{\theta}_p\cos\theta_p \\
+\dot{z}_m &= -l_{mx}\dot{\theta}_p\cos\theta_p - l_{mz}\dot{\theta}_p\sin\theta_p
+\end{align}
+
+\begin{equation}
+T_m = \frac{1}{2} m_m (\dot{x}_m^2 + \dot{z}_m^2)
+      + \frac{1}{2} I_m \dot{\theta}_p^2
+\end{equation}
+
+\begin{equation}
+U_m = m_m g (- l_{mx}\sin\theta_p + l_{mz}\cos\theta_p)
+\end{equation}
+
+\begin{align}
+x_a &= x + l_{ax}\cos\theta_p + (l_{az}+d_m)\sin\theta_p \\
+z_a &= r_w - l_{ax}\sin\theta_p + (l_{az}+d_m)\cos\theta_p
+\end{align}
+
+\begin{align}
+\dot{x}_a &= \dot{x} - l_{ax}\dot{\theta}_p\sin\theta_p
++ (l_{az}+d_m)\dot{\theta}_p\cos\theta_p + \dot{d}_m\sin\theta_p \\
+\dot{z}_a &= -l_{ax}\dot{\theta}_p\cos\theta_p
+- (l_{az}+d_m)\dot{\theta}_p\sin\theta_p + \dot{d}_m\cos\theta_p
+\end{align}
+
+\begin{equation}
+T_a = \frac{1}{2} m_a (\dot{x}_a^2 + \dot{z}_a^2)
+      + \frac{1}{2} I_a \dot{\theta}_p^2
+\end{equation}
+
+\begin{equation}
+U_a = m_a g (- l_{ax}\sin\theta_p + (l_{az}+d_m)\cos\theta_p)
+\end{equation}
+
+\begin{align}
+x_f &= x + l_{ax}\cos\theta_p + (l_{az}+d_m)\sin\theta_p
+      + l_{fx} \cos(\theta_p + \theta_a) \\
+z_f &= r_w - l_{ax}\sin\theta_p + (l_{az}+d_m)\cos\theta_p
+      - l_{fx} \sin(\theta_p + \theta_a)
+\end{align}
+
+\begin{align}
+\dot{x}_f &= \dot{x} - l_{ax}\dot{\theta}_p\sin\theta_p
++ (l_{az}+d_m)\dot{\theta}_p\cos\theta_p + \dot{d}_m\sin\theta_p \\
+&\quad - l_{fx}\sin(\theta_p+\theta_a)(\dot{\theta}_p+\dot{\theta}_a) \\
+\dot{z}_f &= -l_{ax}\dot{\theta}_p\cos\theta_p
+- (l_{az}+d_m)\dot{\theta}_p\sin\theta_p + \dot{d}_m\cos\theta_p \\
+&\quad - l_{fx}\cos(\theta_p+\theta_a)(\dot{\theta}_p+\dot{\theta}_a)
+\end{align}
+
+\begin{equation}
+T_f = \frac{1}{2} m_f (\dot{x}_f^2 + \dot{z}_f^2)
+      + \frac{1}{2} I_f (\dot{\theta}_p + \dot{\theta}_a)^2
+\end{equation}
+
+\begin{equation}
+U_f = m_f g \big(
+- l_{ax}\sin\theta_p + (l_{az}+d_m)\cos\theta_p
+- l_{fx}\sin(\theta_p + \theta_a)
+\big)
+\end{equation}
+
+\begin{align}
+T &= 2T_w + T_b + T_m + T_a + T_f \\
+U &= 2U_w + U_b + U_m + U_a + U_f
+\end{align}
+
+\begin{equation}
+L = T - U
+\end{equation}
+
+\begin{equation}
+\frac{d}{dt}\left( \frac{\partial L}{\partial \dot{q}_i} \right)
+- \frac{\partial L}{\partial q_i}
+= Q_i
+\end{equation}
+
+\begin{equation}
+M(q)\ddot{q} + C(q,\dot{q})\dot{q} + G(q) = \tau
+\end{equation}
+
+
+\section{Simplified}
+
+\begin{equation}
+M = \sum_{i=1}^{4} m_i
+\end{equation}
+
+\begin{equation}
+x_G = \frac{1}{M} \sum_{i=1}^{4} m_i x_i,
+\qquad
+z_G = \frac{1}{M} \sum_{i=1}^{4} m_i z_i
+\end{equation}
+
+\begin{equation}
+\Delta x_i = x_i - x_G,
+\qquad
+\Delta z_i = z_i - z_G
+\end{equation}
+
+\begin{equation}
+I_{\mathrm{eq}} =
+\sum_{i=1}^{4}
+\left(
+I_{y,i} + m_i (\Delta x_i^2 + \Delta z_i^2)
+\right)
+\end{equation}
+
+\begin{equation}
+q_s =
+\begin{bmatrix}
+x & \theta_p
+\end{bmatrix}^T
+\end{equation}
+
+\begin{align}
+x_b &= x + l_{bx}\cos\theta_p + l_{bz}\sin\theta_p \\
+z_b &= r_w - l_{bx}\sin\theta_p + l_{bz}\cos\theta_p
+\end{align}
+
+\begin{align}
+\dot{x}_b &= \dot{x}
+- l_{bx}\dot{\theta}_p\sin\theta_p
++ l_{bz}\dot{\theta}_p\cos\theta_p \\
+\dot{z}_b &=
+- l_{bx}\dot{\theta}_p\cos\theta_p
+- l_{bz}\dot{\theta}_p\sin\theta_p
+\end{align}
+
+\begin{equation}
+T_w = \frac{1}{2} m_w \dot{x}^2
+      + \frac{1}{2} I_w \left( \frac{\dot{x}}{r_w} \right)^2
+\end{equation}
+
+\begin{equation}
+T_b =
+\frac{1}{2} M \left( \dot{x}_b^2 + \dot{z}_b^2 \right)
++ \frac{1}{2} I_{\mathrm{eq}} \dot{\theta}_p^2
+\end{equation}
+
+\begin{equation}
+U_b = M g \left( -l_{bx}\sin\theta_p + l_{bz}\cos\theta_p \right)
+\end{equation}
+
+\begin{equation}
+T = 2T_w + T_b
+\end{equation}
+
+\begin{equation}
+U = U_b
+\end{equation}
+
+\begin{equation}
+L = T - U
+\end{equation}
+
+\begin{equation}
+M_s(q_s)\ddot{q}_s + h_s(q_s,\dot{q}_s) = \boldsymbol{\tau}_s
+\end{equation}
+
+\begin{equation}
+\boldsymbol{\tau}_s =
+\begin{bmatrix}
+(\tau_L + \tau_R)/r_w \\
+0
+\end{bmatrix}
+\end{equation}
+
+\begin{equation}
+x_s =
+\begin{bmatrix}
+x & \theta_p & \dot{x} & \dot{\theta}_p
+\end{bmatrix}^T
+\end{equation}
+
+\begin{equation}
+\dot{x}_s =
+\begin{bmatrix}
+\dot{x} \\
+\dot{\theta}_p \\
+\ddot{x} \\
+\ddot{\theta}_p
+\end{bmatrix}
+\end{equation}
+
+\begin{equation}
+\ddot{q}_s =
+M_s(q_s)^{-1}
+\left(
+\boldsymbol{\tau}_s - h_s(q_s,\dot{q}_s)
+\right)
+\end{equation}
+
+
+
+\begin{itemize}
+    \item $N$: The prediction horizon length
+    \item $T$: The total prediction horizon time
+    \item $x_k \in \mathbb{R}^{n_x}$: The differential state vector at time step $k$ 
+    \item $u_k \in \mathbb{R}^{n_u}$: The control input vector 
+    \item $z_k$: The algebraic variables
+    \item $\ell(x_k, z_k, u_k)$: The stage cost (or running cost)
+    \item $M(x_N)$: The terminal cost
+    \item $x_0 = \bar{x}_0$: The initial state constraint
+    \item $\varphi_k(x_k, u_k)$: The numerical integrator (discretized dynamics)
+    \item $g_k(\cdot) \leq 0$: The inequality constraints
+\end{itemize}
+
+
+
+
+$\Delta x_k,\Delta u_k$: corrections $(x^+\!=\!x\!+\!\Delta x,\ u^+\!=\!u\!+\!\Delta u)$\\
+$H_k\!\approx\!J_k^\top W J_k$: Gauss--Newton Hessian\\
+$g_k$: cost gradient\\
+$A_k,B_k$: Jacobians $\partial f/\partial x,\partial f/\partial u$\\
+$d_k$: dynamics residual\\
+$C_k,\underline c_k,\bar c_k$: linearized constraints\\
+$s_k$: slack variables
+
+\newpage
+
+\begin{equation}
+\hat{m}_{\mathrm{lift}} =
+\frac{\hat{f}_{m}^{\mathrm{reac}}}
+{g \cos\!\left(\theta_p^{\mathrm{res}}\right)}
+\end{equation}
+
+\begin{equation}
+\hat{m}_{\mathrm{arm}} =
+\frac{\hat{\tau}_{a}^{\mathrm{reac}}}
+{g \cos\!\left(\theta_a^{\mathrm{res}} + \theta_p^{\mathrm{res}}\right)\, \hat{d}}
+\end{equation}
+
+\begin{equation}
+\hat{d} =
+\begin{cases}
+\dfrac{\hat{\tau}_{a}^{\mathrm{reac}}}
+{g \cos\!\left(\theta_a^{\mathrm{res}} + \theta_p^{\mathrm{res}}\right)\, \hat{m}},
+& \text{if } d_m^{\mathrm{res}} > 0, \\[10pt]
+d_{\mathrm{fork}}^{\mathrm{nom}},
+& \text{otherwise}
+\end{cases}
+\end{equation}
+
+\begin{equation}
+\hat{m} =
+\begin{cases}
+\hat{m}_{\mathrm{lift}}, & \text{if } d_m^{\mathrm{res}} > 0, \\
+\hat{m}_{\mathrm{arm}},  & \text{otherwise}
+\end{cases}
+\end{equation}

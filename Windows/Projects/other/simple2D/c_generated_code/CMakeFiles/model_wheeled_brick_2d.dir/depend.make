@@ -1,0 +1,2 @@
+# Empty dependencies file for model_wheeled_brick_2d.
+# This may be replaced when dependencies are built.

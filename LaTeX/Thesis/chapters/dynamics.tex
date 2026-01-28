@@ -1,0 +1,204 @@
+\section{Dynamic Model Derivation}
+
+This section presents the derivation of the dynamic model of the Two-Wheeled Forklift Robot using an energy-based formulation. The model captures the coupled dynamics of the wheeled base, main body, vertically actuated lift mechanism, and fork assembly, and serves as the foundation for control design.
+
+\section{Coordinate Frames and Generalized Coordinates}
+
+\subsection{Reference Frames}
+
+An inertial world frame $\{W\}$ is defined with the $x$-axis aligned with the forward horizontal direction and the $z$-axis pointing upward. A body-fixed frame $\{B\}$ is attached to the main body of the robot, with its origin located at the wheel--ground contact point and rotating with the pitch angle $\theta_p$.
+
+\subsection{Generalized Coordinates}
+
+The system dynamics are described by the generalized coordinate vector
+\begin{equation}
+\mathbf{q} =
+\begin{bmatrix}
+x & \theta_p & d_m & \theta_a
+\end{bmatrix}^T,
+\end{equation}
+where $x = r_w \theta_w$ denotes the longitudinal position of the robot expressed through the wheel rotation angle $\theta_w$, $\theta_p$ is the pitch angle of the main body, $d_m$ is the vertical displacement of the lift mechanism, and $\theta_a$ represents the relative rotation of the fork with respect to the main body.
+
+\subsection{Geometric Parameters}
+
+\begin{figure}[t]
+    \centering
+    \includegraphics[width=0.6\linewidth]{robot-parametric}
+    \caption{Parametric diagram of the two-wheeled fork robot (TWFR).}
+    \label{fig:robot-parametric}
+\end{figure}
+
+
+The following geometric parameters define the locations of the subsystem centers of gravity (CoG):
+\begin{itemize}
+    \item $r_w$: wheel radius,
+    \item $(l_{bx}, l_{bz})$: CoG of the main body expressed in frame $\{B\}$,
+    \item $(l_{mx}, l_{mz})$: CoG of the lift assembly,
+    \item $(l_{ax}, l_{az} + d_m)$: CoG of the fork motor arm,
+    \item $(l_{fx}, l_{fz} + d_m)$: CoG of the fork.
+\end{itemize}
+
+\section{Energy-Based Modeling}
+
+The dynamic model is derived by computing the kinetic and potential energy contributions of each subsystem. The resulting expressions are grouped consistently to facilitate the Lagrangian formulation.
+
+\subsection{Wheel Subsystem}
+
+\subsubsection{Position and Velocity}
+
+The wheel center translates horizontally according to
+\begin{equation}
+\dot{x}_w = \dot{x}, \qquad \dot{z}_w = 0.
+\end{equation}
+
+\subsubsection{Energies}
+
+The kinetic energy of each wheel consists of translational and rotational components. Using the rolling constraint $\dot{\theta}_w = \dot{x}/r_w$, the kinetic energy is given by
+\begin{equation}
+T_w = \frac{1}{2} m_w \dot{x}^2 + \frac{1}{2} I_w \left(\frac{\dot{x}}{r_w}\right)^2.
+\end{equation}
+The potential energy is defined with respect to the wheel axis and is therefore zero:
+\begin{equation}
+U_w = 0.
+\end{equation}
+
+\subsection{Main Body Subsystem}
+
+\subsubsection{Position and Velocity}
+
+The position of the main body CoG expressed in the world frame is
+\begin{align}
+x_b &= x + l_{bx}\cos\theta_p + l_{bz}\sin\theta_p, \\
+z_b &= r_w - l_{bx}\sin\theta_p + l_{bz}\cos\theta_p.
+\end{align}
+Differentiation yields the linear velocity components
+\begin{align}
+\dot{x}_b &= \dot{x} - l_{bx}\dot{\theta}_p\sin\theta_p + l_{bz}\dot{\theta}_p\cos\theta_p, \\
+\dot{z}_b &= -l_{bx}\dot{\theta}_p\cos\theta_p - l_{bz}\dot{\theta}_p\sin\theta_p.
+\end{align}
+
+\subsubsection{Energies}
+
+The kinetic and gravitational potential energies of the main body are given by
+\begin{equation}
+T_b = \frac{1}{2} m_b (\dot{x}_b^2 + \dot{z}_b^2)
+      + \frac{1}{2} I_b \dot{\theta}_p^2,
+\end{equation}
+\begin{equation}
+U_b = m_b g (- l_{bx}\sin\theta_p + l_{bz}\cos\theta_p).
+\end{equation}
+
+\subsection{Lift Subsystem}
+
+\subsubsection{Position and Velocity}
+
+The lift assembly CoG position is expressed as
+\begin{align}
+x_m &= x + l_{mx}\cos\theta_p + l_{mz}\sin\theta_p, \\
+z_m &= r_w - l_{mx}\sin\theta_p + l_{mz}\cos\theta_p,
+\end{align}
+with corresponding velocities
+\begin{align}
+\dot{x}_m &= \dot{x} - l_{mx}\dot{\theta}_p\sin\theta_p + l_{mz}\dot{\theta}_p\cos\theta_p, \\
+\dot{z}_m &= -l_{mx}\dot{\theta}_p\cos\theta_p - l_{mz}\dot{\theta}_p\sin\theta_p.
+\end{align}
+
+\subsubsection{Energies}
+
+The kinetic and potential energies of the lift assembly are
+\begin{equation}
+T_m = \frac{1}{2} m_m (\dot{x}_m^2 + \dot{z}_m^2)
+      + \frac{1}{2} I_m \dot{\theta}_p^2,
+\end{equation}
+\begin{equation}
+U_m = m_m g (- l_{mx}\sin\theta_p + l_{mz}\cos\theta_p).
+\end{equation}
+
+\subsection{Fork Motor Arm Subsystem}
+
+\subsubsection{Position and Velocity}
+
+The CoG position of the fork motor arm is
+\begin{align}
+x_a &= x + l_{ax}\cos\theta_p + (l_{az}+d_m)\sin\theta_p, \\
+z_a &= r_w - l_{ax}\sin\theta_p + (l_{az}+d_m)\cos\theta_p,
+\end{align}
+with linear velocity components
+\begin{align}
+\dot{x}_a &= \dot{x} - l_{ax}\dot{\theta}_p\sin\theta_p + (l_{az}+d_m)\dot{\theta}_p\cos\theta_p + \dot{d}_m\sin\theta_p, \\
+\dot{z}_a &= -l_{ax}\dot{\theta}_p\cos\theta_p - (l_{az}+d_m)\dot{\theta}_p\sin\theta_p + \dot{d}_m\cos\theta_p.
+\end{align}
+
+\subsubsection{Energies}
+
+The corresponding energy expressions are
+\begin{equation}
+T_a = \frac{1}{2} m_a (\dot{x}_a^2 + \dot{z}_a^2)
+      + \frac{1}{2} I_a \dot{\theta}_p^2,
+\end{equation}
+\begin{equation}
+U_a = m_a g (- l_{ax}\sin\theta_p + (l_{az}+d_m)\cos\theta_p).
+\end{equation}
+
+\subsection{Fork Tool Subsystem}
+
+\subsubsection{Position and Velocity}
+
+The fork CoG position is given by
+\begin{align}
+x_f &= x + l_{ax}\cos\theta_p + (l_{az}+d_m)\sin\theta_p + l_{fx} \cos(\theta_p + \theta_a), \\
+z_f &= r_w - l_{ax}\sin\theta_p + (l_{az}+d_m)\cos\theta_p - l_{fx} \sin(\theta_p + \theta_a).
+\end{align}
+The corresponding velocities are
+\begin{align}
+\dot{x}_f &= \dot{x} - l_{ax}\dot{\theta}_p\sin\theta_p + (l_{az}+d_m)\dot{\theta}_p\cos\theta_p + \dot{d}_m\sin\theta_p \\
+&\quad - l_{fx} \sin(\theta_p + \theta_a)(\dot{\theta}_p + \dot{\theta}_a), \\
+\dot{z}_f &= -l_{ax}\dot{\theta}_p\cos\theta_p - (l_{az}+d_m)\dot{\theta}_p\sin\theta_p + \dot{d}_m\cos\theta_p \\
+&\quad - l_{fx} \cos(\theta_p + \theta_a)(\dot{\theta}_p + \dot{\theta}_a).
+\end{align}
+
+\subsubsection{Energies}
+
+The kinetic and potential energies of the fork are
+\begin{equation}
+T_f = \frac{1}{2} m_f (\dot{x}_f^2 + \dot{z}_f^2)
+      + \frac{1}{2} I_f (\dot{\theta}_p + \dot{\theta}_a)^2,
+\end{equation}
+\begin{equation}
+U_f = m_f g \big(- l_{ax}\sin\theta_p + (l_{az}+d_m)\cos\theta_p - l_{fx} \sin(\theta_p + \theta_a)\big).
+\end{equation}
+
+\section{Lagrangian Formulation}
+
+\subsection{Total Energies}
+
+The total kinetic and potential energies of the system are obtained by summing the individual contributions:
+\begin{align}
+T &= 2T_w + T_b + T_m + T_a + T_f, \\
+U &= 2U_w + U_b + U_m + U_a + U_f.
+\end{align}
+
+\subsection{Equations of Motion}
+
+The Lagrangian is defined as
+\begin{equation}
+L = T - U.
+\end{equation}
+The equations of motion follow from the Euler--Lagrange equations
+\begin{equation}
+\frac{d}{dt}\left( \frac{\partial L}{\partial \dot{q}_i} \right)
+- \frac{\partial L}{\partial q_i}
+= Q_i,
+\qquad q_i \in \mathbf{q},
+\end{equation}
+where $Q_i$ denotes the generalized forces.
+
+\subsection{Compact Matrix Representation}
+
+The system dynamics can be expressed in compact form as
+\begin{equation}
+M(q)\,\ddot{q} + C(q,\dot{q})\,\dot{q} + G(q) = \tau,
+\end{equation}
+where $q \in \mathbb{R}^4$ is the vector of generalized coordinates. The inertia matrix $M(q) \in \mathbb{R}^{4 \times 4}$, Coriolis and centrifugal matrix $C(q,\dot{q}) \in \mathbb{R}^{4 \times 4}$, and gravity vector $G(q) \in \mathbb{R}^4$ depend on the system configuration and velocities.
+
+The explicit expressions of $M(q)$, $C(q,\dot{q})$, and $G(q)$ are obtained through symbolic computation and are omitted for brevity.

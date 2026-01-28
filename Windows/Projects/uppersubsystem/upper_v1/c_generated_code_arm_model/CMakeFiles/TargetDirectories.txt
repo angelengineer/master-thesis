@@ -1,0 +1,9 @@
+C:/Users/itsan/Documents/GitHub/MPC_control/Projects/uppersubsystem/upper_v1/c_generated_code_arm_model/CMakeFiles/model_arm_model.dir
+C:/Users/itsan/Documents/GitHub/MPC_control/Projects/uppersubsystem/upper_v1/c_generated_code_arm_model/CMakeFiles/ocp_arm_model.dir
+C:/Users/itsan/Documents/GitHub/MPC_control/Projects/uppersubsystem/upper_v1/c_generated_code_arm_model/CMakeFiles/acados_ocp_solver_arm_model.dir
+C:/Users/itsan/Documents/GitHub/MPC_control/Projects/uppersubsystem/upper_v1/c_generated_code_arm_model/CMakeFiles/edit_cache.dir
+C:/Users/itsan/Documents/GitHub/MPC_control/Projects/uppersubsystem/upper_v1/c_generated_code_arm_model/CMakeFiles/rebuild_cache.dir
+C:/Users/itsan/Documents/GitHub/MPC_control/Projects/uppersubsystem/upper_v1/c_generated_code_arm_model/CMakeFiles/list_install_components.dir
+C:/Users/itsan/Documents/GitHub/MPC_control/Projects/uppersubsystem/upper_v1/c_generated_code_arm_model/CMakeFiles/install.dir
+C:/Users/itsan/Documents/GitHub/MPC_control/Projects/uppersubsystem/upper_v1/c_generated_code_arm_model/CMakeFiles/install/local.dir
+C:/Users/itsan/Documents/GitHub/MPC_control/Projects/uppersubsystem/upper_v1/c_generated_code_arm_model/CMakeFiles/install/strip.dir

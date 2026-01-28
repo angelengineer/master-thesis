@@ -1,0 +1,32 @@
+\section{NMPC Solver Configuration and Weight Selection}
+
+The NMPC controller is implemented using the \textit{acados} optimal control framework. The prediction horizon is defined with $N = 40$ discretization steps over a horizon length of $T = 1~\mathrm{s}$, resulting in a sampling time of $25~\mathrm{ms}$. This configuration represents a compromise between prediction accuracy and computational complexity, allowing real-time execution.
+
+The system state is defined as
+\[
+x = \begin{bmatrix} x & \beta & \dot{x} & \dot{\beta} \end{bmatrix}^T,
+\]
+while the control input consists of the left and right wheel torques.
+
+\paragraph{Cost Function}
+A nonlinear least-squares formulation (NONLINEAR\_LS) is employed for the initial and path cost stages. This formulation provides flexibility in weighting states and inputs while remaining compatible with a Gauss--Newton Hessian approximation.
+
+The state weighting matrix is defined as
+\[
+W_x = \mathrm{diag}\!\left(10^{-9},\;10^{1},\;10^{2},\;10^{3}\right),
+\]
+placing dominant emphasis on the pitch angle and pitch rate to prioritize balance stabilization. The longitudinal position is assigned a negligible weight to avoid unnecessary regulation of absolute position during balance recovery. The control input weighting matrix is selected as
+\[
+W_u = 10^{-1} I_2,
+\]
+penalizing excessive control effort while preserving sufficient authority for fast corrective actions. The resulting stage cost matrix is given by $W = \mathrm{blkdiag}(W_x, W_u)$, with a zero reference corresponding to regulation around the upright equilibrium.
+
+\paragraph{Constraints}
+Box constraints are imposed on both control inputs and states to reflect physical limitations and ensure safe operation. Wheel torques are bounded within $\pm 10~\mathrm{Nm}$. State constraints limit the longitudinal position, pitch angle, and their derivatives, with the pitch angle restricted to $\pm 45^\circ$ to prevent loss of balance.
+
+The initial state is enforced as a hard constraint, ensuring consistency between the measured system state and the NMPC prediction at each control cycle.
+
+\paragraph{Solver Settings}
+The nonlinear program is solved using a Sequential Quadratic Programming Real-Time Iteration (SQP--RTI) scheme, enabling a single SQP iteration per control step and ensuring real-time feasibility. A Gauss--Newton approximation is used for the Hessian of the cost function, which significantly reduces computational complexity for least-squares objectives.
+
+System dynamics are integrated using the GNSF integrator, and the resulting quadratic programs are solved using the HPIPM solver with partial condensing. Warm-starting is enabled to accelerate convergence across successive control cycles. Overall, the selected solver configuration allows real-time NMPC execution while maintaining robust balance control and effective constraint handling.

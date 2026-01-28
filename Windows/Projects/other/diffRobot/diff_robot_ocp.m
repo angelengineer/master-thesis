@@ -1,0 +1,320 @@
+import casadi.*
+
+% ============================================================
+%  ACADOS OCP – SEGWAY 2D NONLINEAR MPC (PITCH + LOCOMOTION)
+% ============================================================
+
+check_acados_requirements();
+
+%% ================= SOLVER SETTINGS =================
+N = 50;      % number of discretization steps
+T = 2;     % prediction horizon [s] (ligeramente más largo para mejor estabilidad)
+
+% Estado inicial: [β, β_dot, v, ω]
+x0 = [0.1; 0; 0; 0];  % Pequeña inclinación inicial para iniciar movimiento
+
+%% ================= MODEL =================
+% Usar el nuevo modelo Segway 2D
+[model, params, helpers] = get_diff_robot_model('silent');
+nx = length(model.x);   % = 4
+nu = length(model.u);   % = 2
+
+fprintf('============================================\n');
+fprintf('SEGWAY 2D NONLINEAR MPC\n');
+fprintf('States: nx = %d [β, β_dot, v, ω]\n', nx);
+fprintf('Controls: nu = %d [τ_L, τ_R]\n', nu);
+fprintf('Prediction horizon: T = %.1fs, N = %d steps\n', T, N);
+fprintf('Time step: dt = %.3fs\n', T/N);
+fprintf('============================================\n');
+
+%% ================= OCP OBJECT =================
+ocp = AcadosOcp();
+ocp.model = model;
+
+%% ================= COST FUNCTION =================
+% Pesos de estados: [β, β_dot, v, ω]^T
+% Objetivos:
+% 1. Mantener β cerca de 0 (vertical)
+% 2. Reducir β_dot (oscilaciones de pitch)
+% 3. Seguir velocidad de referencia v_ref
+% 4. Seguir velocidad de giro ω_ref
+W_x = diag([
+    5e4;   % β - estabilidad principal
+    2e3;     % β_dot - amortiguación importante pero no excesiva
+    1e0;     % v - muy bajo, enfoque en estabilidad
+    1e0      % ω - muy bajo, enfoque en estabilidad
+]);
+
+W_u = diag([
+    1e-2;     % τ_L - penalización media-alta
+    1e-2      % τ_R - penalización media-alta
+]);
+
+%% ----- COSTE INICIAL -----
+ocp.cost.cost_type_0 = 'NONLINEAR_LS';
+ocp.cost.W_0 = blkdiag(W_x, W_u);
+% Referencia: [β_ref, β_dot_ref, v_ref, ω_ref, τ_L_ref, τ_R_ref]
+ocp.cost.yref_0 = zeros(nx + nu, 1);
+ocp.model.cost_y_expr_0 = vertcat(model.x, model.u);
+
+%% ----- COSTE DE TRAYECTORIA -----
+ocp.cost.cost_type = 'NONLINEAR_LS';
+ocp.cost.W = blkdiag(W_x, W_u);
+ocp.cost.yref = zeros(nx + nu, 1);
+ocp.model.cost_y_expr = vertcat(model.x, model.u);
+
+%% ----- COSTE TERMINAL -----
+ocp.cost.cost_type_e = 'NONLINEAR_LS';
+% Peso terminal más alto para asegurar estabilidad al final
+ocp.cost.W_e = 5.0 * W_x;
+ocp.cost.yref_e = zeros(nx, 1);
+ocp.model.cost_y_expr_e = model.x;
+
+%% ================= CONSTRAINTS =================
+ocp.constraints.constr_type = 'BGH';
+
+% ---- Control: límites de torque individual ----
+tau_max = 12.0;  % Nm (par máximo por motor)
+tau_min = -12.0; % Nm (par mínimo por motor)
+
+% Límites individuales para cada rueda
+ocp.constraints.idxbu = [0, 1];  % Índices de controles: τ_L, τ_R
+ocp.constraints.lbu = [tau_min; tau_min];
+ocp.constraints.ubu = [tau_max; tau_max];
+
+% ---- Estados ----
+beta_max = deg2rad(30);      % ±30° máximo de inclinación
+beta_dot_max = deg2rad(150); % ±150°/s velocidad de pitch
+v_max = 2.0;                 % m/s velocidad máxima
+omega_max = deg2rad(180);    % rad/s velocidad angular máxima
+
+% Solo acotamos algunos estados (β, β_dot, v, ω)
+ocp.constraints.idxbx = 0:nx-1;  % Todos los estados
+ocp.constraints.lbx = [
+    -beta_max;     % β mínimo
+    -beta_dot_max; % β_dot mínimo
+    -v_max;        % v mínimo
+    -omega_max     % ω mínimo
+];
+ocp.constraints.ubx = [
+    beta_max;      % β máximo
+    beta_dot_max;  % β_dot máximo
+    v_max;         % v máximo
+    omega_max      % ω máximo
+];
+
+% ---- Estado inicial fijo ----
+ocp.constraints.idxbx_0 = 0:nx-1;
+ocp.constraints.lbx_0 = x0;
+ocp.constraints.ubx_0 = x0;
+
+% ---- Terminal: menos restrictivo para permitir convergencia ----
+ocp.constraints.idxbx_e = [0, 1];  % Solo β y β_dot terminales
+ocp.constraints.lbx_e = [-deg2rad(10); -deg2rad(30)];
+ocp.constraints.ubx_e = [deg2rad(10); deg2rad(30)];
+
+%% ================= SOLVER OPTIONS =================
+ocp.solver_options.N_horizon = N;
+ocp.solver_options.tf = T;
+ocp.solver_options.nlp_solver_type = 'SQP';
+ocp.solver_options.integrator_type = 'ERK';
+ocp.solver_options.qp_solver = 'PARTIAL_CONDENSING_HPIPM';
+ocp.solver_options.hessian_approx = 'GAUSS_NEWTON';
+ocp.solver_options.qp_solver_cond_N = 5;
+ocp.solver_options.qp_solver_warm_start = 2;
+ocp.solver_options.nlp_solver_max_iter = 100;
+ocp.solver_options.qp_solver_iter_max = 50;
+ocp.solver_options.print_level = 1;
+ocp.solver_options.ext_fun_compile_flags = '-O2 -fPIC';
+
+
+ocp.simulink_opts = simulink_opts;
+
+
+
+%% ================= CREATE SOLVER =================
+fprintf('Creando solver acados...\n');
+ocp_solver = AcadosOcpSolver(ocp);
+fprintf('Solver creado correctamente.\n');
+
+%% ================= INITIAL GUESS =================
+% Inicialización mejorada: extrapolación lineal desde estado inicial
+x_init = zeros(nx, N+1);
+u_init = zeros(nu, N);
+
+% Estado inicial repetido
+for i = 1:N+1
+    x_init(:, i) = x0;
+end
+
+% Controles iniciales pequeños
+for i = 1:N
+    u_init(:, i) = [0.1; -0.1];  % Pequeño torque diferencial para iniciar
+end
+
+ocp_solver.set('init_x', x_init);
+ocp_solver.set('init_u', u_init);
+
+%% ================= FUNCIÓN PARA CAMBIAR REFERENCIA =================
+% Función auxiliar para actualizar la referencia en línea
+set_reference = @(v_ref, omega_ref) set_ocp_reference(ocp_solver, v_ref, omega_ref, nx, nu);
+
+%% ================= FUNCIÓN PARA SIMULAR UN PASO =================
+simulate_step = @(current_state, v_ref, omega_ref) simulate_mpc_step(...
+    ocp_solver, current_state, v_ref, omega_ref, helpers);
+
+%% ================= SOLVE INITIAL OCP =================
+fprintf('Resolviendo OCP inicial...\n');
+ocp_solver.solve();
+
+status = ocp_solver.get('status');
+if status == 0
+    fprintf('Solver convergió correctamente.\n');
+    
+    % Extraer solución
+    x_opt = zeros(nx, N+1);
+    u_opt = zeros(nu, N);
+    
+    for i = 1:N+1
+        x_opt(:, i) = ocp_solver.get('x', i-1);
+    end
+    
+    for i = 1:N
+        u_opt(:, i) = ocp_solver.get('u', i-1);
+    end
+    
+    % Mostrar algunos resultados
+    fprintf('\nSolución inicial:\n');
+    fprintf('Estado inicial: β=%.2f°, β_dot=%.2f°/s, v=%.2f m/s, ω=%.2f°/s\n', ...
+        rad2deg(x_opt(1,1)), rad2deg(x_opt(2,1)), x_opt(3,1), rad2deg(x_opt(4,1)));
+    fprintf('Primer control: τ_L=%.2f Nm, τ_R=%.2f Nm\n', u_opt(1,1), u_opt(2,1));
+    fprintf('Costo final: %.4f\n', ocp_solver.get_cost());
+    
+else
+    warning('Solver falló con status %d', status);
+    
+    % Intentar diagnóstico
+    sqp_iter = ocp_solver.get('sqp_iter');
+    fprintf('Número de iteraciones SQP: %d\n', sqp_iter);
+    
+    % Probar con otra inicialización
+    fprintf('Intentando con inicialización diferente...\n');
+    ocp_solver.set('init_x', zeros(size(x_init)));
+    ocp_solver.set('init_u', zeros(size(u_init)));
+    ocp_solver.solve();
+end
+
+%% ================= FUNCIONES AUXILIARES =================
+
+function set_ocp_reference(ocp_solver, v_ref, omega_ref, nx, nu)
+    % Actualizar las referencias en todo el horizonte
+    for i = 0:ocp_solver.get('N')-1
+        yref = zeros(nx + nu, 1);
+        yref(3) = v_ref;      % v
+        yref(4) = omega_ref;  % ω
+        ocp_solver.set('yref', i, yref);
+    end
+    
+    % Referencia terminal
+    yref_e = zeros(nx, 1);
+    yref_e(3) = v_ref;
+    yref_e(4) = omega_ref;
+    ocp_solver.set('yref_e', yref_e);
+end
+
+function [u_opt, x_pred] = simulate_mpc_step(ocp_solver, current_state, v_ref, omega_ref, helpers)
+    % Un paso de MPC en línea
+    
+    % 1. Fijar estado actual
+    ocp_solver.set('constr_lbx_0', current_state);
+    ocp_solver.set('constr_ubx_0', current_state);
+    
+    % 2. Actualizar referencia
+    N = ocp_solver.get('N');
+    nx = length(current_state);
+    nu = 2;  % τ_L, τ_R
+    
+    for i = 0:N-1
+        yref = zeros(nx + nu, 1);
+        yref(3) = v_ref;      % v
+        yref(4) = omega_ref;  % ω
+        ocp_solver.set('yref', i, yref);
+    end
+    
+    yref_e = zeros(nx, 1);
+    yref_e(3) = v_ref;
+    yref_e(4) = omega_ref;
+    ocp_solver.set('yref_e', yref_e);
+    
+    % 3. Warm-start con solución anterior
+    x_ws = zeros(nx, N+1);
+    u_ws = zeros(nu, N);
+    
+    for i = 1:N
+        x_ws(:, i) = ocp_solver.get('x', i);
+        u_ws(:, i-1) = ocp_solver.get('u', i-1);
+    end
+    x_ws(:, N+1) = ocp_solver.get('x', N);
+    
+    % Desplazar la solución anterior
+    x_ws(:, 1:end-1) = x_ws(:, 2:end);
+    x_ws(:, end) = x_ws(:, end-1);  % Extrapolación simple
+    
+    u_ws(:, 1:end-1) = u_ws(:, 2:end);
+    u_ws(:, end) = u_ws(:, end-1);
+    
+    ocp_solver.set('init_x', x_ws);
+    ocp_solver.set('init_u', u_ws);
+    
+    % 4. Resolver
+    ocp_solver.solve();
+    
+    % 5. Extraer solución
+    u_opt = ocp_solver.get('u', 0);  % Aplicar solo el primer control
+    
+    % Predicción para visualización
+    x_pred = zeros(nx, N+1);
+    for i = 0:N
+        x_pred(:, i+1) = ocp_solver.get('x', i);
+    end
+    
+    % 6. Verificar estado
+    beta = current_state(1);
+    if abs(beta) > deg2rad(30)
+        warning('Ángulo de pitch crítico: %.1f°', rad2deg(beta));
+    end
+end
+
+%% ================= EJEMPLO DE USO EN BUCLE =================
+% Para usar en simulación en tiempo real:
+%
+% current_state = x0;
+% v_desired = 0.5;    % m/s
+% omega_desired = 0;  % rad/s
+% 
+% for k = 1:100
+%     % Paso de MPC
+%     [u_opt, x_pred] = simulate_step(current_state, v_desired, omega_desired);
+%     
+%     % Aplicar control (simular dinámica)
+%     dt = T/N;
+%     x_dot = helpers.f_expl(current_state, u_opt);
+%     current_state = current_state + x_dot * dt;
+%     
+%     % Visualizar
+%     fprintf('Step %d: β=%.2f°, v=%.3f m/s, τ=[%.2f, %.2f]\n', ...
+%         k, rad2deg(current_state(1)), current_state(3), u_opt(1), u_opt(2));
+%     
+%     % Cambiar referencia si es necesario
+%     if k == 50
+%         v_desired = 0;  % Detenerse
+%         omega_desired = deg2rad(30);  % Girar
+%     end
+% end
+
+fprintf('\n============================================\n');
+fprintf('OCP configurado correctamente para el modelo Segway 2D\n');
+fprintf('Funciones disponibles:\n');
+fprintf('  set_reference(v_ref, omega_ref)\n');
+fprintf('  [u_opt, x_pred] = simulate_step(current_state, v_ref, omega_ref)\n');
+fprintf('============================================\n');

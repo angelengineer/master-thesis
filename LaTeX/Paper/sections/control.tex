@@ -1,0 +1,134 @@
+\subsection{Nonlinear Model Predictive Control}
+
+The NMPC simultaneously regulates the longitudinal velocity and stabilizes the pitch angle while explicitly enforcing physical constraints. The continuous-time optimal control problem is formulated as:
+\begin{equation}
+\begin{aligned}
+\min_{x(\cdot), u(\cdot)} \quad
+& \int_0^T \ell(x(t), u(t)) \, \mathrm{d}t + M(x(T)) \\
+\text{subject to} \quad
+& \dot{x}(t) = f(x(t), u(t)), \\
+& x(0) = \bar{x}_0, \\
+& g(x(t), u(t)) \leq 0 .
+\end{aligned}
+\end{equation}
+
+The stage cost adopts a nonlinear least-squares formulation with state weighting
+\begin{equation}
+W_x = \mathrm{diag}(10^{-9}, 10^{1}, 10^{2}, 10^{3}),
+\end{equation}
+which strongly prioritizes pitch stabilization. The control input is weighted using $W_u = 10^{-1} I_2$.
+
+The NMPC is implemented using \textit{acados} and solved via Real-Time Iteration (RTI) Sequential Quadratic Programming. The prediction horizon consists of $N=40$ discretization steps over $T=1$~s, corresponding to a sampling time of $25$~ms. Box constraints limit the wheel torques to $\pm 10$~Nm and the pitch angle to $\pm 45^\circ$.
+
+\subsection{Disturbance Observers}
+
+\subsubsection{Fork Disturbance Observer (FDOB)}
+
+The FDOB estimates lumped disturbances acting on the fork joint, including dynamic coupling effects, parametric uncertainties, and external torques. Assuming a nominal inertia parameter $m_{n44}$, the fork dynamics are expressed as:
+\begin{equation}
+m_{n44}\ddot{\theta}_a = n_a\tau_a - \tilde{\tau}_{a}^{\mathrm{dist}} .
+\end{equation}
+
+The disturbance is estimated using pseudo-differentiation:
+\begin{equation}
+\hat{\tau}_{a}^{\mathrm{dist}}
+=
+\frac{g_a}{s + g_a}
+\left(
+n_a\tau_a
++
+g_a m_{n44}\dot{\theta}_a
+\right)
+-
+g_a m_{n44}\dot{\theta}_a ,
+\end{equation}
+where $g_a$ denotes the observer bandwidth. The estimated disturbance is fed forward to augment a PD controller:
+\begin{equation}
+\tau_a =
+K_{pa}(\theta_a^{\mathrm{cmd}} - \theta_a)
++
+K_{da}(\dot{\theta}_a^{\mathrm{cmd}} - \dot{\theta}_a)
++
+\hat{\tau}_{a}^{\mathrm{dist}} .
+\end{equation}
+
+\subsubsection{Fork Reaction Torque Observer (FRTOB)}
+
+The FRTOB isolates the payload-induced reaction torque from the total disturbance estimate. By excluding gravity and friction effects, the reaction torque is obtained as:
+\begin{equation}
+\hat{\tau}_a^{\mathrm{reac}}
+=
+\frac{g_r}{s + g_r}
+\left(
+n_a\tau_a
++
+g_r m_{n44}\dot{\theta}_a
+-
+g_4
+-
+\tilde{\tau}_a^{\mathrm{fric}}
+\right)
+-
+g_r m_{n44}\dot{\theta}_a ,
+\end{equation}
+where $g_r$ is the observer bandwidth. Analogous observers (LDOB/LRFOB) are employed to estimate lift reaction forces.
+
+\subsection{Payload Parameter Estimation}
+
+The payload mass is estimated from the lift reaction force when the actuator is active:
+\begin{equation}
+\hat{m}_{\mathrm{lift}} =
+\frac{\hat{f}_{m}^{\mathrm{reac}}}
+{g \cos(\theta_p)} .
+\end{equation}
+
+The horizontal distance between the fork joint and the payload center of mass is estimated from the arm reaction torque:
+\begin{equation}
+\hat{d} =
+\frac{\hat{\tau}_{a}^{\mathrm{reac}}}
+{g \cos(\theta_a + \theta_p)\, \hat{m}} .
+\end{equation}
+
+These estimates are used to update the equivalent parameters $(M, x_G, z_G, I_{\mathrm{eq}})$ of the internal NMPC model, enabling continuous adaptation to changing payload conditions.
+
+\subsection{Collision Detection}
+
+Collision detection exploits the predictive capability of the NMPC. The prediction error is defined as:
+\begin{equation}
+e_k = x_k - \hat{x}_{k|k-1},
+\end{equation}
+where $\hat{x}_{k|k-1}$ denotes the one-step-ahead state prediction. The time derivative of the absolute prediction error,
+\begin{equation}
+\dot{e}_k = \frac{\mathrm{d}}{\mathrm{d}t} \left( | e_k | \right),
+\end{equation}
+emphasizes abrupt deviations from nominal behavior. A collision is detected when:
+\begin{equation}
+|\dot{e}_{\dot{\theta_p},k}| > \delta_{\mathrm{coll}} .
+\end{equation}
+In self-balancing systems, the pitch-rate prediction error is particularly sensitive to external contacts.
+
+\begin{figure}[t]
+    \centering
+    \includegraphics[width=\columnwidth]{control-collision.png}
+    \caption{Control architecture for collision handling.}
+    \label{fig:control-collision}
+\end{figure}
+
+\subsection{Finite State Machine}
+
+A supervisory finite state machine (FSM) coordinates the operational modes (\emph{Idle}, \emph{Moving}, \emph{Loading}, and \emph{Collision}) based on boolean inputs (\emph{Start}, \emph{Move}, \emph{Load}, \emph{Collision}). During the \emph{Loading} state, disturbance signals are ignored to ensure safe payload handling. Upon collision detection, the robot executes a backward motion and subsequently stops (\figref{fig:control-fsm}).
+
+\begin{figure}[t]
+    \centering
+    \includegraphics[width=\columnwidth]{FSM.png}
+    \caption{Finite state machine.}
+    \label{fig:control-fsm}
+\end{figure}
+
+\begin{figure}[t]
+    \centering
+    \includegraphics[width=\columnwidth]{control-global-diagram.png}
+    \includegraphics[width=\columnwidth]{control-FSM.png}
+    \caption{Global control architecture of the system.}
+    \label{fig:control-architecture}
+\end{figure}

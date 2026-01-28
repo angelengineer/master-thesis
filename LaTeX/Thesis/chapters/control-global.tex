@@ -1,0 +1,27 @@
+\section{Global Control Strategy and Architecture}
+
+This section summarizes the overall control strategy adopted in this work and clarifies the interaction between the different control and estimation modules introduced previously. The proposed architecture is designed for a non-autonomous self-balancing robot, where high-level decisions are driven by a human operator, while low-level control and safety are handled automatically.
+
+At the core of the architecture lies a Nonlinear Model Predictive Controller (NMPC), which is responsible for stabilizing the robot and regulating its motion. The NMPC simultaneously enforces dynamic balance, longitudinal motion control, and actuator constraints by explicitly accounting for the nonlinear system dynamics. Rather than generating autonomous behaviors, the NMPC tracks references that are derived from human commands or higher-level supervisory logic, ensuring that operator intentions are executed in a dynamically feasible and safe manner.
+
+To enhance robustness against modeling uncertainties and external interactions, Disturbance Observers (DOB) and Reaction Disturbance Observers (RDOB) are integrated into the control loop. These observers act as virtual sensors, providing real-time estimates of external forces, payload variations, and interaction-induced disturbances. Their outputs are not used to override the operator commands, but instead to improve the reliability of the NMPC predictions and to enable informed safety decisions when abnormal conditions are detected.
+
+A Finite State Machine (FSM) supervises the overall system behavior and governs the transitions between different operational modes. The FSM monitors key variables such as estimated disturbances, reaction forces, and system states, and determines whether the robot operates in nominal control, interaction-aware, or safety-related modes. In this way, the FSM provides a structured and transparent mechanism for handling events such as human contact, payload changes, or constraint violations, without compromising the continuous control performance of the NMPC.
+
+Figure~\ref{fig:global_control_architecture} illustrates the global control architecture. Human inputs are processed at the supervisory level and translated into references for the NMPC. The NMPC computes optimal control actions based on the current state estimates and predicted system evolution. In parallel, the DOB and RDOB estimate external disturbances and feed this information to both the NMPC and the FSM. The FSM, acting as a high-level safety and logic layer, can adapt control parameters or switch operational modes in response to detected events, ensuring safe and predictable human–robot interaction.
+
+Overall, this layered control strategy combines prediction-based optimal control, disturbance-aware estimation, and discrete supervisory logic. This integration allows the robot to remain stable and responsive under human operation, while providing a safety-oriented framework capable of handling external interactions and uncertainties in a principled manner.
+
+\begin{figure}[t]
+    \centering
+    \includegraphics[width=1\linewidth]{control-global-diagram.png}
+    \caption{Block diagram of the global control architecture.}
+    \label{fig:global_control_architecture}
+\end{figure}
+
+\begin{figure}[t]
+    \centering
+    \includegraphics[width=0.8\linewidth]{control-FSM.png}
+    \caption{Block diagram of the finite state machine (FSM) implementation.}
+    \label{fig:control_FSM}
+\end{figure}

@@ -1,0 +1,239 @@
+\subsection{Understanding the Lagrange Running Cost}
+
+\subsubsection{Definition and Physical Interpretation}
+
+The Lagrange running cost, denoted as $\ell(x(t), z(t), u(t))$, is a function that quantifies the instantaneous "cost" or "penalty" incurred at each moment in time along the system trajectory. In the continuous-time optimal control formulation:
+
+\begin{equation}
+J = \int_0^T \ell(x(t), z(t), u(t)) \, dt + M(x(T)),
+\end{equation}
+
+the Lagrange term $\ell(\cdot)$ is integrated over the entire prediction horizon $[0, T]$, while $M(x(T))$ is the terminal cost evaluated only at the final time.
+
+\paragraph{Key Characteristics:}
+
+\begin{itemize}
+    \item \textbf{Temporal nature}: Penalizes deviations from desired behavior at every instant
+    \item \textbf{Accumulated effect}: The total contribution is the integral (sum in discrete time) over the horizon
+    \item \textbf{Design flexibility}: Can encode multiple control objectives simultaneously
+\end{itemize}
+
+\subsubsection{Common Forms of Lagrange Cost}
+
+\paragraph{Quadratic Form (LQ Control):}
+
+For linear-quadratic problems, the running cost is typically:
+
+\begin{equation}
+\ell(x, u) = (x - x_{\text{ref}})^T Q (x - x_{\text{ref}}) + (u - u_{\text{ref}})^T R (u - u_{\text{ref}}),
+\end{equation}
+
+where:
+\begin{itemize}
+    \item $Q \succeq 0$ is the state weighting matrix (positive semi-definite)
+    \item $R \succ 0$ is the control weighting matrix (positive definite)
+    \item $x_{\text{ref}}$, $u_{\text{ref}}$ are the reference (desired) trajectories
+\end{itemize}
+
+This form penalizes:
+\begin{enumerate}
+    \item State deviations from the reference with weight $Q$
+    \item Control effort deviations from nominal with weight $R$
+\end{enumerate}
+
+\paragraph{Nonlinear Least-Squares Form:}
+
+For nonlinear systems, a common generalization is:
+
+\begin{equation}
+\ell(x, z, u) = \|r(x, z, u)\|^2_W = r(x, z, u)^T W \, r(x, z, u),
+\end{equation}
+
+where:
+\begin{itemize}
+    \item $r : \mathbb{R}^{n_x} \times \mathbb{R}^{n_z} \times \mathbb{R}^{n_u} \to \mathbb{R}^{n_r}$ is a residual function
+    \item $W \succeq 0$ is a weighting matrix
+\end{itemize}
+
+For example, the residual might be:
+
+\begin{equation}
+r(x, u) = \begin{bmatrix} x - x_{\text{ref}} \\ u - u_{\text{ref}} \end{bmatrix}.
+\end{equation}
+
+\paragraph{General Nonlinear Form:}
+
+In the most general case:
+
+\begin{equation}
+\ell(x, z, u) = f_{\text{cost}}(x, z, u),
+\end{equation}
+
+where $f_{\text{cost}}$ can be any smooth function encoding the control objectives.
+
+\subsubsection{Discrete-Time Formulation}
+
+In the multiple shooting discretization used by acados, the continuous integral becomes a sum:
+
+\begin{equation}
+\int_0^T \ell(x(t), z(t), u(t)) \, dt \approx \sum_{k=0}^{N-1} (t_{k+1} - t_k) \cdot \ell(x_k, z_k, u_k).
+\end{equation}
+
+For uniform time steps $\Delta t = t_{k+1} - t_k$:
+
+\begin{equation}
+\sum_{k=0}^{N-1} \Delta t \cdot \ell(x_k, z_k, u_k).
+\end{equation}
+
+Often, the time step is absorbed into the weight matrices, giving:
+
+\begin{equation}
+\sum_{k=0}^{N-1} \ell_k(x_k, z_k, u_k).
+\end{equation}
+
+\subsubsection{Physical Interpretation for the Inverted Pendulum}
+
+For the two-wheeled inverted pendulum system, the Lagrange running cost:
+
+\begin{equation}
+\ell(x_k, u_k) = \begin{bmatrix} x_k - x_{\text{ref}} \\ u_k - u_{\text{ref}} \end{bmatrix}^T 
+\begin{bmatrix} W_x & 0 \\ 0 & W_u \end{bmatrix}
+\begin{bmatrix} x_k - x_{\text{ref}} \\ u_k - u_{\text{ref}} \end{bmatrix},
+\end{equation}
+
+with:
+
+\begin{equation}
+W_x = \begin{bmatrix}
+10^2 & 0 & 0 & 0 \\
+0 & 10^3 & 0 & 0 \\
+0 & 0 & 10^2 & 0 \\
+0 & 0 & 0 & 10^3
+\end{bmatrix}, \quad
+W_u = \begin{bmatrix}
+10^{-1} & 0 \\
+0 & 10^{-1}
+\end{bmatrix},
+\end{equation}
+
+encodes the following control objectives **at each time step**:
+
+\begin{enumerate}
+    \item \textbf{Balance maintenance} ($\beta \to 0$): Weight $10^3$ strongly penalizes pitch angle deviations, keeping the robot upright
+    
+    \item \textbf{Angular stability} ($\dot{\beta} \to 0$): Weight $10^3$ penalizes angular velocity, preventing oscillations
+    
+    \item \textbf{Position regulation} ($x \to 0$): Weight $10^2$ moderately penalizes horizontal displacement from origin
+    
+    \item \textbf{Velocity regulation} ($\dot{x} \to 0$): Weight $10^2$ moderately penalizes linear velocity
+    
+    \item \textbf{Control effort} ($\tau_L, \tau_R \to 0$): Weight $10^{-1}$ minimally penalizes torque usage, allowing aggressive corrections when needed
+\end{enumerate}
+
+\subsubsection{Design Considerations}
+
+\paragraph{Weight Matrix Selection:}
+
+The choice of $Q$ and $R$ involves trade-offs:
+
+\begin{itemize}
+    \item \textbf{Large $Q$}: Tight tracking of state reference, but may require large control effort
+    \item \textbf{Small $Q$}: Loose tracking, potentially slower convergence
+    \item \textbf{Large $R$}: Smooth, energy-efficient control, but slower response
+    \item \textbf{Small $R$}: Aggressive control, faster response, but higher energy consumption
+\end{itemize}
+
+For the inverted pendulum, the hierarchy:
+
+\begin{equation}
+W_{\beta} \gg W_{x} \gg W_u
+\end{equation}
+
+reflects that **balance is critical** (primary objective), position control is secondary, and control effort is tertiary.
+
+\paragraph{Typical Tuning Strategy:}
+
+\begin{enumerate}
+    \item Start with identity matrices: $Q = I$, $R = I$
+    \item Increase weights on critical states (e.g., $\beta$ for balance)
+    \item Adjust control weights to achieve desired aggressiveness
+    \item Iterate based on closed-loop performance
+\end{enumerate}
+
+\subsubsection{Lagrange vs. Mayer Cost}
+
+\begin{table}[h]
+\centering
+\begin{tabular}{|l|p{5cm}|p{5cm}|}
+\hline
+\textbf{Aspect} & \textbf{Lagrange Cost} $\ell(\cdot)$ & \textbf{Mayer Cost} $M(\cdot)$ \\
+\hline
+Evaluation & At every time step $k = 0, \ldots, N-1$ & Only at final time $k = N$ \\
+\hline
+Purpose & Penalize trajectory behavior along entire horizon & Penalize terminal state deviation \\
+\hline
+Typical use & Running costs, control effort, path tracking & Terminal constraints, target reaching \\
+\hline
+Mathematical form & $\sum_{k=0}^{N-1} \ell_k(\cdot)$ & $M(x_N)$ \\
+\hline
+Example & $\|x_k - x_{\text{ref}}\|_Q^2$ & $\|x_N - x_{\text{target}}\|_P^2$ \\
+\hline
+\end{tabular}
+\caption{Comparison of Lagrange and Mayer cost terms}
+\end{table}
+
+\paragraph{Note on Terminology:}
+
+The term "Lagrange" here refers to Joseph-Louis Lagrange's formulation of the calculus of variations, not to the Lagrangian mechanics used to derive the system dynamics (though both honor the same mathematician).
+
+\subsubsection{Implementation in acados}
+
+In the acados implementation for the inverted pendulum:
+
+\begin{verbatim}
+% Define cost type
+ocp.cost.cost_type = 'NONLINEAR_LS';
+
+% Set weight matrices
+W_x = diag([1e2, 1e3, 1e2, 1e3]);  % State weights
+W_u = 1e-1 * eye(nu);               % Control weights
+ocp.cost.W = blkdiag(W_x, W_u);     % Combined weight matrix
+
+% Set reference
+ocp.cost.yref = [0; 0; 0; 0; 0; 0];  % [x_ref; β_ref; ẋ_ref; β̇_ref; τ_L_ref; τ_R_ref]
+
+% Define residual function
+ocp.model.cost_y_expr = vertcat(model.x, model.u);
+\end{verbatim}
+
+This corresponds to the running cost:
+
+\begin{equation}
+\ell_k = \left\| \begin{bmatrix} x_k \\ u_k \end{bmatrix} - \begin{bmatrix} 0 \\ 0 \end{bmatrix} \right\|_W^2
+= x_k^T W_x x_k + u_k^T W_u u_k,
+\end{equation}
+
+which is evaluated and summed at each of the $N = 40$ shooting intervals.
+
+\subsubsection{Computational Aspects}
+
+\paragraph{Gauss-Newton Approximation:}
+
+For least-squares costs, acados uses the Gauss-Newton Hessian approximation in the SQP method. The Hessian of the Lagrange cost is approximated as:
+
+\begin{equation}
+H_k \approx \frac{\partial r_k}{\partial (x_k, u_k)}^T W \frac{\partial r_k}{\partial (x_k, u_k)},
+\end{equation}
+
+which avoids computing second derivatives of the residual function $r_k$, significantly reducing computational cost while maintaining good convergence properties for problems close to the solution.
+
+\paragraph{Sensitivity Propagation:}
+
+The gradient of the running cost with respect to states and controls:
+
+\begin{align}
+\frac{\partial \ell_k}{\partial x_k} &= 2 W_x (x_k - x_{\text{ref}}), \\
+\frac{\partial \ell_k}{\partial u_k} &= 2 W_u (u_k - u_{\text{ref}}),
+\end{align}
+
+is computed efficiently and used in the QP subproblem linearization at each SQP iteration.
