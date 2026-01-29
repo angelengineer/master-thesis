@@ -5,6 +5,9 @@
 
 %clear; clc;
 
+[script_path, ~, ~] = fileparts(mfilename('fullpath'))
+cd(script_path);
+
 %% Define Symbolic Variables
 % Generalized coordinates
 syms x theta_p d_m theta_a real
@@ -274,3 +277,5 @@ fprintf('Mn_11 = %.4f\n', Mn_11);
 fprintf('Mn_22 = %.4f\n', Mn_22);
 fprintf('Mn_33 = %.4f\n', Mn_33);
 fprintf('Mn_44 = %.4f\n', Mn_44);
+
+cd ..

@@ -57,9 +57,9 @@ endif()
 
 
 if(CMAKE_CXX_COMPILER_ID MATCHES "MSVC")
-    set(CMAKE_RUNTIME_OUTPUT_DIRECTORY_RELEASE /home/angel/Projects/master-thesis/Windows/Projects/TWFL/TWFL_V2/c_generated_code_model_simplified)
-    set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY_RELEASE /home/angel/Projects/master-thesis/Windows/Projects/TWFL/TWFL_V2/c_generated_code_model_simplified)
-    set(CMAKE_LIBRARY_OUTPUT_DIRECTORY_RELEASE /home/angel/Projects/master-thesis/Windows/Projects/TWFL/TWFL_V2/c_generated_code_model_simplified)
+    set(CMAKE_RUNTIME_OUTPUT_DIRECTORY_RELEASE /home/angel/Projects/master-thesis/Linux/TWFL/TWFL_V2/c_generated_code_model_simplified)
+    set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY_RELEASE /home/angel/Projects/master-thesis/Linux/TWFL/TWFL_V2/c_generated_code_model_simplified)
+    set(CMAKE_LIBRARY_OUTPUT_DIRECTORY_RELEASE /home/angel/Projects/master-thesis/Linux/TWFL/TWFL_V2/c_generated_code_model_simplified)
 endif()
 
 
@@ -103,8 +103,8 @@ set(EXTERNAL_DIR)
 set(EXTERNAL_LIB)
 
 # set some search paths for preprocessor and linker
-set(ACADOS_INCLUDE_PATH /home/angel/Projects/acados/examples/acados_matlab_octave/pendulum_on_cart_model/../../../include CACHE PATH "Define the path which contains the include directory for acados.")
-set(ACADOS_LIB_PATH /home/angel/Projects/acados/examples/acados_matlab_octave/pendulum_on_cart_model/../../../lib CACHE PATH "Define the path which contains the lib directory for acados.")
+set(ACADOS_INCLUDE_PATH /home/angel/Projects/acados/include CACHE PATH "Define the path which contains the include directory for acados.")
+set(ACADOS_LIB_PATH /home/angel/Projects/acados/lib CACHE PATH "Define the path which contains the lib directory for acados.")
 
 # c-compiler flags for debugging
 set(CMAKE_C_FLAGS_DEBUG "-O0 -ggdb")

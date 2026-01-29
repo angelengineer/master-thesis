@@ -1,8 +1,8 @@
 {
 	"code_export_directory":"c_generated_code_model_simplified",
 	"code_gen_opts":{
-		"acados_include_path":"/home/angel/Projects/acados/examples/acados_matlab_octave/pendulum_on_cart_model/../../../include",
-		"acados_lib_path":"/home/angel/Projects/acados/examples/acados_matlab_octave/pendulum_on_cart_model/../../../lib",
+		"acados_include_path":"/home/angel/Projects/acados/include",
+		"acados_lib_path":"/home/angel/Projects/acados/lib",
 		"acados_link_libs":{
 			"clarabel":"",
 			"daqp":"",
@@ -14,9 +14,9 @@
 			"qpoases":"-lqpOASES_e"
 		},
 		"acados_version":"281378772",
-		"code_export_directory":"/home/angel/Projects/master-thesis/Windows/Projects/TWFL/TWFL_V2/c_generated_code_model_simplified",
+		"code_export_directory":"/home/angel/Projects/master-thesis/Linux/TWFL/TWFL_V2/c_generated_code_model_simplified",
 		"cython_include_dirs":[],
-		"json_file":"/home/angel/Projects/master-thesis/Windows/Projects/TWFL/TWFL_V2/model_simplified_ocp.json",
+		"json_file":"/home/angel/Projects/master-thesis/Linux/TWFL/TWFL_V2/model_simplified_ocp.json",
 		"os":"unix",
 		"shared_lib_ext":".so"
 	},
@@ -948,5 +948,5 @@
 		"with_value_sens_wrt_params":0
 	},
 	"zoro_description":[],
-	"hash":"113438d8a8d6bde1651d24cc9a8e05b4"
+	"hash":"43493429d84319f82bb08c092bb646f0"
 }

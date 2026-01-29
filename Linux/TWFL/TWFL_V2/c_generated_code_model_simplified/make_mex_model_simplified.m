@@ -41,7 +41,7 @@ function make_mex_model_simplified()
     template_lib_include = ['-l' 'acados_ocp_solver_model_simplified'];
     template_lib_path = ['-L' fullfile(pwd)];
 
-    acados_link_str = ['-L' '/home/angel/Projects/acados/examples/acados_matlab_octave/pendulum_on_cart_model/../../../lib'];
+    acados_link_str = ['-L' '/home/angel/Projects/acados/lib'];
     external_include = ['-I', fullfile(acados_folder, 'external')];
     blasfeo_include = ['-I', fullfile(acados_folder, 'external', 'blasfeo', 'include')];
     hpipm_include = ['-I', fullfile(acados_folder, 'external', 'hpipm', 'include')];

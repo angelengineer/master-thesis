@@ -64,7 +64,7 @@ SOURCES = { ...
             'acados_solver_model_simplified.c'
           };
 
-INC_PATH = '/home/angel/Projects/acados/examples/acados_matlab_octave/pendulum_on_cart_model/../../../include';
+INC_PATH = '/home/angel/Projects/acados/include';
 
 INCS = {['-I', fullfile(INC_PATH, 'blasfeo', 'include')], ...
         ['-I', fullfile(INC_PATH, 'hpipm', 'include')], ...
@@ -80,7 +80,7 @@ COMPDEFINES = 'COMPDEFINES=$COMPDEFINES';
 
 
 
-LIB_PATH = ['-L', fullfile('/home/angel/Projects/acados/examples/acados_matlab_octave/pendulum_on_cart_model/../../../lib')];
+LIB_PATH = ['-L', fullfile('/home/angel/Projects/acados/lib')];
 
 LIBS = {'-lacados', '-lhpipm', '-lblasfeo'};
 
