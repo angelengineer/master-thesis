@@ -1,0 +1,28 @@
+<?xml version="1.0" ?>
+<robot name="cart-pole" xmlns:xacro="http://www.ros.org/wiki/xacro">
+
+<xacro:include filename="$(find cart-pole_description)/urdf/materials.xacro" />
+<xacro:include filename="$(find cart-pole_description)/urdf/cart-pole.ros2control" />
+<xacro:include filename="$(find cart-pole_description)/urdf/cart-pole.gazebo" />
+<link name="base_link">
+  <inertial>
+    <origin xyz="0.0 0.0 0.05" rpy="0 0 0"/>
+    <mass value="39.25"/>
+    <inertia ixx="0.040885" iyy="3.303542" izz="3.27901" ixy="0.0" iyz="0.0" ixz="0.0"/>
+  </inertial>
+  <visual>
+    <origin xyz="0 0 0" rpy="0 0 0"/>
+    <geometry>
+      <mesh filename="file://$(find cart-pole_description)/meshes/base_link.stl" scale="0.001 0.001 0.001"/>
+    </geometry>
+    <material name="silver"/>
+  </visual>
+  <collision>
+    <origin xyz="0 0 0" rpy="0 0 0"/>
+    <geometry>
+      <mesh filename="file://$(find cart-pole_description)/meshes/base_link.stl" scale="0.001 0.001 0.001"/>
+    </geometry>
+  </collision>
+</link>
+
+</robot>
