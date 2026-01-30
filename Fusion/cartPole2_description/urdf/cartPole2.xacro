@@ -1,0 +1,85 @@
+<?xml version="1.0" ?>
+<robot name="cartPole2" xmlns:xacro="http://www.ros.org/wiki/xacro">
+
+<xacro:include filename="$(find cartPole2_description)/urdf/materials.xacro" />
+<xacro:include filename="$(find cartPole2_description)/urdf/cartPole2.ros2control" />
+<xacro:include filename="$(find cartPole2_description)/urdf/cartPole2.gazebo" />
+<link name="base_link">
+  <inertial>
+    <origin xyz="0.0 0.0 0.05" rpy="0 0 0"/>
+    <mass value="39.25"/>
+    <inertia ixx="0.040885" iyy="3.303542" izz="3.27901" ixy="0.0" iyz="0.0" ixz="0.0"/>
+  </inertial>
+  <visual>
+    <origin xyz="0 0 0" rpy="0 0 0"/>
+    <geometry>
+      <mesh filename="file://$(find cartPole2_description)/meshes/base_link.stl" scale="0.001 0.001 0.001"/>
+    </geometry>
+    <material name="silver"/>
+  </visual>
+  <collision>
+    <origin xyz="0 0 0" rpy="0 0 0"/>
+    <geometry>
+      <mesh filename="file://$(find cartPole2_description)/meshes/base_link.stl" scale="0.001 0.001 0.001"/>
+    </geometry>
+  </collision>
+</link>
+
+<link name="Cart_1">
+  <inertial>
+    <origin xyz="8.399129114862669e-14 -1.8602722292054638e-17 0.024794579674669845" rpy="0 0 0"/>
+    <mass value="7.675794216383947"/>
+    <inertia ixx="0.020804" iyy="0.017855" izz="0.014532" ixy="-0.0" iyz="-0.0" ixz="-0.0"/>
+  </inertial>
+  <visual>
+    <origin xyz="-0.0 -0.0 -0.1" rpy="0 0 0"/>
+    <geometry>
+      <mesh filename="file://$(find cartPole2_description)/meshes/Cart_1.stl" scale="0.001 0.001 0.001"/>
+    </geometry>
+    <material name="silver"/>
+  </visual>
+  <collision>
+    <origin xyz="-0.0 -0.0 -0.1" rpy="0 0 0"/>
+    <geometry>
+      <mesh filename="file://$(find cartPole2_description)/meshes/Cart_1.stl" scale="0.001 0.001 0.001"/>
+    </geometry>
+  </collision>
+</link>
+
+<link name="Pole_1">
+  <inertial>
+    <origin xyz="3.644540535995829e-08 -0.009146379342975304 -0.06010915935097999" rpy="0 0 0"/>
+    <mass value="0.7015953177483354"/>
+    <inertia ixx="0.005581" iyy="0.003975" izz="0.00167" ixy="0.0" iyz="-0.001512" ixz="-0.0"/>
+  </inertial>
+  <visual>
+    <origin xyz="-0.0 0.05 -0.2" rpy="0 0 0"/>
+    <geometry>
+      <mesh filename="file://$(find cartPole2_description)/meshes/Pole_1.stl" scale="0.001 0.001 0.001"/>
+    </geometry>
+    <material name="silver"/>
+  </visual>
+  <collision>
+    <origin xyz="-0.0 0.05 -0.2" rpy="0 0 0"/>
+    <geometry>
+      <mesh filename="file://$(find cartPole2_description)/meshes/Pole_1.stl" scale="0.001 0.001 0.001"/>
+    </geometry>
+  </collision>
+</link>
+
+<joint name="Slider 3" type="prismatic">
+  <origin xyz="0.0 0.0 0.1" rpy="0 0 0"/>
+  <parent link="base_link"/>
+  <child link="Cart_1"/>
+  <axis xyz="1.0 0.0 0.0"/>
+  <limit upper="0.45" lower="-0.45" effort="100" velocity="100"/>
+</joint>
+
+<joint name="Revolute 4" type="continuous">
+  <origin xyz="0.0 -0.05 0.1" rpy="0 0 0"/>
+  <parent link="Cart_1"/>
+  <child link="Pole_1"/>
+  <axis xyz="-0.0 1.0 -0.0"/>
+</joint>
+
+</robot>
