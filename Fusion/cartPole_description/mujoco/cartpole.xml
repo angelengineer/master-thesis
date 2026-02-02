@@ -41,7 +41,9 @@
           name="cart_slide"
           type="slide"
           axis="1 0 0"
-          range="-0.45 0.45"/>
+          range="-0.45 0.45"
+          limited="true"
+        />
 
         <!-- Masa SIMPLE (sin inercia) -->
         <geom
@@ -74,6 +76,6 @@
   </worldbody>
 
     <actuator>
-        <position name="slider" joint="cart_slide" ctrlrange="-0.45 0.45" kp="1000000"/>
+        <motor name="cart_force" joint="cart_slide" gear="100" ctrllimited="true" ctrlrange="-100 100"/>
     </actuator>
 </mujoco>
