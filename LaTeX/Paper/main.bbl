@@ -7,8 +7,7 @@
 \providecommand{\BIBentrySTDinterwordspacing}{\spaceskip=0pt\relax}
 \providecommand{\BIBentryALTinterwordstretchfactor}{4}
 \providecommand{\BIBentryALTinterwordspacing}{\spaceskip=\fontdimen2\font plus
-\BIBentryALTinterwordstretchfactor\fontdimen3\font minus
-  \fontdimen4\font\relax}
+\BIBentryALTinterwordstretchfactor\fontdimen3\font minus \fontdimen4\font\relax}
 \providecommand{\BIBforeignlanguage}[2]{{%
 \expandafter\ifx\csname l@#1\endcsname\relax
 \typeout{** WARNING: IEEEtran.bst: No hyphenation pattern has been}%
@@ -22,35 +21,18 @@
 \BIBdecl
 
 \bibitem{millsNonlinearModelPredictive2009}
-A.~Mills, A.~Wills, and B.~Ninness, ``Nonlinear model predictive control of an
-  inverted pendulum,'' in \emph{Proceedings of the 2009 American Control
-  Conference}.\hskip 1em plus 0.5em minus 0.4em\relax IEEE, 2009, pp.
-  2335--2340.
+A.~Mills, A.~Wills, and B.~Ninness, ``Nonlinear model predictive control of an inverted pendulum,'' in \emph{Proceedings of the 2009 American Control Conference}.\hskip 1em plus 0.5em minus 0.4em\relax IEEE, 2009, pp. 2335--2340.
 
 \bibitem{mishraControlTwoWheelSelfBalancing2024}
-A.~Mishra and K.~Bansal, ``Control of two-wheel self-balancing robot: Lqr and
-  mpc performance analysis,'' in \emph{Proceedings of the 2024 IEEE
-  International Students' Conference on Electrical, Electronics and Computer
-  Science (SCEECS)}.\hskip 1em plus 0.5em minus 0.4em\relax IEEE, 2024, pp.
-  1--6.
+A.~Mishra and K.~Bansal, ``Control of two-wheel self-balancing robot: Lqr and mpc performance analysis,'' in \emph{Proceedings of the 2024 IEEE International Students' Conference on Electrical, Electronics and Computer Science (SCEECS)}.\hskip 1em plus 0.5em minus 0.4em\relax IEEE, 2024, pp. 1--6.
 
 \bibitem{onkolAdaptiveModelPredictive2018}
-M.~Önkol and C.~Kasnakoğlu, ``Adaptive model predictive control of a
-  two-wheeled robot manipulator with varying mass,'' \emph{Measurement and
-  Control}, vol.~51, no. 1--2, pp. 38--56, 2018.
+M.~Önkol and C.~Kasnakoğlu, ``Adaptive model predictive control of a two-wheeled robot manipulator with varying mass,'' \emph{Measurement and Control}, vol.~51, no. 1--2, pp. 38--56, 2018.
 
 \bibitem{yajimaPostureStabilizationControl2023}
-H.~Yajima, K.~Ishizaki, Y.~Miyata, M.~Nawa, N.~Kato, and T.~Murakami, ``Posture
-  stabilization control compensating variation of body center of gravity in
-  underactuated system,'' in \emph{Proceedings of the 2023 IEEE International
-  Conference on Mechatronics (ICM)}.\hskip 1em plus 0.5em minus 0.4em\relax
-  IEEE, 2023, pp. 1--6.
+H.~Yajima, K.~Ishizaki, Y.~Miyata, M.~Nawa, N.~Kato, and T.~Murakami, ``Posture stabilization control compensating variation of body center of gravity in underactuated system,'' in \emph{Proceedings of the 2023 IEEE International Conference on Mechatronics (ICM)}.\hskip 1em plus 0.5em minus 0.4em\relax IEEE, 2023, pp. 1--6.
 
 \bibitem{kanazawa2023}
-H.~Kanazawa, K.~Ishizaki, Y.~Miyata, M.~Nawa, N.~Kato, and T.~Murakami,
-  ``Model-based pitch angle compensation for center of gravity variation in
-  underactuated system with an arm,'' in \emph{Proceedings of the 2023 IEEE
-  International Symposium on Industrial Electronics (ISIE)}.\hskip 1em plus
-  0.5em minus 0.4em\relax IEEE, 2023, pp. 1--6.
+H.~Kanazawa, K.~Ishizaki, Y.~Miyata, M.~Nawa, N.~Kato, and T.~Murakami, ``Model-based pitch angle compensation for center of gravity variation in underactuated system with an arm,'' in \emph{Proceedings of the 2023 IEEE International Symposium on Industrial Electronics (ISIE)}.\hskip 1em plus 0.5em minus 0.4em\relax IEEE, 2023, pp. 1--6.
 
 \end{thebibliography}

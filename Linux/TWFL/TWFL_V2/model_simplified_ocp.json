@@ -13,7 +13,7 @@
 			"qpdunes":"",
 			"qpoases":"-lqpOASES_e"
 		},
-		"acados_version":"281378772",
+		"acados_version":"0ec405f4a",
 		"code_export_directory":"/home/angel/Projects/master-thesis/Linux/TWFL/TWFL_V2/c_generated_code_model_simplified",
 		"cython_include_dirs":[],
 		"json_file":"/home/angel/Projects/master-thesis/Linux/TWFL/TWFL_V2/model_simplified_ocp.json",
@@ -948,5 +948,5 @@
 		"with_value_sens_wrt_params":0
 	},
 	"zoro_description":[],
-	"hash":"43493429d84319f82bb08c092bb646f0"
+	"hash":"758dbd4cfdd55c8738848f726ddecbf4"
 }
