@@ -51,18 +51,23 @@
 
 
 SOURCES = { ...
-            'pendulum_model/pendulum_impl_dae_fun.c', ...
-            'pendulum_model/pendulum_impl_dae_fun_jac_x_xdot_z.c', ...
-            'pendulum_model/pendulum_impl_dae_jac_x_xdot_u_z.c', ...
-            'pendulum_model/pendulum_impl_dae_fun_jac_x_xdot_u.c', ...
-            'pendulum_cost/pendulum_cost_y_0_fun.c', ...
-            'pendulum_cost/pendulum_cost_y_0_fun_jac_ut_xt.c', ...
-            'pendulum_cost/pendulum_cost_y_fun.c', ...
-            'pendulum_cost/pendulum_cost_y_fun_jac_ut_xt.c', ...
-            'pendulum_cost/pendulum_cost_y_e_fun.c', ...
-            'pendulum_cost/pendulum_cost_y_e_fun_jac_ut_xt.c', ...
-            'acados_solver_sfunction_pendulum.c', ...
-            'acados_solver_pendulum.c'
+            'cart_pole_model/cart_pole_gnsf_phi_fun.c', ...
+            'cart_pole_model/cart_pole_gnsf_phi_fun_jac_y.c', ...
+            'cart_pole_model/cart_pole_gnsf_phi_jac_y_uhat.c', ...
+            'cart_pole_model/cart_pole_gnsf_f_lo_fun_jac_x1k1uz.c', ...
+            'cart_pole_model/cart_pole_gnsf_get_matrices_fun.c', ...
+            'cart_pole_cost/cart_pole_cost_y_0_fun.c', ...
+            'cart_pole_cost/cart_pole_cost_y_0_fun_jac_ut_xt.c', ...
+            'cart_pole_cost/cart_pole_cost_y_fun.c', ...
+            'cart_pole_cost/cart_pole_cost_y_fun_jac_ut_xt.c', ...
+            'cart_pole_cost/cart_pole_cost_y_e_fun.c', ...
+            'cart_pole_cost/cart_pole_cost_y_e_fun_jac_ut_xt.c', ...
+            'cart_pole_constraints/cart_pole_constr_h_0_fun.c', ...
+            'cart_pole_constraints/cart_pole_constr_h_0_fun_jac_uxt_zt.c', ...
+            'cart_pole_constraints/cart_pole_constr_h_fun.c', ...
+            'cart_pole_constraints/cart_pole_constr_h_fun_jac_uxt_zt.c', ...
+            'acados_solver_sfunction_cart_pole.c', ...
+            'acados_solver_cart_pole.c'
           };
 
 INC_PATH = '/home/angel/Projects/acados/include';
@@ -89,14 +94,14 @@ LIBS = {'-lacados', '-lhpipm', '-lblasfeo'};
     
     
 
-COMPFLAGS = [COMPFLAGS ' -O2'];
-CFLAGS = [CFLAGS ' -O2'];
+COMPFLAGS = [COMPFLAGS ' -O2 -fPIC'];
+CFLAGS = [CFLAGS ' -O2 -fPIC'];
 
 try
     %     mex('-v', '-O', CFLAGS, LDFLAGS, COMPFLAGS, COMPDEFINES, INCS{:}, ...
     mex('-O', CFLAGS, LDFLAGS, COMPFLAGS, COMPDEFINES, INCS{:}, ...
             LIB_PATH, LIBS{:}, SOURCES{:}, ...
-            '-output', 'acados_solver_sfunction_pendulum' );
+            '-output', 'acados_solver_sfunction_cart_pole' );
 catch exception
     disp('make_sfun failed with the following exception:')
     disp(exception);
@@ -105,7 +110,7 @@ catch exception
     keyboard
 end
 
-fprintf( [ '\n\nSuccessfully created sfunction:\nacados_solver_sfunction_pendulum', '.', ...
+fprintf( [ '\n\nSuccessfully created sfunction:\nacados_solver_sfunction_cart_pole', '.', ...
     eval('mexext')] );
 
 
@@ -124,10 +129,6 @@ input_note = strcat(input_note, num2str(i_in), ') ubx_0 - upper bound on x for s
                     ' size [4]\n ');
 sfun_input_names = [sfun_input_names; 'ubx_0 [4]'];
 i_in = i_in + 1;
-input_note = strcat(input_note, num2str(i_in), ') parameters - concatenated for all stages 0 to N,',...
-                    ' size [21]\n ');
-sfun_input_names = [sfun_input_names; 'parameter_traj [21]'];
-i_in = i_in + 1;
 input_note = strcat(input_note, num2str(i_in), ') y_ref_0 - size [1]\n ');
 sfun_input_names = [sfun_input_names; 'y_ref_0 [1]'];
 i_in = i_in + 1;
@@ -135,17 +136,23 @@ i_in = i_in + 1;
 
 
 input_note = strcat(input_note, num2str(i_in), ') y_ref - concatenated for stages 1 to N-1,',...
-                    ' size [95]\n ');
-sfun_input_names = [sfun_input_names; 'y_ref [95]'];
+                    ' size [195]\n ');
+sfun_input_names = [sfun_input_names; 'y_ref [195]'];
 i_in = i_in + 1;
 input_note = strcat(input_note, num2str(i_in), ') y_ref_e - size [4]\n ');
 sfun_input_names = [sfun_input_names; 'y_ref_e [4]'];
 i_in = i_in + 1;
-input_note = strcat(input_note, num2str(i_in), ') lbu for stages 0 to N-1, size [20]\n ');
-sfun_input_names = [sfun_input_names; 'lbu [20]'];
+input_note = strcat(input_note, num2str(i_in), ') lh for stages 1 to N-1, size [39]\n ');
+sfun_input_names = [sfun_input_names; 'lh [39]'];
 i_in = i_in + 1;
-input_note = strcat(input_note, num2str(i_in), ') ubu for stages 0 to N-1, size [20]\n ');
-sfun_input_names = [sfun_input_names; 'ubu [20]'];
+input_note = strcat(input_note, num2str(i_in), ') uh for stages 1 to N-1, size [39]\n ');
+sfun_input_names = [sfun_input_names; 'uh [39]'];
+i_in = i_in + 1;
+input_note = strcat(input_note, num2str(i_in), ') lh_0, size [1]\n ');
+sfun_input_names = [sfun_input_names; 'lh_0 [1]'];
+i_in = i_in + 1;
+input_note = strcat(input_note, num2str(i_in), ') uh_0, size [1]\n ');
+sfun_input_names = [sfun_input_names; 'uh_0 [1]'];
 i_in = i_in + 1;
 
 
@@ -182,13 +189,13 @@ sfun_output_names = [sfun_output_names; 'sqp_iter'];
 
 
 fprintf(output_note)
-modelName = 'pendulum_ocp_solver_simulink_block';
+modelName = 'cart_pole_ocp_solver_simulink_block';
 new_system(modelName);
 open_system(modelName);
 
-blockPath = [modelName '/pendulum_ocp_solver'];
+blockPath = [modelName '/cart_pole_ocp_solver'];
 add_block('simulink/User-Defined Functions/S-Function', blockPath);
-set_param(blockPath, 'FunctionName', 'acados_solver_sfunction_pendulum');
+set_param(blockPath, 'FunctionName', 'acados_solver_sfunction_cart_pole');
 
 Simulink.Mask.create(blockPath);
 mask_str = sprintf([ ...

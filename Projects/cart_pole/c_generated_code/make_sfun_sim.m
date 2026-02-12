@@ -29,12 +29,13 @@
 
 %
 
-SOURCES = [ 'acados_sim_solver_sfunction_pendulum.c ', ...
-            'acados_sim_solver_pendulum.c ', ...
-            'pendulum_model/pendulum_impl_dae_fun.c ', ...
-            'pendulum_model/pendulum_impl_dae_fun_jac_x_xdot_z.c ', ...
-            'pendulum_model/pendulum_impl_dae_jac_x_xdot_u_z.c ', ...
-            'pendulum_model/pendulum_impl_dae_fun_jac_x_xdot_u.c ', ...
+SOURCES = [ 'acados_sim_solver_sfunction_cart_pole.c ', ...
+            'acados_sim_solver_cart_pole.c ', ...
+            'cart_pole_model/cart_pole_gnsf_phi_fun.c ', ...
+            'cart_pole_model/cart_pole_gnsf_phi_fun_jac_y.c ', ...
+            'cart_pole_model/cart_pole_gnsf_phi_jac_y_uhat.c ', ...
+            'cart_pole_model/cart_pole_gnsf_f_lo_fun_jac_x1k1uz.c ', ...
+            'cart_pole_model/cart_pole_gnsf_get_matrices_fun.c ', ...
 ];
 
 INC_PATH = '/home/angel/Projects/acados/include';
@@ -50,8 +51,8 @@ LIB_PATH = '/home/angel/Projects/acados/lib';
 LIBS = '-lacados -lhpipm -lblasfeo';
 
 try
-    % eval( [ 'mex -v -output  acados_sim_solver_sfunction_pendulum ', ...
-    eval( [ 'mex -output  acados_sim_solver_sfunction_pendulum ', ...
+    % eval( [ 'mex -v -output  acados_sim_solver_sfunction_cart_pole ', ...
+    eval( [ 'mex -output  acados_sim_solver_sfunction_cart_pole ', ...
         CFLAGS, INCS, ' ', SOURCES, ' -L', LIB_PATH, ' ', LIBS ]);
 
 catch exception
@@ -63,7 +64,7 @@ catch exception
 end
 
 
-fprintf( [ '\n\nSuccessfully created sfunction:\nacados_sim_solver_sfunction_pendulum', '.', ...
+fprintf( [ '\n\nSuccessfully created sfunction:\nacados_sim_solver_sfunction_cart_pole', '.', ...
     eval('mexext')] );
 
 
@@ -78,9 +79,6 @@ sfun_sim_input_names = [sfun_sim_input_names; 'x0 [4]'];
 input_note = strcat(input_note, num2str(i_in), ') u, size [1]\n ');
 i_in = i_in + 1;
 sfun_sim_input_names = [sfun_sim_input_names; 'u [1]'];
-input_note = strcat(input_note, num2str(i_in), ') parameters, size [1]\n ');
-i_in = i_in + 1;
-sfun_sim_input_names = [sfun_sim_input_names; 'p [1]'];
 
 
 fprintf(input_note)
@@ -98,13 +96,13 @@ fprintf(output_note)
 
 
 % create the Simulink block for the integrator
-modelName = 'pendulum_sim_solver_simulink_block';
+modelName = 'cart_pole_sim_solver_simulink_block';
 new_system(modelName);
 open_system(modelName);
 
-blockPath = [modelName '/pendulum_sim_solver'];
+blockPath = [modelName '/cart_pole_sim_solver'];
 add_block('simulink/User-Defined Functions/S-Function', blockPath);
-set_param(blockPath, 'FunctionName', 'acados_sim_solver_sfunction_pendulum');
+set_param(blockPath, 'FunctionName', 'acados_sim_solver_sfunction_cart_pole');
 
 Simulink.Mask.create(blockPath);
 mask_str = sprintf([ ...

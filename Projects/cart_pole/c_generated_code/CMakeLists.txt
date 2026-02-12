@@ -32,12 +32,17 @@
 
 cmake_minimum_required(VERSION 3.13)
 
-project(pendulum)
+project(cart_pole)
 
 # build options.
 
-option(BUILD_SIM_EXAMPLE "Should the simulation example main_sim_pendulum be build?" OFF)
-option(BUILD_ACADOS_SIM_SOLVER_LIB "Should the simulation solver library acados_sim_solver_pendulum be build?" OFF)
+option(BUILD_ACADOS_SOLVER_LIB "Should the solver library acados_solver_cart_pole be build?" OFF)
+option(BUILD_ACADOS_OCP_SOLVER_LIB "Should the OCP solver library acados_ocp_solver_cart_pole be build?" OFF)
+option(BUILD_ACADOS_OCP_SOLVER_STATIC_LIB "Should the static OCP solver library acados_ocp_solver_cart_pole_static be built?" OFF)
+option(BUILD_EXAMPLE "Should the example main_cart_pole be build?" OFF)
+option(BUILD_EXAMPLE_STATIC "Should the example main_cart_pole be build linking to the static OCP solver library?" OFF)
+option(BUILD_SIM_EXAMPLE "Should the simulation example main_sim_cart_pole be build?" OFF)
+option(BUILD_ACADOS_SIM_SOLVER_LIB "Should the simulation solver library acados_sim_solver_cart_pole be build?" OFF)
 
 
 if(CMAKE_CXX_COMPILER_ID MATCHES "GNU" AND CMAKE_SYSTEM_NAME MATCHES "Windows")
@@ -59,25 +64,47 @@ endif()
 
 
 # object target names
-set(MODEL_OBJ model_pendulum)
-set(OCP_OBJ ocp_pendulum)
-set(SIM_OBJ sim_pendulum)
+set(MODEL_OBJ model_cart_pole)
+set(OCP_OBJ ocp_cart_pole)
+set(SIM_OBJ sim_cart_pole)
 # model
 set(MODEL_SRC
-    pendulum_model/pendulum_impl_dae_fun.c
-    pendulum_model/pendulum_impl_dae_fun_jac_x_xdot_z.c
-    pendulum_model/pendulum_impl_dae_jac_x_xdot_u_z.c
-    pendulum_model/pendulum_impl_dae_fun_jac_x_xdot_u.c
+    cart_pole_model/cart_pole_gnsf_phi_fun.c
+    cart_pole_model/cart_pole_gnsf_phi_fun_jac_y.c
+    cart_pole_model/cart_pole_gnsf_phi_jac_y_uhat.c
+    cart_pole_model/cart_pole_gnsf_f_lo_fun_jac_x1k1uz.c
+    cart_pole_model/cart_pole_gnsf_get_matrices_fun.c
 )
 add_library(${MODEL_OBJ} OBJECT ${MODEL_SRC} )
 
 
+# optimal control problem - mostly CasADi exports
+if(${BUILD_ACADOS_SOLVER_LIB} OR ${BUILD_ACADOS_OCP_SOLVER_LIB} OR ${BUILD_ACADOS_OCP_SOLVER_STATIC_LIB} OR ${BUILD_EXAMPLE})
+    set(OCP_SRC
+
+        cart_pole_cost/cart_pole_cost_y_0_fun.c
+        cart_pole_cost/cart_pole_cost_y_0_fun_jac_ut_xt.c
+        cart_pole_cost/cart_pole_cost_y_fun.c
+        cart_pole_cost/cart_pole_cost_y_fun_jac_ut_xt.c
+        cart_pole_cost/cart_pole_cost_y_e_fun.c
+        cart_pole_cost/cart_pole_cost_y_e_fun_jac_ut_xt.c
+        cart_pole_constraints/cart_pole_constr_h_0_fun.c
+        cart_pole_constraints/cart_pole_constr_h_0_fun_jac_uxt_zt.c
+        cart_pole_constraints/cart_pole_constr_h_fun.c
+        cart_pole_constraints/cart_pole_constr_h_fun_jac_uxt_zt.c
+        acados_solver_cart_pole.c
+    )
+    add_library(${OCP_OBJ} OBJECT ${OCP_SRC})
+endif()
 # for sim solver
 if(${BUILD_ACADOS_SOLVER_LIB} OR ${BUILD_EXAMPLE}
     OR ${BUILD_SIM_EXAMPLE} OR ${BUILD_ACADOS_SIM_SOLVER_LIB})
-    set(SIM_SRC acados_sim_solver_pendulum.c)
+    set(SIM_SRC acados_sim_solver_cart_pole.c)
     add_library(${SIM_OBJ} OBJECT ${SIM_SRC})
 endif()
+# for target example
+set(EX_SRC main_cart_pole.c)
+set(EX_EXE main_cart_pole)
 set(EXTERNAL_DIR)
 set(EXTERNAL_LIB)
 
@@ -88,7 +115,7 @@ set(ACADOS_LIB_PATH /home/angel/Projects/acados/lib CACHE PATH "Define the path 
 # c-compiler flags for debugging
 set(CMAKE_C_FLAGS_DEBUG "-O0 -ggdb")
 
-set(CMAKE_C_FLAGS "-fPIC -std=c99   -O2  ")
+set(CMAKE_C_FLAGS "-fPIC -std=c99   -O2 -fPIC  ")
 #-fno-diagnostics-show-line-numbers -g
 
 set(ACADOS_INCLUDE_PATHS
@@ -113,22 +140,77 @@ endif()
 link_libraries(${ACADOS_LINK_LIBS})
 
 # the targets
+# bundled_shared_lib
+if(${BUILD_ACADOS_SOLVER_LIB})
+    set(LIB_ACADOS_SOLVER acados_solver_cart_pole)
+    add_library(${LIB_ACADOS_SOLVER} SHARED
+    $<TARGET_OBJECTS:${MODEL_OBJ}>
+    $<TARGET_OBJECTS:${OCP_OBJ}>
+    $<TARGET_OBJECTS:${SIM_OBJ}>)
+    install(TARGETS ${LIB_ACADOS_SOLVER} DESTINATION ${CMAKE_INSTALL_PREFIX})
+endif(${BUILD_ACADOS_SOLVER_LIB})
+
+# ocp_shared_lib
+if(${BUILD_ACADOS_OCP_SOLVER_LIB})
+    set(LIB_ACADOS_OCP_SOLVER acados_ocp_solver_cart_pole)
+    add_library(${LIB_ACADOS_OCP_SOLVER} SHARED
+    $<TARGET_OBJECTS:${MODEL_OBJ}>
+    $<TARGET_OBJECTS:${OCP_OBJ}>)
+    # Specify libraries or flags to use when linking a given target and/or its dependents.
+    target_link_libraries(${LIB_ACADOS_OCP_SOLVER} PRIVATE ${EXTERNAL_LIB})
+    target_link_directories(${LIB_ACADOS_OCP_SOLVER} PRIVATE ${EXTERNAL_DIR})
+    install(TARGETS ${LIB_ACADOS_OCP_SOLVER} DESTINATION ${CMAKE_INSTALL_PREFIX})
+endif(${BUILD_ACADOS_OCP_SOLVER_LIB})
+
+# ocp_static_lib
+if(${BUILD_ACADOS_OCP_SOLVER_STATIC_LIB})
+    set(LIB_ACADOS_OCP_SOLVER_STATIC acados_ocp_solver_cart_pole_static)
+    add_library(${LIB_ACADOS_OCP_SOLVER_STATIC} STATIC
+        $<TARGET_OBJECTS:${MODEL_OBJ}>
+        $<TARGET_OBJECTS:${OCP_OBJ}>
+    )
+    target_link_libraries(${LIB_ACADOS_OCP_SOLVER_STATIC} PRIVATE ${EXTERNAL_LIB})
+    target_link_directories(${LIB_ACADOS_OCP_SOLVER_STATIC} PRIVATE ${EXTERNAL_DIR})
+    install(TARGETS ${LIB_ACADOS_OCP_SOLVER_STATIC} DESTINATION ${CMAKE_INSTALL_PREFIX})
+endif(${BUILD_ACADOS_OCP_SOLVER_STATIC_LIB})
+
+# example
+if(${BUILD_EXAMPLE})
+    add_executable(${EX_EXE} ${EX_SRC}
+    $<TARGET_OBJECTS:${MODEL_OBJ}>
+    $<TARGET_OBJECTS:${OCP_OBJ}>
+        $<TARGET_OBJECTS:${SIM_OBJ}>)
+    install(TARGETS ${EX_EXE} DESTINATION ${CMAKE_INSTALL_PREFIX})
+endif(${BUILD_EXAMPLE})
+
+# example linking to static lib
+if(${BUILD_EXAMPLE_STATIC})
+    add_executable(${EX_EXE} ${EX_SRC}
+    )
+    install(TARGETS ${EX_EXE} DESTINATION ${CMAKE_INSTALL_PREFIX})
+    target_link_libraries(${EX_EXE} PRIVATE ${LIB_ACADOS_OCP_SOLVER_STATIC} ${EXTERNAL_LIB})
+endif(${BUILD_EXAMPLE_STATIC})
 
 # example_sim
 if(${BUILD_SIM_EXAMPLE})
-    set(EX_SIM_SRC main_sim_pendulum.c)
-    set(EX_SIM_EXE main_sim_pendulum)
+    set(EX_SIM_SRC main_sim_cart_pole.c)
+    set(EX_SIM_EXE main_sim_cart_pole)
     add_executable(${EX_SIM_EXE} ${EX_SIM_SRC} $<TARGET_OBJECTS:${MODEL_OBJ}> $<TARGET_OBJECTS:${SIM_OBJ}>)
     install(TARGETS ${EX_SIM_EXE} DESTINATION ${CMAKE_INSTALL_PREFIX})
 endif(${BUILD_SIM_EXAMPLE})
 
 # sim_shared_lib
 if(${BUILD_ACADOS_SIM_SOLVER_LIB})
-    set(LIB_ACADOS_SIM_SOLVER acados_sim_solver_pendulum)
+    set(LIB_ACADOS_SIM_SOLVER acados_sim_solver_cart_pole)
     add_library(${LIB_ACADOS_SIM_SOLVER} SHARED $<TARGET_OBJECTS:${MODEL_OBJ}> $<TARGET_OBJECTS:${SIM_OBJ}>)
     install(TARGETS ${LIB_ACADOS_SIM_SOLVER} DESTINATION ${CMAKE_INSTALL_PREFIX})
 endif(${BUILD_ACADOS_SIM_SOLVER_LIB})
 
 # unset options for clean cmake cache on subsequent cmake runs
+unset(BUILD_ACADOS_SOLVER_LIB CACHE)
+unset(BUILD_ACADOS_OCP_SOLVER_LIB CACHE)
+unset(BUILD_ACADOS_OCP_SOLVER_STATIC_LIB CACHE)
+unset(BUILD_EXAMPLE CACHE)
+unset(BUILD_EXAMPLE_STATIC CACHE)
 unset(BUILD_SIM_EXAMPLE CACHE)
 unset(BUILD_ACADOS_SIM_SOLVER_LIB CACHE)

@@ -1,0 +1,663 @@
+\documentclass[12pt]{article}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage[margin=1in]{geometry}
+
+\title{Derivación Completa de las Ecuaciones de Euler-Lagrange\\
+para el Péndulo Invertido sobre Carrito}
+\author{Desarrollo Paso a Paso}
+\date{}
+
+\begin{document}
+
+\maketitle
+
+\section{Descripción del Sistema}
+
+Consideramos un péndulo invertido montado sobre un carrito que se mueve horizontalmente:
+
+\begin{itemize}
+    \item \textbf{Carrito:} masa $M$, posición horizontal $p$
+    \item \textbf{Péndulo:} masa $m$, longitud al centro de masa $\ell$, momento de inercia $I_{\text{pend}}$
+    \item \textbf{Pivote:} ubicado a altura $h_{\text{pivot}}$ sobre el carrito
+    \item \textbf{Control:} fuerza horizontal $F$ aplicada al carrito
+    \item \textbf{Gravedad:} $g = 9.81 \, \text{m/s}^2$
+\end{itemize}
+
+\subsection{Coordenadas Generalizadas}
+
+\begin{align}
+q_1 &= p \quad \text{(posición horizontal del carrito)} \\
+q_2 &= \theta \quad \text{(ángulo del péndulo con la vertical)} \\
+\dot{q}_1 &= v = \dot{p} \quad \text{(velocidad del carrito)} \\
+\dot{q}_2 &= \omega = \dot{\theta} \quad \text{(velocidad angular del péndulo)}
+\end{align}
+
+\section{Cinemática del Sistema}
+
+\subsection{Posición del Centro de Masa del Péndulo}
+
+El centro de masa del péndulo se encuentra a distancia $\ell$ del pivote. En coordenadas cartesianas:
+
+\begin{align}
+x_{\text{pend}} &= p + \ell \sin\theta \\
+z_{\text{pend}} &= h_{\text{pivot}} - \ell \cos\theta
+\end{align}
+
+\textbf{Explicación:}
+\begin{itemize}
+    \item El pivote se mueve horizontalmente con el carrito en $p$
+    \item El péndulo se desvía horizontalmente $\ell\sin\theta$ desde el pivote
+    \item Verticalmente, el péndulo "cuelga" $\ell\cos\theta$ debajo del pivote
+\end{itemize}
+
+\subsection{Velocidad del Centro de Masa del Péndulo}
+
+Derivamos las posiciones respecto al tiempo:
+
+\subsubsection{Velocidad Horizontal}
+
+\begin{align}
+\dot{x}_{\text{pend}} &= \frac{d}{dt}[p + \ell\sin\theta] \\
+&= \dot{p} + \ell \frac{d}{dt}[\sin\theta] \\
+&= v + \ell \cos\theta \cdot \dot{\theta} \\
+&= v + \ell \cos\theta \cdot \omega
+\end{align}
+
+\textbf{Nota:} Usamos la regla de la cadena: $\frac{d}{dt}[\sin\theta] = \cos\theta \cdot \dot{\theta}$
+
+\subsubsection{Velocidad Vertical}
+
+\begin{align}
+\dot{z}_{\text{pend}} &= \frac{d}{dt}[h_{\text{pivot}} - \ell\cos\theta] \\
+&= 0 - \ell \frac{d}{dt}[\cos\theta] \\
+&= -\ell(-\sin\theta) \cdot \dot{\theta} \\
+&= \ell \sin\theta \cdot \omega
+\end{align}
+
+\textbf{Nota:} $h_{\text{pivot}}$ es constante, y $\frac{d}{dt}[\cos\theta] = -\sin\theta \cdot \dot{\theta}$
+
+\section{Energías del Sistema}
+
+\subsection{Energía Cinética}
+
+\subsubsection{Energía Cinética del Carrito}
+
+El carrito solo tiene movimiento traslacional horizontal:
+
+\begin{equation}
+T_{\text{cart}} = \frac{1}{2}M v^2
+\end{equation}
+
+\subsubsection{Energía Cinética del Péndulo}
+
+El péndulo tiene dos componentes:
+
+\textbf{1. Traslación del centro de masa:}
+
+\begin{align}
+T_{\text{pend,trans}} &= \frac{1}{2}m(\dot{x}_{\text{pend}}^2 + \dot{z}_{\text{pend}}^2) \\
+&= \frac{1}{2}m[(v + \ell\cos\theta \cdot \omega)^2 + (\ell\sin\theta \cdot \omega)^2]
+\end{align}
+
+Expandiendo el primer término:
+
+\begin{align}
+(v + \ell\cos\theta \cdot \omega)^2 &= v^2 + 2v\ell\cos\theta \cdot \omega + \ell^2\cos^2\theta \cdot \omega^2
+\end{align}
+
+Expandiendo el segundo término:
+
+\begin{align}
+(\ell\sin\theta \cdot \omega)^2 &= \ell^2\sin^2\theta \cdot \omega^2
+\end{align}
+
+Sumando ambos:
+
+\begin{align}
+\dot{x}_{\text{pend}}^2 + \dot{z}_{\text{pend}}^2 &= v^2 + 2v\ell\cos\theta \cdot \omega + \ell^2\cos^2\theta \cdot \omega^2 + \ell^2\sin^2\theta \cdot \omega^2 \\
+&= v^2 + 2v\ell\cos\theta \cdot \omega + \ell^2(\cos^2\theta + \sin^2\theta)\omega^2 \\
+&= v^2 + 2v\ell\cos\theta \cdot \omega + \ell^2\omega^2
+\end{align}
+
+\textbf{Identidad trigonométrica usada:} $\cos^2\theta + \sin^2\theta = 1$
+
+Por lo tanto:
+
+\begin{equation}
+T_{\text{pend,trans}} = \frac{1}{2}m[v^2 + 2v\ell\cos\theta \cdot \omega + \ell^2\omega^2]
+\end{equation}
+
+\textbf{2. Rotación sobre su centro de masa:}
+
+\begin{equation}
+T_{\text{pend,rot}} = \frac{1}{2}I_{\text{pend}}\omega^2
+\end{equation}
+
+\textbf{Energía cinética total del péndulo:}
+
+\begin{align}
+T_{\text{pend}} &= T_{\text{pend,trans}} + T_{\text{pend,rot}} \\
+&= \frac{1}{2}m[v^2 + 2v\ell\cos\theta \cdot \omega + \ell^2\omega^2] + \frac{1}{2}I_{\text{pend}}\omega^2 \\
+&= \frac{1}{2}mv^2 + mv\ell\cos\theta \cdot \omega + \frac{1}{2}(m\ell^2 + I_{\text{pend}})\omega^2
+\end{align}
+
+\subsubsection{Energía Cinética Total del Sistema}
+
+\begin{align}
+T &= T_{\text{cart}} + T_{\text{pend}} \\
+&= \frac{1}{2}Mv^2 + \frac{1}{2}mv^2 + mv\ell\cos\theta \cdot \omega + \frac{1}{2}(m\ell^2 + I_{\text{pend}})\omega^2 \\
+&= \frac{1}{2}(M + m)v^2 + mv\ell\cos\theta \cdot \omega + \frac{1}{2}J\omega^2
+\end{align}
+
+donde definimos el \textbf{momento de inercia efectivo} del péndulo sobre el pivote:
+
+\begin{equation}
+J = m\ell^2 + I_{\text{pend}}
+\end{equation}
+
+\textbf{Nota:} Este es el teorema de los ejes paralelos (Steiner).
+
+\subsection{Energía Potencial}
+
+\subsubsection{Energía Potencial del Carrito}
+
+Si el centro de masa del carrito está a altura constante $h_c$:
+
+\begin{equation}
+U_{\text{cart}} = Mgh_c
+\end{equation}
+
+Esta es una \textbf{constante}, por lo que no afectará las ecuaciones de movimiento.
+
+\subsubsection{Energía Potencial del Péndulo}
+
+La altura del centro de masa del péndulo es:
+
+\begin{equation}
+U_{\text{pend}} = mg \cdot z_{\text{pend}} = mg(h_{\text{pivot}} - \ell\cos\theta)
+\end{equation}
+
+El término $mgh_{\text{pivot}}$ es constante, así que podemos escribir:
+
+\begin{equation}
+U_{\text{pend}} = -mg\ell\cos\theta + \text{constante}
+\end{equation}
+
+\subsubsection{Energía Potencial Total}
+
+Ignorando las constantes:
+
+\begin{equation}
+U = -mg\ell\cos\theta
+\end{equation}
+
+\section{Lagrangiano del Sistema}
+
+El Lagrangiano se define como:
+
+\begin{equation}
+\mathcal{L} = T - U
+\end{equation}
+
+Sustituyendo:
+
+\begin{align}
+\mathcal{L} &= \frac{1}{2}(M + m)v^2 + mv\ell\cos\theta \cdot \omega + \frac{1}{2}J\omega^2 - (-mg\ell\cos\theta) \\
+&= \frac{1}{2}(M + m)v^2 + mv\ell\cos\theta \cdot \omega + \frac{1}{2}J\omega^2 + mg\ell\cos\theta
+\end{align}
+
+\textbf{Forma final del Lagrangiano:}
+
+\begin{equation}
+\boxed{\mathcal{L} = \frac{1}{2}(M + m)v^2 + mv\ell\cos\theta \cdot \omega + \frac{1}{2}J\omega^2 + mg\ell\cos\theta}
+\end{equation}
+
+\section{Ecuaciones de Euler-Lagrange}
+
+Las ecuaciones de Euler-Lagrange son:
+
+\begin{equation}
+\frac{d}{dt}\left(\frac{\partial \mathcal{L}}{\partial \dot{q}_i}\right) - \frac{\partial \mathcal{L}}{\partial q_i} = Q_i
+\end{equation}
+
+donde $Q_i$ son las fuerzas generalizadas.
+
+\subsection{Ecuación para la Coordenada $p$ (Posición del Carrito)}
+
+\subsubsection{Paso 1: Calcular $\frac{\partial \mathcal{L}}{\partial v}$}
+
+El Lagrangiano es:
+
+\begin{equation}
+\mathcal{L} = \frac{1}{2}(M + m)v^2 + mv\ell\cos\theta \cdot \omega + \frac{1}{2}J\omega^2 + mg\ell\cos\theta
+\end{equation}
+
+Los términos que contienen $v$ son:
+
+\begin{equation}
+\frac{1}{2}(M + m)v^2 \quad \text{y} \quad mv\ell\cos\theta \cdot \omega
+\end{equation}
+
+Derivando parcialmente con respecto a $v$:
+
+\begin{align}
+\frac{\partial \mathcal{L}}{\partial v} &= \frac{\partial}{\partial v}\left[\frac{1}{2}(M + m)v^2\right] + \frac{\partial}{\partial v}[mv\ell\cos\theta \cdot \omega] \\
+&= (M + m)v + m\ell\cos\theta \cdot \omega
+\end{align}
+
+\textbf{Resultado:}
+
+\begin{equation}
+\boxed{\frac{\partial \mathcal{L}}{\partial v} = (M + m)v + m\ell\cos\theta \cdot \omega}
+\end{equation}
+
+\subsubsection{Paso 2: Calcular $\frac{d}{dt}\left(\frac{\partial \mathcal{L}}{\partial v}\right)$}
+
+Derivamos con respecto al tiempo:
+
+\begin{align}
+\frac{d}{dt}\left(\frac{\partial \mathcal{L}}{\partial v}\right) &= \frac{d}{dt}[(M + m)v + m\ell\cos\theta \cdot \omega]
+\end{align}
+
+Aplicando la derivada término a término:
+
+\textbf{Primer término:}
+
+\begin{equation}
+\frac{d}{dt}[(M + m)v] = (M + m)\dot{v} = (M + m)a
+\end{equation}
+
+donde $a = \ddot{p}$ es la aceleración del carrito.
+
+\textbf{Segundo término:}
+
+\begin{equation}
+\frac{d}{dt}[m\ell\cos\theta \cdot \omega] = m\ell \frac{d}{dt}[\cos\theta \cdot \omega]
+\end{equation}
+
+Usando la regla del producto: $\frac{d}{dt}[f \cdot g] = \dot{f} \cdot g + f \cdot \dot{g}$
+
+\begin{align}
+\frac{d}{dt}[\cos\theta \cdot \omega] &= \frac{d}{dt}[\cos\theta] \cdot \omega + \cos\theta \cdot \frac{d}{dt}[\omega] \\
+&= (-\sin\theta \cdot \dot{\theta}) \cdot \omega + \cos\theta \cdot \dot{\omega} \\
+&= -\sin\theta \cdot \omega^2 + \cos\theta \cdot \alpha
+\end{align}
+
+donde $\alpha = \ddot{\theta}$ es la aceleración angular.
+
+Por lo tanto:
+
+\begin{equation}
+\frac{d}{dt}[m\ell\cos\theta \cdot \omega] = m\ell(-\sin\theta \cdot \omega^2 + \cos\theta \cdot \alpha)
+\end{equation}
+
+\textbf{Sumando ambos términos:}
+
+\begin{align}
+\frac{d}{dt}\left(\frac{\partial \mathcal{L}}{\partial v}\right) &= (M + m)a + m\ell\cos\theta \cdot \alpha - m\ell\sin\theta \cdot \omega^2
+\end{align}
+
+\textbf{Resultado:}
+
+\begin{equation}
+\boxed{\frac{d}{dt}\left(\frac{\partial \mathcal{L}}{\partial v}\right) = (M + m)a + m\ell\cos\theta \cdot \alpha - m\ell\sin\theta \cdot \omega^2}
+\end{equation}
+
+\subsubsection{Paso 3: Calcular $\frac{\partial \mathcal{L}}{\partial p}$}
+
+Revisamos el Lagrangiano:
+
+\begin{equation}
+\mathcal{L} = \frac{1}{2}(M + m)v^2 + mv\ell\cos\theta \cdot \omega + \frac{1}{2}J\omega^2 + mg\ell\cos\theta
+\end{equation}
+
+\textbf{Ningún término depende explícitamente de $p$}, por lo tanto:
+
+\begin{equation}
+\boxed{\frac{\partial \mathcal{L}}{\partial p} = 0}
+\end{equation}
+
+\subsubsection{Paso 4: Fuerza Generalizada $Q_p$}
+
+La fuerza externa $F$ actúa horizontalmente sobre el carrito, por lo que:
+
+\begin{equation}
+Q_p = F
+\end{equation}
+
+\subsubsection{Paso 5: Aplicar Euler-Lagrange}
+
+\begin{equation}
+\frac{d}{dt}\left(\frac{\partial \mathcal{L}}{\partial v}\right) - \frac{\partial \mathcal{L}}{\partial p} = Q_p
+\end{equation}
+
+Sustituyendo:
+
+\begin{equation}
+(M + m)a + m\ell\cos\theta \cdot \alpha - m\ell\sin\theta \cdot \omega^2 - 0 = F
+\end{equation}
+
+\textbf{Primera ecuación del sistema:}
+
+\begin{equation}
+\boxed{(M + m)\ddot{p} + m\ell\cos\theta \cdot \ddot{\theta} - m\ell\sin\theta \cdot \dot{\theta}^2 = F}
+\end{equation}
+
+O reordenando:
+
+\begin{equation}
+\boxed{(M + m)\ddot{p} + m\ell\cos\theta \cdot \ddot{\theta} = F + m\ell\sin\theta \cdot \dot{\theta}^2}
+\end{equation}
+
+\subsection{Ecuación para la Coordenada $\theta$ (Ángulo del Péndulo)}
+
+\subsubsection{Paso 1: Calcular $\frac{\partial \mathcal{L}}{\partial \omega}$}
+
+Los términos que contienen $\omega = \dot{\theta}$ son:
+
+\begin{equation}
+mv\ell\cos\theta \cdot \omega \quad \text{y} \quad \frac{1}{2}J\omega^2
+\end{equation}
+
+Derivando parcialmente:
+
+\begin{align}
+\frac{\partial \mathcal{L}}{\partial \omega} &= \frac{\partial}{\partial \omega}[mv\ell\cos\theta \cdot \omega] + \frac{\partial}{\partial \omega}\left[\frac{1}{2}J\omega^2\right] \\
+&= mv\ell\cos\theta + J\omega
+\end{align}
+
+\textbf{Resultado:}
+
+\begin{equation}
+\boxed{\frac{\partial \mathcal{L}}{\partial \omega} = mv\ell\cos\theta + J\omega}
+\end{equation}
+
+\subsubsection{Paso 2: Calcular $\frac{d}{dt}\left(\frac{\partial \mathcal{L}}{\partial \omega}\right)$}
+
+\begin{equation}
+\frac{d}{dt}\left(\frac{\partial \mathcal{L}}{\partial \omega}\right) = \frac{d}{dt}[mv\ell\cos\theta + J\omega]
+\end{equation}
+
+\textbf{Primer término:}
+
+\begin{equation}
+\frac{d}{dt}[mv\ell\cos\theta] = m\ell \frac{d}{dt}[v\cos\theta]
+\end{equation}
+
+Usando la regla del producto:
+
+\begin{align}
+\frac{d}{dt}[v\cos\theta] &= \dot{v}\cos\theta + v \frac{d}{dt}[\cos\theta] \\
+&= a\cos\theta + v(-\sin\theta \cdot \omega) \\
+&= a\cos\theta - v\sin\theta \cdot \omega
+\end{align}
+
+Por lo tanto:
+
+\begin{equation}
+\frac{d}{dt}[mv\ell\cos\theta] = m\ell(a\cos\theta - v\sin\theta \cdot \omega)
+\end{equation}
+
+\textbf{Segundo término:}
+
+\begin{equation}
+\frac{d}{dt}[J\omega] = J\dot{\omega} = J\alpha
+\end{equation}
+
+\textbf{Sumando:}
+
+\begin{align}
+\frac{d}{dt}\left(\frac{\partial \mathcal{L}}{\partial \omega}\right) &= m\ell a\cos\theta - m\ell v\sin\theta \cdot \omega + J\alpha
+\end{align}
+
+\textbf{Resultado:}
+
+\begin{equation}
+\boxed{\frac{d}{dt}\left(\frac{\partial \mathcal{L}}{\partial \omega}\right) = m\ell\cos\theta \cdot a - m\ell\sin\theta \cdot v\omega + J\alpha}
+\end{equation}
+
+\subsubsection{Paso 3: Calcular $\frac{\partial \mathcal{L}}{\partial \theta}$}
+
+Los términos que contienen $\theta$ (no $\omega$) son:
+
+\begin{equation}
+mv\ell\cos\theta \cdot \omega \quad \text{y} \quad mg\ell\cos\theta
+\end{equation}
+
+Derivando parcialmente:
+
+\begin{align}
+\frac{\partial \mathcal{L}}{\partial \theta} &= \frac{\partial}{\partial \theta}[mv\ell\cos\theta \cdot \omega] + \frac{\partial}{\partial \theta}[mg\ell\cos\theta] \\
+&= mv\ell(-\sin\theta) \cdot \omega + mg\ell(-\sin\theta) \\
+&= -m\ell\sin\theta(v\omega + g)
+\end{align}
+
+\textbf{Resultado:}
+
+\begin{equation}
+\boxed{\frac{\partial \mathcal{L}}{\partial \theta} = -m\ell\sin\theta \cdot v\omega - mg\ell\sin\theta}
+\end{equation}
+
+\subsubsection{Paso 4: Fuerza Generalizada $Q_\theta$}
+
+No hay par externo aplicado directamente al péndulo:
+
+\begin{equation}
+Q_\theta = 0
+\end{equation}
+
+\subsubsection{Paso 5: Aplicar Euler-Lagrange}
+
+\begin{equation}
+\frac{d}{dt}\left(\frac{\partial \mathcal{L}}{\partial \omega}\right) - \frac{\partial \mathcal{L}}{\partial \theta} = Q_\theta
+\end{equation}
+
+Sustituyendo:
+
+\begin{align}
+&m\ell\cos\theta \cdot a - m\ell\sin\theta \cdot v\omega + J\alpha \\
+&\quad - (-m\ell\sin\theta \cdot v\omega - mg\ell\sin\theta) = 0
+\end{align}
+
+Simplificando:
+
+\begin{align}
+&m\ell\cos\theta \cdot a - m\ell\sin\theta \cdot v\omega + J\alpha \\
+&\quad + m\ell\sin\theta \cdot v\omega + mg\ell\sin\theta = 0
+\end{align}
+
+\textbf{Los términos $m\ell\sin\theta \cdot v\omega$ se cancelan:}
+
+\begin{equation}
+m\ell\cos\theta \cdot a + J\alpha + mg\ell\sin\theta = 0
+\end{equation}
+
+\textbf{Segunda ecuación del sistema:}
+
+\begin{equation}
+\boxed{m\ell\cos\theta \cdot \ddot{p} + J\ddot{\theta} + mg\ell\sin\theta = 0}
+\end{equation}
+
+O reordenando:
+
+\begin{equation}
+\boxed{J\ddot{\theta} + m\ell\cos\theta \cdot \ddot{p} = -mg\ell\sin\theta}
+\end{equation}
+
+\section{Sistema de Ecuaciones Acopladas}
+
+Tenemos dos ecuaciones con dos incógnitas ($\ddot{p}$ y $\ddot{\theta}$):
+
+\begin{align}
+(M + m)\ddot{p} + m\ell\cos\theta \cdot \ddot{\theta} &= F + m\ell\sin\theta \cdot \dot{\theta}^2 \tag{Ec. 1}\\
+m\ell\cos\theta \cdot \ddot{p} + J\ddot{\theta} &= -mg\ell\sin\theta \tag{Ec. 2}
+\end{align}
+
+\subsection{Forma Matricial}
+
+\begin{equation}
+\begin{bmatrix}
+M + m & m\ell\cos\theta \\
+m\ell\cos\theta & J
+\end{bmatrix}
+\begin{bmatrix}
+\ddot{p} \\
+\ddot{\theta}
+\end{bmatrix}
+=
+\begin{bmatrix}
+F + m\ell\sin\theta \cdot \dot{\theta}^2 \\
+-mg\ell\sin\theta
+\end{bmatrix}
+\end{equation}
+
+O de forma compacta:
+
+\begin{equation}
+\mathbf{M}(\theta) \ddot{\mathbf{q}} = \mathbf{b}(\theta, \dot{\theta}, F)
+\end{equation}
+
+\section{Solución del Sistema (Regla de Cramer)}
+
+\subsection{Determinante de la Matriz de Masa}
+
+\begin{align}
+\text{det}(\mathbf{M}) &= (M + m) \cdot J - (m\ell\cos\theta)^2 \\
+&= (M + m)J - m^2\ell^2\cos^2\theta
+\end{align}
+
+\textbf{Definimos:}
+
+\begin{equation}
+\boxed{\Delta = (M + m)J - m^2\ell^2\cos^2\theta}
+\end{equation}
+
+\subsection{Solución para $\ddot{p}$}
+
+Usando la regla de Cramer:
+
+\begin{equation}
+\ddot{p} = \frac{1}{\Delta}
+\begin{vmatrix}
+F + m\ell\sin\theta \cdot \dot{\theta}^2 & m\ell\cos\theta \\
+-mg\ell\sin\theta & J
+\end{vmatrix}
+\end{equation}
+
+Calculando el determinante:
+
+\begin{align}
+&= \frac{1}{\Delta}\left[J(F + m\ell\sin\theta \cdot \dot{\theta}^2) - m\ell\cos\theta \cdot (-mg\ell\sin\theta)\right] \\
+&= \frac{1}{\Delta}\left[JF + Jm\ell\sin\theta \cdot \dot{\theta}^2 + m^2g\ell^2\sin\theta\cos\theta\right] \\
+&= \frac{1}{\Delta}\left[JF + m\ell\sin\theta(J\dot{\theta}^2 + mg\ell\cos\theta)\right]
+\end{align}
+
+\textbf{Resultado:}
+
+\begin{equation}
+\boxed{\ddot{p} = \frac{JF + m\ell\sin\theta(J\dot{\theta}^2 + mg\ell\cos\theta)}{(M+m)J - m^2\ell^2\cos^2\theta}}
+\end{equation}
+
+\subsection{Solución para $\ddot{\theta}$}
+
+Usando la regla de Cramer:
+
+\begin{equation}
+\ddot{\theta} = \frac{1}{\Delta}
+\begin{vmatrix}
+M + m & F + m\ell\sin\theta \cdot \dot{\theta}^2 \\
+m\ell\cos\theta & -mg\ell\sin\theta
+\end{vmatrix}
+\end{equation}
+
+Calculando el determinante:
+
+\begin{align}
+&= \frac{1}{\Delta}\left[(M+m)(-mg\ell\sin\theta) - m\ell\cos\theta(F + m\ell\sin\theta \cdot \dot{\theta}^2)\right] \\
+&= \frac{1}{\Delta}\left[-(M+m)mg\ell\sin\theta - m\ell\cos\theta \cdot F - m^2\ell^2\sin\theta\cos\theta \cdot \dot{\theta}^2\right]
+\end{align}
+
+\textbf{Resultado:}
+
+\begin{equation}
+\boxed{\ddot{\theta} = \frac{-m\ell\cos\theta \cdot F - (M+m)mg\ell\sin\theta - m^2\ell^2\sin\theta\cos\theta \cdot \dot{\theta}^2}{(M+m)J - m^2\ell^2\cos^2\theta}}
+\end{equation}
+
+\section{Forma Explícita de las Ecuaciones Dinámicas}
+
+\subsection{Notación Simplificada}
+
+Definimos:
+\begin{align}
+s &= \sin\theta \\
+c &= \cos\theta \\
+\Delta &= (M+m)J - m^2\ell^2c^2
+\end{align}
+
+\subsection{Ecuaciones Finales}
+
+\begin{equation}
+\boxed{
+\begin{aligned}
+\ddot{p} &= \frac{JF + m\ell s(J\dot{\theta}^2 + mg\ell c)}{\Delta} \\[10pt]
+\ddot{\theta} &= \frac{-m\ell c \cdot F - (M+m)mg\ell s - m^2\ell^2 sc \cdot \dot{\theta}^2}{\Delta}
+\end{aligned}
+}
+\end{equation}
+
+Estas son las ecuaciones que implementas en tu modelo de Acados.
+
+\section{Sistema de Estados}
+
+Para implementación numérica, definimos el vector de estados:
+
+\begin{equation}
+\mathbf{x} = 
+\begin{bmatrix}
+p \\
+\theta \\
+v \\
+\omega
+\end{bmatrix}
+=
+\begin{bmatrix}
+p \\
+\theta \\
+\dot{p} \\
+\dot{\theta}
+\end{bmatrix}
+\end{equation}
+
+Y el sistema de primer orden:
+
+\begin{equation}
+\dot{\mathbf{x}} = 
+\begin{bmatrix}
+\dot{p} \\
+\dot{\theta} \\
+\ddot{p} \\
+\ddot{\theta}
+\end{bmatrix}
+=
+\begin{bmatrix}
+v \\
+\omega \\
+\frac{JF + m\ell\sin\theta(J\omega^2 + mg\ell\cos\theta)}{\Delta} \\[5pt]
+\frac{-m\ell\cos\theta \cdot F - (M+m)mg\ell\sin\theta - m^2\ell^2\sin\theta\cos\theta \cdot \omega^2}{\Delta}
+\end{bmatrix}
+\end{equation}
+
+\section{Resumen de Parámetros}
+
+\begin{itemize}
+    \item $M$: masa del carrito [kg]
+    \item $m$: masa del péndulo [kg]
+    \item $\ell$: distancia del pivote al centro de masa del péndulo [m]
+    \item $I_{\text{pend}}$: momento de inercia del péndulo sobre su centro de masa [kg$\cdot$m$^2$]
+    \item $J = m\ell^2 + I_{\text{pend}}$: momento de inercia efectivo sobre el pivote [kg$\cdot$m$^2$]
+    \item $g = 9.81$: aceleración gravitacional [m/s$^2$]
+    \item $F$: fuerza de control aplicada al carrito [N]
+\end{itemize}
+
+\end{document}
