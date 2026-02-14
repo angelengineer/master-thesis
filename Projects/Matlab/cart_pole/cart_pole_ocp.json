@@ -14,9 +14,9 @@
 			"qpoases":"-lqpOASES_e"
 		},
 		"acados_version":"0ec405f4a",
-		"code_export_directory":"/home/angel/Projects/master-thesis/Projects/cart_pole/c_generated_code",
+		"code_export_directory":"/home/angel/Projects/master-thesis/Projects/Matlab/cart_pole/c_generated_code",
 		"cython_include_dirs":[],
-		"json_file":"/home/angel/Projects/master-thesis/Projects/cart_pole/cart_pole_ocp.json",
+		"json_file":"/home/angel/Projects/master-thesis/Projects/Matlab/cart_pole/cart_pole_ocp.json",
 		"os":"unix",
 		"shared_lib_ext":".so"
 	},
@@ -893,5 +893,5 @@
 		"with_value_sens_wrt_params":0
 	},
 	"zoro_description":[],
-	"hash":"79b8ce583c60db97f391438dda489902"
+	"hash":"c7d26f80f7548a42e1b84e1af689d3da"
 }

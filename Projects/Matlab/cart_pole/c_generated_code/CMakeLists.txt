@@ -57,9 +57,9 @@ endif()
 
 
 if(CMAKE_CXX_COMPILER_ID MATCHES "MSVC")
-    set(CMAKE_RUNTIME_OUTPUT_DIRECTORY_RELEASE /home/angel/Projects/master-thesis/Projects/cart_pole/c_generated_code)
-    set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY_RELEASE /home/angel/Projects/master-thesis/Projects/cart_pole/c_generated_code)
-    set(CMAKE_LIBRARY_OUTPUT_DIRECTORY_RELEASE /home/angel/Projects/master-thesis/Projects/cart_pole/c_generated_code)
+    set(CMAKE_RUNTIME_OUTPUT_DIRECTORY_RELEASE /home/angel/Projects/master-thesis/Projects/Matlab/cart_pole/c_generated_code)
+    set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY_RELEASE /home/angel/Projects/master-thesis/Projects/Matlab/cart_pole/c_generated_code)
+    set(CMAKE_LIBRARY_OUTPUT_DIRECTORY_RELEASE /home/angel/Projects/master-thesis/Projects/Matlab/cart_pole/c_generated_code)
 endif()
 
 

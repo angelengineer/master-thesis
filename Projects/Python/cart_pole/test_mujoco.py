@@ -44,10 +44,21 @@ with mujoco.viewer.launch_passive(model, data) as viewer:
         jid = model.joint("revolute_pole").id
         qpos_addr = model.jnt_qposadr[jid]
 
-        data.qpos[qpos_addr] = 3.14
+        # data.qpos[qpos_addr] = 3.14
 
         # avanzar simulación
         mujoco.mj_step(model, data)
+
+        # Después de mj_step, imprime el número de contactos
+        print("Número de contactos:", data.ncon)
+        for i in range(data.ncon):
+            c = data.contact[i]
+            geom1_name = model.geom(c.geom1).name
+            geom2_name = model.geom(c.geom2).name
+            body1_name = model.body(model.geom_bodyid[c.geom1]).name
+            body2_name = model.body(model.geom_bodyid[c.geom2]).name
+            print(f"  Contacto entre geometría '{geom1_name}' (cuerpo '{body1_name}') y "
+                f"geometría '{geom2_name}' (cuerpo '{body2_name}')")
 
         # --- POLE ---
         jid = model.joint("revolute_pole").id
