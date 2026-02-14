@@ -1,0 +1,81 @@
+<mujoco model="cartpole_base_cart">
+    <visual>
+    <quality shadowsize="2048"/>
+    </visual>
+
+  <option gravity="0 0 -9.81"/>
+
+  <asset>
+    <mesh name="track_mesh" file="meshes/track.stl" scale="0.001 0.001 0.001"/>
+    <mesh name="cart_mesh"  file="meshes/cart.stl"  scale="0.001 0.001 0.001"/>
+    <mesh name="pole_mesh"  file="meshes/pole.stl"  scale="0.001 0.001 0.001"/>
+    <texture
+    name="sky"
+    type="skybox"
+    builtin="gradient"
+    rgb1="0.4 0.6 0.9"
+    rgb2="0.9 0.95 1.0"
+    width="512"
+    height="512"/>
+  <texture name="texplane" type="2d" builtin="checker" rgb1="0.2 0.3 0.9" rgb2="0.1 0.15 0.5" 
+             width="512" height="512" mark="cross" markrgb=".8 .8 .8"/>  
+    
+    <material name="matplane" reflectance="0.01" texture="texplane" texrepeat="5 5" texuniform="true"/>
+
+    </asset>
+
+  <worldbody>
+    <!-- FLOOR -->
+    <geom name="floor" type="plane" size="0 0 0.05" material="matplane" pos="0 0 0"/>
+
+    <!-- TRACK (FIJO) -->
+    <body name="track_link" pos="0 0 0">
+      <geom type="mesh" mesh="track_mesh" rgba="0.7 0.7 0.7 1"/>
+
+
+      <!-- CART (MÓVIL) -->
+      <body name="cart_link" pos="0 0 0.1">
+
+        <!-- Prismatic joint -->
+        <joint
+          name="cart_slide"
+          type="slide"
+          axis="1 0 0"
+          range="-0.45 0.45"
+          limited="true"
+        />
+
+        <!-- Masa SIMPLE (sin inercia) -->
+        <geom
+          type="mesh"
+          pos="0 0 -0.1"
+          mesh="cart_mesh"
+          mass="7.7"
+          rgba="0.2 0.6 1 1"/>
+
+        <!-- POLE (pendulum) -->
+        <body name="pole_link" pos="0 0 0.1">
+          <joint
+            name="revolute_pole"
+            type="hinge"
+            axis="0 1 0"
+            range="-180 180"
+            damping="0"
+            frictionloss="0"/>
+
+        <geom
+            type="mesh"
+            pos="0 0 -0.2"
+            mesh="pole_mesh"
+            mass="0.7"
+            rgba="1 0 0 1"/>    
+        </body> 
+
+      </body>
+    </body>
+  </worldbody>
+
+    <actuator>
+        <motor name="cart_force" joint="cart_slide" gear="100" ctrllimited="true" ctrlrange="-100 100"/>
+    </actuator>
+</mujoco>
