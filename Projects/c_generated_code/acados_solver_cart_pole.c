@@ -517,7 +517,7 @@ void cart_pole_acados_setup_nlp_in(cart_pole_solver_capsule* capsule, const int 
     free(yref);
     double* W = calloc(NY*NY, sizeof(double));
     // change only the non-zero elements:
-    W[0+(NY) * 0] = 1000;
+    W[0+(NY) * 0] = 100;
     W[1+(NY) * 1] = 1000;
     W[2+(NY) * 2] = 0.01;
     W[3+(NY) * 3] = 0.01;

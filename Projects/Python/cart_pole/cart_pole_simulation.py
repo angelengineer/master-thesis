@@ -4,7 +4,7 @@ import time
 import numpy as np
 import os
 from acados_template import AcadosOcpSolver
-from cart_pole_ocp import ocp   # Importa el objeto ocp definido en tu generador
+from cart_pole_ocp import W_u, ocp   # Importa el objeto ocp definido en tu generador
 
 # Cambiar al directorio del script
 os.chdir(os.path.dirname(os.path.abspath(__file__)))
@@ -43,17 +43,16 @@ sim_time = 0.0
 control_period = 0.025  # 40 Hz
 
 # Límites amplios para relajar las restricciones de estado en stages futuros
-# Especialmente importante para theta (índice 1), que debe pasar de π a 0
-lbx_wide = np.array([-2.5, -10*np.pi, -3.0, -10*np.pi])   # [x, theta, x_dot, theta_dot]
-ubx_wide = np.array([ 2.5,  10*np.pi,  3.0,  10*np.pi])
+lbx = np.array([-2.5, -10*np.pi, -3.0, -10*np.pi])   # [x, theta, x_dot, theta_dot]
+ubx = np.array([ 2.5,  10*np.pi,  3.0,  10*np.pi])
 
-# Límites de control originales (los que definiste en el OCP, por ejemplo ±80 N)
-# Los puedes modificar aquí si quieres cambiarlos dinámicamente
-lbu_orig = -150.0
-ubu_orig =  150.0
-# Por ahora los dejamos igual, pero podrías ampliarlos si es necesario
-lbu_current = lbu_orig
-ubu_current = ubu_orig
+# Límites de control
+lbu = -150.0
+ubu =  150.0
+
+# Pesos para la función de costo (ajustar según preferencia)
+W_x = np.diag([1e3, 1e3, 1e-1, 1e-2])   
+W = np.block([[W_x, np.zeros((4,1))],[np.zeros((1,4)), W_u]])
 
 # Para mantener el último control exitoso (en caso de fallo del solver)
 last_successful_u = 0.0
@@ -88,18 +87,26 @@ with mujoco.viewer.launch_passive(model, data) as viewer:
             ocp_solver.set(0, "lbx", x_current)
             ocp_solver.set(0, "ubx", x_current)
             
-            # PASO 2: Relajar límites de estado para todos los stages futuros (1..N-1)
-            for i in range(1, N_horizon):
-                ocp_solver.constraints_set(i, "lbx", lbx_wide)
-                ocp_solver.constraints_set(i, "ubx", ubx_wide)
+            # PASO 2: Setear constraints y pesos
+            for i in range(1,N_horizon):
+                ocp_solver.constraints_set(i, "lbx", lbx)
+                ocp_solver.constraints_set(i, "ubx", ubx)
+
             
-            # PASO 3: (Opcional) Modificar límites de control en todos los stages
-            # Si deseas cambiar los límites de control respecto a los originales,
-            # puedes hacerlo aquí. En este ejemplo los dejamos como estaban.
+            for i in range(N_horizon):   # incluye etapa terminal
+                if i == 0:
+                    ocp_solver.cost_set(i, "W", W_u)
+
+                    continue   # saltar etapa 0
+                if i == N_horizon:
+                    ocp_solver.cost_set(i, "W", W_x)   # terminal
+                else:
+                    ocp_solver.cost_set(i, "W", W)
+
             for i in range(N_horizon):
-                ocp_solver.constraints_set(i, "lbu", np.array([lbu_current]))
-                ocp_solver.constraints_set(i, "ubu", np.array([ubu_current]))
-            
+                ocp_solver.constraints_set(i, "lbu", np.array([lbu]))
+                ocp_solver.constraints_set(i, "ubu", np.array([ubu]))
+
             # PASO 4: Configurar referencias
             # Stage 0: solo control deseado (dimensión 1)
             ocp_solver.set(0, "yref", np.array([0.0]))

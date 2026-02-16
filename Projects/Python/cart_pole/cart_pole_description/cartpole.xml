@@ -79,6 +79,15 @@
             mesh="pole_mesh"
             mass="0.7"
             rgba="0.5843 0.5843 0.5843 1"/>    
+
+          <geom
+            name="sphere"
+            type="sphere"
+            size="0.03"
+            pos="0 -0.095 0.155"
+            mass="1"
+            rgba="1 0.84 0 1"/>
+
         </body> 
 
       </body>

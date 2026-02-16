@@ -25,7 +25,7 @@ ocp = AcadosOcp()
 ocp.model = model
 
 # ============ COSTOS NONLINEAR_LS ============
-W_x = np.diag([1e3, 1e3, 1e-2, 1e-2])   # pesos estados
+W_x = np.diag([1e2, 1e3, 1e-2, 1e-2])   # pesos estados
 W_u = np.array([[1e-2]])                 # peso control (1x1)
 
 # --- Costo inicial (stage 0) ---
