@@ -14,8 +14,8 @@ NEW_SPHERE_RADIUS = 0.02    # cambiar tamaño esfera
 NEW_SPHERE_MASS = 0.5        # masa de la esfera (si se usa)
 EXTRA_POLE_MASS = 0         # masa extra al péndulo
 CART_DAMPING = 0.8            # damping cart
-POLE_DAMPING = 0            # damping pole
-CART_FRICTION = 0.0           # fricción tipo Coulomb
+POLE_DAMPING = 0.05            # damping pole
+CART_FRICTION = 0.4          # fricción tipo Coulomb
 ENABLE_WIND = False            # activar viento
 
 # ==========================================================

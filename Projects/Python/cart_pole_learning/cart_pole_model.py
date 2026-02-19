@@ -14,7 +14,7 @@ def cart_pole_model(**kwargs):
     # ------- Valores por defecto -------
     M  = 7.67
     m  = 0.7
-    L  = 0.155
+    L  = 0.06
     I  = 3.9750e-03
     dz = 0.0
     dy = 0.0

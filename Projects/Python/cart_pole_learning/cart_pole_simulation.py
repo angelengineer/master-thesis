@@ -22,19 +22,19 @@ dt = model.opt.timestep
 def apply_model_uncertainty(model, data):
     # ---- Sphere size ----
     sphere_id = mujoco.mj_name2id(model, mujoco.mjtObj.mjOBJ_GEOM, "sphere")
-    model.geom_size[sphere_id][0] = 0.021  # radio diferente
+    model.geom_size[sphere_id][0] = 0.03  # radio diferente
 
     # ---- Extra sphere mass ----
     extra_body_id = mujoco.mj_name2id(model, mujoco.mjtObj.mjOBJ_BODY, "extra_mass")
-    model.body_mass[extra_body_id] = 1  # masa diferente
+    model.body_mass[extra_body_id] = 4.5  # masa diferente
 
     # ---- Joint damping ----
     cart_joint_id = mujoco.mj_name2id(model, mujoco.mjtObj.mjOBJ_JOINT, "cart_slide")
     pole_joint_id = mujoco.mj_name2id(model, mujoco.mjtObj.mjOBJ_JOINT, "revolute_pole")
 
-    model.dof_damping[cart_joint_id] = 0.1
-    model.dof_damping[pole_joint_id] = 0
-    model.dof_frictionloss[cart_joint_id] = 0
+    model.dof_damping[cart_joint_id] = 0.2
+    model.dof_damping[pole_joint_id] = 0.005
+    model.dof_frictionloss[cart_joint_id] = 0.2
 
     mujoco.mj_forward(model, data)
 

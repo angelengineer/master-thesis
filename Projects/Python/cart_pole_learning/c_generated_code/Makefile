@@ -37,35 +37,35 @@
 # model
 MODEL_SRC=
 
-MODEL_SRC+= cart_pole_model/cart_pole_expl_ode_fun.c
-MODEL_SRC+= cart_pole_model/cart_pole_expl_vde_forw.c
-MODEL_SRC+= cart_pole_model/cart_pole_expl_vde_adj.c
+MODEL_SRC+= cart_pole_augmented_model/cart_pole_augmented_expl_ode_fun.c
+MODEL_SRC+= cart_pole_augmented_model/cart_pole_augmented_expl_vde_forw.c
+MODEL_SRC+= cart_pole_augmented_model/cart_pole_augmented_expl_vde_adj.c
 
 MODEL_OBJ := $(MODEL_SRC:.c=.o)
 # optimal control problem - mostly CasADi exports
 OCP_SRC=
 
 
-OCP_SRC+= cart_pole_cost/cart_pole_cost_y_0_fun.c
-OCP_SRC+= cart_pole_cost/cart_pole_cost_y_0_fun_jac_ut_xt.c
-OCP_SRC+= cart_pole_cost/cart_pole_cost_y_0_hess.c
-OCP_SRC+= cart_pole_cost/cart_pole_cost_y_fun.c
-OCP_SRC+= cart_pole_cost/cart_pole_cost_y_fun_jac_ut_xt.c
-OCP_SRC+= cart_pole_cost/cart_pole_cost_y_hess.c
+OCP_SRC+= cart_pole_augmented_cost/cart_pole_augmented_cost_y_0_fun.c
+OCP_SRC+= cart_pole_augmented_cost/cart_pole_augmented_cost_y_0_fun_jac_ut_xt.c
+OCP_SRC+= cart_pole_augmented_cost/cart_pole_augmented_cost_y_0_hess.c
+OCP_SRC+= cart_pole_augmented_cost/cart_pole_augmented_cost_y_fun.c
+OCP_SRC+= cart_pole_augmented_cost/cart_pole_augmented_cost_y_fun_jac_ut_xt.c
+OCP_SRC+= cart_pole_augmented_cost/cart_pole_augmented_cost_y_hess.c
 
-OCP_SRC+= acados_solver_cart_pole.c
+OCP_SRC+= acados_solver_cart_pole_augmented.c
 
 OCP_OBJ := $(OCP_SRC:.c=.o)
 # for sim solver
-SIM_SRC= acados_sim_solver_cart_pole.c
+SIM_SRC= acados_sim_solver_cart_pole_augmented.c
 SIM_OBJ := $(SIM_SRC:.c=.o)
 
 # for target example_sim
-EX_SIM_SRC= main_sim_cart_pole.c
+EX_SIM_SRC= main_sim_cart_pole_augmented.c
 EX_SIM_OBJ := $(EX_SIM_SRC:.c=.o)
 EX_SIM_EXE := $(EX_SIM_SRC:.c=)
 # for target example
-EX_SRC= main_cart_pole.c
+EX_SRC= main_cart_pole_augmented.c
 EX_OBJ := $(EX_SRC:.c=.o)
 EX_EXE := $(EX_SRC:.c=)
 
@@ -90,7 +90,7 @@ CPPFLAGS+= -I$(INCLUDE_PATH)/hpipm/include
 
 
 # define the c-compiler flags for make's implicit rules
-CFLAGS = -fPIC -std=c99   -O2 -fPIC
+CFLAGS = -fPIC -std=c99   -O0 -fPIC
 
 # # Debugging
 # CFLAGS += -g3 -fno-diagnostics-show-line-numbers -g
@@ -107,8 +107,8 @@ LDLIBS+= -lm
 LDLIBS+= 
 
 # libraries
-LIBACADOS_SOLVER=libacados_solver_cart_pole.so
-LIBACADOS_OCP_SOLVER=libacados_ocp_solver_cart_pole.so
+LIBACADOS_SOLVER=libacados_solver_cart_pole_augmented.so
+LIBACADOS_OCP_SOLVER=libacados_ocp_solver_cart_pole_augmented.so
 LIBACADOS_SIM_SOLVER=lib$(SIM_SRC:.c=.so)
 
 # virtual targets
@@ -159,7 +159,7 @@ ocp_cython: ocp_cython_o
 	-o acados_ocp_solver_pyx.so \
 	-Wl,-rpath=$(LIB_PATH) \
 	acados_ocp_solver_pyx.o \
-	$(abspath .)/libacados_ocp_solver_cart_pole.so \
+	$(abspath .)/libacados_ocp_solver_cart_pole_augmented.so \
 	$(LDFLAGS) $(LDLIBS)
 
 
@@ -188,7 +188,7 @@ sim_cython: sim_cython_o
 	-o acados_sim_solver_pyx.so \
 	-Wl,-rpath=$(LIB_PATH) \
 	acados_sim_solver_pyx.o \
-	$(abspath .)/libacados_sim_solver_cart_pole.so \
+	$(abspath .)/libacados_sim_solver_cart_pole_augmented.so \
 	$(LDFLAGS) $(LDLIBS)
 
 clean:
@@ -200,13 +200,13 @@ clean_ocp_shared_lib:
 	$(RM) $(OCP_OBJ)
 
 clean_ocp_cython:
-	$(RM) libacados_ocp_solver_cart_pole.so
-	$(RM) acados_solver_cart_pole.o
+	$(RM) libacados_ocp_solver_cart_pole_augmented.so
+	$(RM) acados_solver_cart_pole_augmented.o
 	$(RM) acados_ocp_solver_pyx.so
 	$(RM) acados_ocp_solver_pyx.o
 
 clean_sim_cython:
-	$(RM) libacados_sim_solver_cart_pole.so
-	$(RM) acados_sim_solver_cart_pole.o
+	$(RM) libacados_sim_solver_cart_pole_augmented.so
+	$(RM) acados_sim_solver_cart_pole_augmented.o
 	$(RM) acados_sim_solver_pyx.so
 	$(RM) acados_sim_solver_pyx.o

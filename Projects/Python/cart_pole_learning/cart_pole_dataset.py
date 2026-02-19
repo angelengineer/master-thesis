@@ -1,4 +1,5 @@
 import mujoco
+import mujoco.viewer
 import numpy as np
 import os
 import time
@@ -10,8 +11,8 @@ import sys
 XML_PATH = "cart_pole_description/cartpole.xml"
 SAVE_PATH = "cartpole_residual_dataset.npy"
 
-NUM_EPISODES = 500      # Más episodios = mejor cobertura
-MAX_STEPS = 1000             # Pasos máximos por episodio
+NUM_EPISODES = 1000      # Más episodios = mejor cobertura
+MAX_STEPS = 1500             # Pasos máximos por episodio
 CONTROL_RANGE = (-150, 150) # Rango de exploración (ajusta según límites físicos)
 VISUALIZE = False           # ¡ACTIVA SOLO PARA DEBUG! (False para recolección rápida)
 SEED = 42
@@ -19,7 +20,8 @@ np.random.seed(SEED)
 
 # Rangos de incertidumbre REALISTAS (ajusta según tu modelo físico)
 UNCERTAINTY_CONFIG = {
-    "extra_mass_range": (0.0, 0.25),    # Masa extra en "extra_mass" body [kg]
+    "extra_mass_range": (0.0, 3),    # Masa extra en "extra_mass" body [kg]
+    "extra_sphere_radius_range": (0.025, 0.045),  # Radio de la esfera [m]
     "cart_damping_range": (0.1, 1.5),   # Amortiguamiento carrito [Ns/m]
     "pole_damping_range": (0.01, 0.15), # Amortiguamiento péndulo [Ns/m]
     "cart_friction_range": (0.0, 0.8),  # Fricción Coulomb carrito [N]
@@ -39,7 +41,12 @@ def apply_random_uncertainties(model, data, config):
         extra_body_id = mujoco.mj_name2id(model, mujoco.mjtObj.mjOBJ_BODY, "extra_mass")
         random_extra_mass = np.random.uniform(*config["extra_mass_range"])
         model.body_mass[extra_body_id] = random_extra_mass
-        
+
+        # 2. Radio de la esfera (afecta dinámica de colisión)
+        sphere_id = mujoco.mj_name2id(model, mujoco.mjtObj.mjOBJ_GEOM, "sphere")
+        random_sphere_radius = np.random.uniform(*config["extra_sphere_radius_range"])
+        model.geom_size[sphere_id][0] = random_sphere_radius
+
         # 2. Amortiguamiento y fricción en joints
         cart_joint_id = mujoco.mj_name2id(model, mujoco.mjtObj.mjOBJ_JOINT, "cart_slide")
         pole_joint_id = mujoco.mj_name2id(model, mujoco.mjtObj.mjOBJ_JOINT, "revolute_pole")
@@ -78,9 +85,9 @@ def reset_to_random_state(model, data, cart_joint_id, pole_joint_id):
     """Inicializa estado aleatorio con cobertura inteligente del espacio de estados"""
     # 70% cerca de posición colgante (0 rad), 30% cerca de invertida (π rad)
     if np.random.rand() < 0.7:
-        theta0 = np.random.uniform(-0.7, 0.7)  # Cerca de abajo
+        theta0 = np.random.uniform(-0.4, 0.4)  # Cerca de abajo
     else:
-        theta0 = np.pi + np.random.uniform(-0.6, 0.6)  # Cerca de arriba (inestable)
+        theta0 = np.pi + np.random.uniform(-0.6, 0.6)  
     
     # Posición carrito y velocidades
     x0 = np.random.uniform(-1.2, 1.2)
@@ -138,6 +145,11 @@ print("="*60)
 print("✅ VALIDACIÓN EXITOSA - Iniciando recolección de datos")
 print(f"Episodios: {NUM_EPISODES} | Pasos máx/episodio: {MAX_STEPS}")
 print(f"Incertidumbres: Masa extra [{UNCERTAINTY_CONFIG['extra_mass_range'][0]}, {UNCERTAINTY_CONFIG['extra_mass_range'][1]}] kg")
+print(f"Radio esfera [{UNCERTAINTY_CONFIG['extra_sphere_radius_range'][0]}, {UNCERTAINTY_CONFIG['extra_sphere_radius_range'][1]}] m")
+print(f"Amortiguamiento carrito [{UNCERTAINTY_CONFIG['cart_damping_range'][0]}, {UNCERTAINTY_CONFIG['cart_damping_range'][1]}] Ns/m")
+print(f"Amortiguamiento péndulo [{UNCERTAINTY_CONFIG['pole_damping_range'][0]}, {UNCERTAINTY_CONFIG['pole_damping_range'][1]}] Ns/m")
+print(f"Fricción carrito [{UNCERTAINTY_CONFIG['cart_friction_range'][0]}, {UNCERTAINTY_CONFIG['cart_friction_range'][1]}] N")
+print(f"Viento (70% episodios) con fuerza [{UNCERTAINTY_CONFIG['wind_force_range'][0]}, {UNCERTAINTY_CONFIG['wind_force_range'][1]}] N y frecuencia [{UNCERTAINTY_CONFIG['wind_freq_range'][0]}, {UNCERTAINTY_CONFIG['wind_freq_range'][1]}] rad/s")
 print("="*60)
 
 # ==========================================================
@@ -180,7 +192,7 @@ for ep in range(NUM_EPISODES):
         
         # --- B. APLICAR VIENTO SI ESTÁ HABILITADO ---
         if ep_params['wind']['enabled']:
-            t = time.time() - wind_start_time
+            t = time.time() - dt
             wind_force = (ep_params['wind']['amp'] * 
                          np.sin(ep_params['wind']['freq'] * t + ep_params['wind']['phase']))
             data.xfrc_applied[pole_body_id, 0] = wind_force  # Fuerza en eje X del péndulo
@@ -188,13 +200,35 @@ for ep in range(NUM_EPISODES):
             data.xfrc_applied[pole_body_id, :] = 0.0
         
         # --- C. GENERAR CONTROL EXPLORATORIO (MEZCLA INTELIGENTE) ---
-        if np.random.rand() < 0.6:  # 60% exploración pura
+        if np.random.rand() < 0.3:  # 60% exploración pura
             u = np.random.uniform(*CONTROL_RANGE)
         else:  # 40% política energética simple para swing-up
             # Energía deseada para péndulo invertido
-            energy_target = 0.5 * 0.1 * 9.81 * 0.5  # m*g*l/2 (ajusta según tu modelo)
-            current_energy = 0.5 * 0.1 * (state[3]**2) * (0.5**2) + 0.1 * 9.81 * 0.5 * (1 - np.cos(state[1]))
-            u = 80.0 * np.sign(state[3] * np.cos(state[1])) * (energy_target - current_energy)
+            g = 9.81
+            l_pole = 0.06
+            m_pole = 0.7
+            m_extra = ep_params['extra_mass'] 
+            m_total = m_pole + m_extra
+            l_extra = 0.155
+            l_eff = (m_pole*l_pole + m_extra*l_extra) / m_total
+
+            m = m_pole + m_extra
+
+            theta = state[1]
+            theta_dot = state[3]
+
+            # Energía actual
+            E = 0.5 * m_total * (l_eff**2) * theta_dot**2 + m_total * g * l_eff * (1 - np.cos(theta))
+
+            # Energía objetivo (upright)
+            E_target = m_total * g * l_eff
+
+            # Ganancia
+            k = 25.0   # empezar suave, puedes subir a 40
+
+            # Energy shaping continuo (sin sign)
+            u = k * theta_dot * np.cos(theta) * (E_target - E)
+
             u = np.clip(u, CONTROL_RANGE[0], CONTROL_RANGE[1])
         
         data.ctrl[0] = u
@@ -221,8 +255,10 @@ for ep in range(NUM_EPISODES):
         # --- G. VERIFICAR CONDICIONES DE TERMINACIÓN ---
        
         terminate = (
-            abs(next_state[0]) > 2.4 or          # Límite físico del riel (ajusta según tu XML)
-            abs(next_state[1]) > 3.0 * np.pi     # Más de 1.5 vueltas (no físico para péndulo simple)
+            abs(next_state[0]) > 0.45 or          
+            abs(next_state[1]) > 1.5 * np.pi or
+            abs(next_state[3]) > 80.0 
+
         )
         transition['terminated'] = terminate
         episode_data.append(transition)
@@ -230,7 +266,7 @@ for ep in range(NUM_EPISODES):
         # --- H. SINCRONIZAR VISUALIZACIÓN ---
         if viewer is not None:
             viewer.sync()
-            time.sleep(dt * 0.5)  # Ligera aceleración para debug
+            time.sleep(dt)  # Ligera aceleración para debug
         
         if terminate:
             break
